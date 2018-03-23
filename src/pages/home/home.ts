@@ -2,90 +2,66 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 import { LoginPage } from '../login/login';
+import { MovieProvider } from '../../providers/movie/movie';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  todos: any;
+  foundMovies: any;
+  firstLoaded: boolean = true;
+
 
   constructor(
     public navCtrl: NavController,
-    public alertCtrl: AlertController ) {
+    public alertCtrl: AlertController,
+    public movieProvider: MovieProvider ) {
 
   }
 
   ionViewDidLoad(){
+    if(this.firstLoaded)
+    {
+      this.getMostRecentMovies();
+    }
  
- 
+  }
+
+  getMostRecentMovies() {
+    // find most recent movies and set foundMovies to this --> loop over them and display
+  }
+
+  findMovies() {
+    // find by title
+    // update foundMovies to this
+  }
+
+  discoverMovies() 
+  {
+    // discover, api has discover feature
+    // update foundMovies to this
   }
  
   logout(){
-   // this.todoService.logout();
-    this.todos = null;
+    this.movieProvider.logout();
+    this.foundMovies = null;
     this.navCtrl.setRoot(LoginPage);
   }
-  createTodo(){
+  
  
-    let prompt = this.alertCtrl.create({
-      title: 'Add',
-      message: 'What do you need to do?',
-      inputs: [
-        {
-          name: 'title'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel'
-        },
-        {
-          text: 'Save',
-          handler: data => {
-          //  this.todoService.createTodo({title: data.title});
-          }
-        }
-      ]
-    });
- 
-    prompt.present();
- 
-  }
- 
-  updateTodo(todo){
- 
-    let prompt = this.alertCtrl.create({
-      title: 'Edit',
-      message: 'Change your mind?',
-      inputs: [
-        {
-          name: 'title'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel'
-        },
-        {
-          text: 'Save',
-          handler: data => {
-            // this.todoService.updateTodo({
-            //   _id: todo._id,
-            //   _rev: todo._rev,
-            //   title: data.title
-            // });
-          }
-        }
-      ]
-    });
- 
-    prompt.present();
-  }
- 
-  deleteTodo(todo){
-    //this.todoService.deleteTodo(todo);
+  showDetails() 
+  {
+    // show details of a movie
+
   }
 
+  addToList(type: string, movie: any)
+  {
+    // add to seen movie list, based on type!
+    this.movieProvider.addMovie(type, movie);
+  }
+ 
+  
 
 }
