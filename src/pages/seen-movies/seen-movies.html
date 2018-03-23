@@ -1,0 +1,49 @@
+<!--
+  Generated template for the SeenMoviesPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>seen Movies</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-grid> 
+  <ion-row> 
+<ion-col col-sm-12 col-md-4 col-lg-3 > 
+  <ion-card *ngFor="let movie of movies">
+    <img src="{{movie.src}}"/>
+    <ion-card-content>
+      <ion-card-title>
+        {{movie.title}}
+      </ion-card-title>
+      <p>
+        {{movie.description}}
+      </p>
+    </ion-card-content>
+    <ion-row no-padding>
+      <ion-col>
+        <button ion-button clear small color="danger" icon-start>
+          <ion-icon name='star'></ion-icon>
+          Favorite
+        </button>
+      </ion-col>
+      <ion-col text-center>
+        <button ion-button clear small color="danger" icon-start>
+          <ion-icon name='musical-notes'></ion-icon>
+          Listen
+        </button>
+      </ion-col>
+      <ion-col text-right>
+        <button ion-button clear small color="danger" icon-start>
+          <ion-icon name='share-alt'></ion-icon>
+          Share
+        </button>
+      </ion-col>
+    </ion-row>
+</ion-card>
+</ion-col>
+</ion-row>
+</ion-grid>
