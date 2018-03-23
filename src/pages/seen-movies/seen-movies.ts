@@ -27,11 +27,19 @@ export class SeenMoviesPage {
 
   ionViewDidLoad() {
 
-    this.movieProvider.getMovies('seen').then((data) => {
-      console.log(data);
-      console.log("this is a log")
-      this.movies = data;
-    });
+    // this.movieProvider.getMovies('seen').then((data) => {
+    //   console.log(data);
+    //   console.log("this is a log")
+    //   this.movies = data;
+    // });
+
+   
+     this.movieProvider.getMoviesInTheater().then((data) => {
+        this.movies = data;
+
+     })
+      
+    
     
 
     }

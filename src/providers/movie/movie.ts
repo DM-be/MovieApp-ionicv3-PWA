@@ -2,6 +2,8 @@
 import { Injectable } from '@angular/core';
 
 import PouchDB from 'pouchdb';
+import moment from 'moment';
+import { Http, Headers } from '@angular/http';
 
 
 /*
@@ -18,11 +20,54 @@ export class MovieProvider {
   db: any;
   remote: any;
 
+  api_key = "4e60ba1292b6c1d4bbf05e0fe3542a92";
+  headers = new Headers();
+  file_size = "w200"
+  image_url = "https://image.tmdb.org/t/p/"
+  
+  constructor(public http: Http,) {
+      this.headers.append('Content-Type', 'application/json');
+    }
 
-  constructor() {
+  // api functions
+
+
+  getMoviesInTheater() {
     
-  }
+    // /discover/movie?primary_release_date.gte=2014-09-15&primary_release_date.lte=2014-10-22
+    // https://api.themoviedb.org/3/discover/movie?api_key=<<api_key>>&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1
+    
+    return new Promise(resolve => {
 
+    let now = moment().format('YYYY-MM-DD');
+    let aMonthAgo = moment().subtract(1, 'months').format('YYYY-MM-DD');
+    let url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&primary_release_date.gte=${aMonthAgo}&primary_release_date.lte=${now}`;
+
+    let moviesIntheaters = [];
+    let response;
+
+    this.http.get(
+      url,{headers: this.headers}).subscribe(res => {
+        
+        res.json().results.forEach(movie => {
+          moviesIntheaters.push(
+            {
+              "id": movie.id, "title": movie.title, "poster": this.image_url + this.file_size + movie.poster_path, "overview": movie.overview
+            }
+          )
+        });
+      }, err => console.log(err));
+
+      resolve(moviesIntheaters);
+  })
+}
+
+  
+
+
+
+
+  // DB functions
   init(details)  {
 
     this.db = new PouchDB('cloudo');
@@ -67,8 +112,6 @@ export class MovieProvider {
         result.rows.map((row) => {
           this.movies[type].push(row.doc);
         });
-
-        console.log(this.getMovies[type])
 
         resolve(this.movies[type]);
       }).catch((error) => {

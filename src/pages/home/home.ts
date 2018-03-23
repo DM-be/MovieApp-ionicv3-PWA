@@ -11,6 +11,7 @@ import { MovieProvider } from '../../providers/movie/movie';
 export class HomePage {
   foundMovies: any;
   firstLoaded: boolean = true;
+  
 
 
   constructor(

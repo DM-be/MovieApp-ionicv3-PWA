@@ -46,7 +46,7 @@ export class SignupPage {
  
       this.http.post('http://localhost:3000/auth/register', JSON.stringify(user), {headers: headers})
         .subscribe(res => {
-          this.todoService.init(res.json());
+         // this.todoService.init(res.json());
           this.navCtrl.setRoot(HomePage);
         }, (err) => {
           console.log(err);
