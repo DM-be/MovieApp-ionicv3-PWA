@@ -10,10 +10,11 @@
   </ion-navbar>
 </ion-header>
 
+<ion-content>
 <ion-grid> 
   <ion-row> 
-<ion-col col-sm-12 col-md-4 col-lg-3 > 
-  <ion-card *ngFor="let movie of movies">
+<ion-col *ngFor="let movie of movies" col-12 col-xl-2 col-lg-2 col-md-4 > 
+  <ion-card >
     <img src="{{movie.poster}}"/>
     <ion-card-content>
       <ion-card-title>
@@ -46,4 +47,4 @@
 </ion-card>
 </ion-col>
 </ion-row>
-</ion-grid>
+</ion-grid></ion-content>

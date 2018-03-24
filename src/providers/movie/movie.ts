@@ -34,9 +34,6 @@ export class MovieProvider {
 
   getMoviesInTheater() {
     
-    // /discover/movie?primary_release_date.gte=2014-09-15&primary_release_date.lte=2014-10-22
-    // https://api.themoviedb.org/3/discover/movie?api_key=<<api_key>>&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1
-    
     return new Promise(resolve => {
 
     let now = moment().format('YYYY-MM-DD');
