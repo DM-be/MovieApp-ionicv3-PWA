@@ -32,6 +32,73 @@ export class MovieProvider {
   // api functions
 
 
+  getMoviesByKeyWord() {
+    // get the keyword out of searchbar
+    let testKeyWord = "cat";
+    let keyWordIDS;
+    let keyWordURL = `https://api.themoviedb.org/3/search/keyword?api_key=${this.api_key}&query=${testKeyWord}`
+
+    // nog een promise reolsven bestaande uit 2x promises
+
+    
+
+    return new Promise(resolve => {
+      getKeyWords().then(data => {
+        resolve(getRelatedMovies(data));
+      })
+    })
+
+
+    function getKeyWords() {
+      return new Promise ( resolve => {
+      
+      this.http.get(
+      keyWordURL,{headers: this.headers}).subscribe(res => {
+        keyWordIDS = res.json().results.map(id => id.id) 
+        keyWordIDS = keyWordIDS.join();
+       }, err => console.log(err));
+    
+      resolve(keyWordIDS);
+      })
+
+    }
+
+    function getRelatedMovies(keywords) {
+
+      return new Promise ( resolve => {
+      let url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&with_keywords=${keywords}`;
+      let relatedMovies = [];
+      this.http.get(
+        url,{headers: this.headers}).subscribe(res => {
+          
+          res.json().results.forEach(movie => {
+            relatedMovies.push(
+              {
+                "id": movie.id, "title": movie.title, "poster": this.image_url + this.file_size + movie.poster_path, "overview": movie.overview
+              }
+            )
+          });
+        }, err => console.log(err));
+        resolve(relatedMovies);
+            
+    
+    })
+  }
+
+
+
+}
+
+    
+
+
+    
+      
+      
+
+
+  
+
   getMoviesInTheater() {
     
     return new Promise(resolve => {

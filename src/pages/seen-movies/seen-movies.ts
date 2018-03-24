@@ -34,10 +34,16 @@ export class SeenMoviesPage {
     // });
 
    
-     this.movieProvider.getMoviesInTheater().then((data) => {
-        this.movies = data;
+    //  this.movieProvider.getMoviesInTheater().then((data) => {
+    //     this.movies = data;
 
-     })
+    //  })
+
+    this.movieProvider.getMoviesByKeyWord().then((data) => {
+      this.movies = data;
+    })
+
+     
       
     
     
