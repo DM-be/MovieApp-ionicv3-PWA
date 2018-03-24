@@ -35,14 +35,14 @@ export class MovieProvider {
 
   getKeyWords() {
     return new Promise ( resolve => {
-    let testKeyWord ="cat";
+    let testKeyWord ="bear";
     let keyWordIDS = null;
     let keyWordURL =`https://api.themoviedb.org/3/search/keyword?api_key=${this.api_key}&query=${testKeyWord}`  
     
     this.http.get(
     keyWordURL,{headers: this.headers}).subscribe(res => {
       keyWordIDS = res.json().results.map(id => id.id) 
-      keyWordIDS = keyWordIDS.join('|');
+      keyWordIDS = keyWordIDS.slice(0, 1).join('|'); 
       resolve(keyWordIDS);
      }, err => console.log(err));
     
