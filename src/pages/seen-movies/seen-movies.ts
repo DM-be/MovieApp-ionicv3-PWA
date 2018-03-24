@@ -39,10 +39,24 @@ export class SeenMoviesPage {
 
     //  })
 
-    this.movieProvider.getMoviesByKeyWord().then((data) => {
-      this.movies = data;
-    })
+    // this.movieProvider.getKeyWords().then((keywords) => {
+    //   this.movieProvider.getRelatedMovies(keywords).then(
+    //     (data) => {
+    //       this.movies = data;
+    //       console.log(data)
+    //     }
+    //   )
+    // })
+    // this.movieProvider.getRelatedMovies('188|930').then((data) => {
+    //   this.movies = data;
+    // })
 
+    this.movieProvider.getKeyWords().then((keywords) => {
+      console.log(keywords)
+      this.movieProvider.getRelatedMovies(keywords).then((movies) => {
+        this.movies = movies;
+      })
+    })
      
       
     
