@@ -41,7 +41,7 @@ export class MovieProvider {
     
     this.http.get(
     keyWordURL,{headers: this.headers}).subscribe(res => {
-      keyWordIDS = res.json().results.map(id => id.id) 
+      keyWordIDS = res.json().results.map(id => id.id);
       keyWordIDS = keyWordIDS.slice(0, 1).join('|'); 
       resolve(keyWordIDS);
      }, err => console.log(err));

@@ -1,0 +1,45 @@
+<!--
+  Generated template for the DiscoverPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-toolbar fixed>
+    <ion-row align-items-center> 
+      <ion-col>
+        <ion-buttons text-center>test</ion-buttons>
+      </ion-col>
+      <ion-col>
+        <ion-searchbar [(ngModel)]="searchTerm" [formControl]="searchControl" ></ion-searchbar>
+      </ion-col>
+      <ion-col>
+        <ion-buttons >
+          <button ion-button color="secondary" >Log in</button>
+          <button ion-button color="secondary" >Sign up</button>
+        </ion-buttons>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content > 
+<ion-grid fixed>
+  <ion-row>
+    <ion-card ion-col *ngFor="let movie of movies" col-6 col-md-4 col-lg-3>
+        <img src="{{movie.poster}}" />
+        <ion-card-content>
+          <ion-card-title>
+            {{movie.title}}
+          </ion-card-title>
+          <p>
+            {{movie.description}}
+          </p>
+        </ion-card-content>
+       
+      </ion-card>
+    
+  </ion-row>
+</ion-grid>
+
+</ion-content>

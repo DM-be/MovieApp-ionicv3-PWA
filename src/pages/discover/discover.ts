@@ -8,18 +8,13 @@ import { SuperTabs } from 'ionic2-super-tabs';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 
-/**
- * Generated class for the SeenMoviesPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+
 
 @Component({
-  selector: 'page-seen-movies',
-  templateUrl: 'seen-movies.html',
+  selector: 'page-discover',
+  templateUrl: 'discover.html',
 })
-export class SeenMoviesPage {
+export class DiscoverPage {
 
   @ViewChild(Content) content: Content;
 
@@ -51,9 +46,7 @@ export class SeenMoviesPage {
   ionViewDidLoad() {
 
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
- 
-      this.setMoviesByKeyWords(this.searchTerm); 
-      
+       this.setMoviesByKeyWords(this.searchTerm); 
       
 
   });
@@ -74,44 +67,4 @@ export class SeenMoviesPage {
       })
     }
 
-
-    
-
-    
-    
-    
-
-    // this.movieProvider.getMovies('seen').then((data) => {
-    //   console.log(data);
-    //   console.log("this is a log")
-    //   this.movies = data;
-    // });
-
-   
-    //  this.movieProvider.getMoviesInTheater().then((data) => {
-    //     this.movies = data;
-
-    //  })
-
-    // this.movieProvider.getKeyWords().then((keywords) => {
-    //   this.movieProvider.getRelatedMovies(keywords).then(
-    //     (data) => {
-    //       this.movies = data;
-    //       console.log(data)
-    //     }
-    //   )
-    // })
-    // this.movieProvider.getRelatedMovies('188|930').then((data) => {
-    //   this.movies = data;
-    // })
-
-    
-     
-      
-    
-    
-
-    }
-
-   
-
+}
