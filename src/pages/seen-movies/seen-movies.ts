@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild  } from '@angular/core';
 import {  NavController, NavParams } from 'ionic-angular';
 import { MovieProvider } from '../../providers/movie/movie';
 import { Platform } from 'ionic-angular/platform/platform';
 import { HomePage } from '../home/home';
+import { Content } from 'ionic-angular';
+import { SuperTabs } from 'ionic2-super-tabs';
 
 /**
  * Generated class for the SeenMoviesPage page.
@@ -17,7 +19,7 @@ import { HomePage } from '../home/home';
 })
 export class SeenMoviesPage {
 
-  
+  @ViewChild(Content) content: Content;
 
   movies: any;
 
@@ -25,13 +27,11 @@ export class SeenMoviesPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public movieProvider: MovieProvider,
-    public platform: Platform) {
-      this.movieProvider.getKeyWords().then((keywords) => {
-        console.log(keywords)
-        this.movieProvider.getRelatedMovies(keywords).then((movies) => {
-          this.movies = movies;
-        })
-      })
+    public platform: Platform,
+    ) {
+
+      
+      
       
       
   }
@@ -40,6 +40,28 @@ export class SeenMoviesPage {
 
 
   ionViewDidLoad() {
+    this.movieProvider.getKeyWords().then((keywords) => {
+      console.log(keywords)
+      this.movieProvider.getRelatedMovies(keywords).then((movies) => {
+        this.movies = movies;
+      //  console.log(this.content.scrollHeight)
+      console.log(this.movies)
+        
+        
+        
+      })
+    })
+
+    
+    
+     
+    }
+
+    
+
+    
+    
+    
 
     // this.movieProvider.getMovies('seen').then((data) => {
     //   console.log(data);
@@ -73,4 +95,5 @@ export class SeenMoviesPage {
 
     }
 
-}
+   
+

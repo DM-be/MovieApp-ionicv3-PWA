@@ -6,11 +6,10 @@
 -->
 
 
-<ion-content overflow-scroll="true" scroll="true">
+ <ion-content > 
   <ion-grid fixed>
     <ion-row>
-      <ion-col *ngFor="let movie of movies" col-12 col-xl-2 col-lg-2 col-md-4>
-        <ion-card>
+      <ion-card ion-col *ngFor="let movie of movies" col-6 col-md-4 col-lg-3>
           <img src="{{movie.poster}}" />
           <ion-card-content>
             <ion-card-title>
@@ -20,29 +19,10 @@
               {{movie.description}}
             </p>
           </ion-card-content>
-          <ion-row no-padding>
-            <ion-col>
-              <button ion-button clear small color="danger" icon-start>
-                <ion-icon name='star'></ion-icon>
-                Favorite
-              </button>
-            </ion-col>
-            <ion-col text-center>
-              <button ion-button clear small color="danger" icon-start>
-                <ion-icon name='musical-notes'></ion-icon>
-                Listen
-              </button>
-            </ion-col>
-            <ion-col text-right>
-              <button ion-button clear small color="danger" icon-start>
-                <ion-icon name='share-alt'></ion-icon>
-                Share
-              </button>
-            </ion-col>
-          </ion-row>
+         
         </ion-card>
-      </ion-col>
+      
     </ion-row>
-
   </ion-grid>
+
 </ion-content>

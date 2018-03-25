@@ -15,6 +15,7 @@ import { MovieProvider } from '../providers/movie/movie';
 import { SeenMoviesPage } from '../pages/seen-movies/seen-movies';
 import { TabsPage } from '../pages/tabs/tabs';
 import { SuperTabsModule } from 'ionic2-super-tabs';
+import { Content } from 'ionic-angular/components/content/content';
 
 
 
@@ -47,6 +48,7 @@ import { SuperTabsModule } from 'ionic2-super-tabs';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     MovieProvider, 
+    
 
   ]
 })

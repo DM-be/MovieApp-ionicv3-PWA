@@ -30,14 +30,6 @@ ion-header .toolbar {
       padding-left: calc((100% - #{map-get($grid-max-widths, lg)}) / 2);
     }
    }
-
-   ion-tab {
-    transform: translateY(-200%);
-  }
   
-  ion-tab.show-tab {
-    transform: translateY(0);
-  }
-
 
    

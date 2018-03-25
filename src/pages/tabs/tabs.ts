@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular/platform/platform';
 import { SeenMoviesPage } from '../seen-movies/seen-movies';
+import { SuperTabs } from 'ionic2-super-tabs';
 
 
 /**
@@ -17,7 +18,7 @@ import { SeenMoviesPage } from '../seen-movies/seen-movies';
   templateUrl: 'tabs.html',
 })
 export class TabsPage {
-
+  
   tabsPlacement: string;
   tabsLayout: string;
 
@@ -27,6 +28,7 @@ export class TabsPage {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform) {
+   
     
 
     if (!this.platform.is('mobile')) {
@@ -36,6 +38,7 @@ export class TabsPage {
   }
 
   ionViewDidLoad() {
+    
     
   }
 
