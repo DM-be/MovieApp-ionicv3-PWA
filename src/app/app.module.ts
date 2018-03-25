@@ -13,6 +13,7 @@ import { SignupPage } from '../pages/signup/signup';
 
 import { MovieProvider } from '../providers/movie/movie';
 import { SeenMoviesPage } from '../pages/seen-movies/seen-movies';
+import { TabsPage } from '../pages/tabs/tabs';
 
 
 
@@ -23,7 +24,8 @@ import { SeenMoviesPage } from '../pages/seen-movies/seen-movies';
     HomePage,
     LoginPage,
     SignupPage,
-    SeenMoviesPage
+    SeenMoviesPage,
+    TabsPage
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import { SeenMoviesPage } from '../pages/seen-movies/seen-movies';
     HomePage,
     LoginPage,
     SignupPage,
-    SeenMoviesPage
+    SeenMoviesPage,
+    TabsPage
   ],
   providers: [
     StatusBar,

@@ -8,6 +8,7 @@ import { Loading } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular/components/loading/loading-controller';
 import { MovieProvider } from '../../providers/movie/movie';
 import { SeenMoviesPage } from '../seen-movies/seen-movies';
+import { TabsPage } from '../tabs/tabs';
 
 /**
  * Generated class for the LoginPage page.
@@ -16,7 +17,7 @@ import { SeenMoviesPage } from '../seen-movies/seen-movies';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
@@ -71,7 +72,7 @@ export class LoginPage {
         this.movieProvider.init(res.json());
         
         loader.dismiss();
-        this.navCtrl.setRoot(SeenMoviesPage);
+        this.navCtrl.setRoot(TabsPage);
 
       }, err => console.log(err));
 

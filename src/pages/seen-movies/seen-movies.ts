@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {  NavController, NavParams } from 'ionic-angular';
 import { MovieProvider } from '../../providers/movie/movie';
+import { Platform } from 'ionic-angular/platform/platform';
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the SeenMoviesPage page.
@@ -9,21 +11,33 @@ import { MovieProvider } from '../../providers/movie/movie';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-seen-movies',
   templateUrl: 'seen-movies.html',
 })
 export class SeenMoviesPage {
 
+  
+
   movies: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public movieProvider: MovieProvider) {
-    
+    public movieProvider: MovieProvider,
+    public platform: Platform) {
+      this.movieProvider.getKeyWords().then((keywords) => {
+        console.log(keywords)
+        this.movieProvider.getRelatedMovies(keywords).then((movies) => {
+          this.movies = movies;
+        })
+      })
+      
+      
   }
+
+
+
 
   ionViewDidLoad() {
 
@@ -51,12 +65,7 @@ export class SeenMoviesPage {
     //   this.movies = data;
     // })
 
-    this.movieProvider.getKeyWords().then((keywords) => {
-      console.log(keywords)
-      this.movieProvider.getRelatedMovies(keywords).then((movies) => {
-        this.movies = movies;
-      })
-    })
+    
      
       
     
