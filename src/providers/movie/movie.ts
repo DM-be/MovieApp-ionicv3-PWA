@@ -33,9 +33,9 @@ export class MovieProvider {
 
 
 
-  getKeyWords() {
+  getKeyWords(keyword) {
     return new Promise ( resolve => {
-    let testKeyWord ="bear";
+    let testKeyWord = keyword;
     let keyWordIDS = null;
     let keyWordURL =`https://api.themoviedb.org/3/search/keyword?api_key=${this.api_key}&query=${testKeyWord}`  
     
