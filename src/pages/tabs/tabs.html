@@ -5,7 +5,9 @@
   Ionic pages and navigation.
 -->
 
-<ion-tabs [tabsPlacement]="tabsPlacement" [tabsLayout]="tabsLayout">
-  <ion-tab [root]="seenMovies" tabTitle="Chat" ></ion-tab>
-    
- <ion-tabs>
+
+    <super-tabs [tabsPlacement]="tabsPlacement">
+        <super-tab [root]="page1" title="First page"></super-tab>
+        <super-tab [root]="page2" title="Second page"></super-tab>
+        <super-tab [root]="page3" title="Third page"></super-tab>
+      </super-tabs>

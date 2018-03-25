@@ -21,7 +21,9 @@ export class TabsPage {
   tabsPlacement: string;
   tabsLayout: string;
 
-   seenMovies = SeenMoviesPage;
+  page1: any = SeenMoviesPage;
+  page2: any = SeenMoviesPage;
+  page3: any = SeenMoviesPage;
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform) {

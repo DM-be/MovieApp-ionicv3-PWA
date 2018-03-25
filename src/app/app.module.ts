@@ -14,7 +14,7 @@ import { SignupPage } from '../pages/signup/signup';
 import { MovieProvider } from '../providers/movie/movie';
 import { SeenMoviesPage } from '../pages/seen-movies/seen-movies';
 import { TabsPage } from '../pages/tabs/tabs';
-
+import { SuperTabsModule } from 'ionic2-super-tabs';
 
 
 
@@ -31,6 +31,7 @@ import { TabsPage } from '../pages/tabs/tabs';
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp),
+    SuperTabsModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
