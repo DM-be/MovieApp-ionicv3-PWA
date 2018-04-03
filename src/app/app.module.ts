@@ -17,6 +17,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { SuperTabsModule } from 'ionic2-super-tabs';
 import { Content } from 'ionic-angular/components/content/content';
 import { DiscoverPage } from '../pages/discover/discover';
+import { MovieDetailPage } from '../pages/movie-detail/movie-detail';
 
 
 
@@ -28,7 +29,8 @@ import { DiscoverPage } from '../pages/discover/discover';
     SignupPage,
     SeenMoviesPage,
     TabsPage,
-    DiscoverPage
+    DiscoverPage,
+    MovieDetailPage
   ],
   imports: [
     BrowserModule,
@@ -44,7 +46,8 @@ import { DiscoverPage } from '../pages/discover/discover';
     SignupPage,
     SeenMoviesPage,
     TabsPage,
-    DiscoverPage
+    DiscoverPage,
+    MovieDetailPage
   ],
   providers: [
     StatusBar,
