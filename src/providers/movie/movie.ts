@@ -129,7 +129,14 @@ export class MovieProvider {
 
   addMovie(type: string, movie: any)
   {
-    
+    this.db.put({
+      _id: type + movie.title,
+      title: movie.title
+    }).then(function (response) {
+      console.log("succes!")
+    }).catch(function (err) {
+      console.log(err);
+    });
     
   }
 

@@ -18,6 +18,7 @@ import { SuperTabsModule } from 'ionic2-super-tabs';
 import { Content } from 'ionic-angular/components/content/content';
 import { DiscoverPage } from '../pages/discover/discover';
 import { MovieDetailPage } from '../pages/movie-detail/movie-detail';
+import { ImagePreload } from '../directives/imgpreload/imgpreload';
 
 
 
@@ -30,7 +31,9 @@ import { MovieDetailPage } from '../pages/movie-detail/movie-detail';
     SeenMoviesPage,
     TabsPage,
     DiscoverPage,
-    MovieDetailPage
+    MovieDetailPage,
+    ImagePreload  
+    
   ],
   imports: [
     BrowserModule,

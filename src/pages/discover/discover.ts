@@ -26,6 +26,7 @@ export class DiscoverPage {
 
   movies: any;
 
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -66,27 +67,37 @@ export class DiscoverPage {
 
     async setMoviesByKeyWords_async(keyword)
     {
+
+      try {
+        let loading = this.loadingCtrl.create({
+          cssClass: 'transparent'
+
+      });
+      loading.present();
       const keywords = await this.movieProvider.getKeyWords(keyword);
       const movies = await this.movieProvider.getRelatedMovies(keywords)
-
       this.movies = movies;
+      loading.dismiss();
+      }
+      catch(err) {
+        console.log("error in setting the movies by keyword : " + err);
+      }
+
+      
     }
 
 
 
     setMoviesByKeyWords(keyword)
     {
-      let loading = this.loadingCtrl.create({
-        content:`please wait while im loading`
-      });
+      
     
-      loading.present();
 
       this.movieProvider.getKeyWords(keyword).then((keywords) => {
         console.log(keywords)
         this.movieProvider.getRelatedMovies(keywords).then((movies) => {
           this.movies = movies;
-          loading.dismiss();
+          
         //  console.log(this.content.scrollHeight)
         console.log(this.movies)
           
