@@ -35,44 +35,23 @@ export class SeenMoviesPage {
     public platform: Platform,
     ) {
 
-      this.searchControl = new FormControl();
-    
-      let genres = [
-        'horror',
-        'drama'
-      ]
-
-      
+     
       
       
   }
 
 
   ionViewDidLoad() {
+    this.movieProvider.getMovies("seen").then(data => console.log(data))
 
-    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
  
-      this.setMoviesByKeyWords(this.searchTerm); 
       
       
 
-  });
-    }
+  }
+  
 
-    setMoviesByKeyWords(keyword)
-    {
-
-      this.movieProvider.getKeyWords(keyword).then((keywords) => {
-        console.log(keywords)
-        this.movieProvider.getRelatedMovies(keywords).then((movies) => {
-          this.movies = movies;
-        //  console.log(this.content.scrollHeight)
-        console.log(this.movies)
-          
-
-        })
-      })
-    }
+    
 
 
     
