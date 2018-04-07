@@ -42,7 +42,7 @@ export class SeenMoviesPage {
 
 
   ionViewDidLoad() {
-    this.movieProvider.getMovies("seen").then(data => console.log(data))
+    this.movieProvider.getMovies("seen").then(data => this.movies = data)
 
  
       

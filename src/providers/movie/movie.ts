@@ -202,23 +202,51 @@ export class MovieProvider {
 
       }).then((result) => {
 
+       
+        var rowDocTitle = null;
+        var posterURL = null;
 
+        var movie = null ;
 
         this.movies[type] = [];
-        result.rows.map((row) => {
-          this.movies[type].push(row.doc);
-        });
+        result.rows.forEach(row => {
 
-        resolve(this.movies[type]);
+         rowDocTitle = row.doc.title;
+         console.log(row)
+          
+          //let blobData = row.doc._attachments[row.doc.title + '.png'].data
+          
+
+          this.db.getAttachment(type +row.doc.title, row.doc.title + '.png' ).then( (blob) => {
+
+            //var url = URL.createObjectURL(blob);
+
+            blobUtil.blobToDataURL(blob).then( (dataURL) => {
+              //console.log(dataURL)
+              posterURL = dataURL
+              movie = {title: rowDocTitle, poster: posterURL}
+              //console.log(movie)
+              this.movies[type].push(movie);
+              
+              resolve(this.movies[type]);
+            }).catch(function (err) {
+              // error
+            });
+
+
+           
+
+            
+          })
+
+
+        })
+        
       }).catch((error) => {
         console.log(error);
-      });
+      })
 
-    });
-
-
-
-
-
-  }
+  })
 }
+}
+
