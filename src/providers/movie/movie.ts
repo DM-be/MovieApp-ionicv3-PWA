@@ -186,67 +186,25 @@ export class MovieProvider {
   }
 
 
-  getMovies(type: string) {
 
-    if (this.movies[type]) {
-      return Promise.resolve(this.movies[type]);
-    }
-    return new Promise(resolve => {
+  async getMovies_async(type: string)
+  {
+    this.movies[type] = [];
+    let result = await this.db.allDocs({
+      include_docs: true,
+      startkey: type,
+      endkey: type + '\ufff0',
+      attachments: true
+    })
+    console.log(result)
+    result.rows.forEach(async movieRow => {
+      let blob = await this.db.getAttachment(type + movieRow.doc.title, movieRow.doc.title + '.png' )
+      let posterURL = await blobUtil.blobToDataURL(blob)
+      let movie = {title: movieRow.doc.title, poster: posterURL}
+      this.movies[type].push(movie)
+    })
+    return this.movies[type];
+  }
 
-      this.db.allDocs({
-
-        include_docs: true,
-        startkey: type,
-        endkey: type + '\ufff0',
-        attachments: true
-
-      }).then((result) => {
-
-       
-        var rowDocTitle = null;
-        var posterURL = null;
-
-        var movie = null ;
-
-        this.movies[type] = [];
-        result.rows.forEach(row => {
-
-         rowDocTitle = row.doc.title;
-         console.log(row)
-          
-          //let blobData = row.doc._attachments[row.doc.title + '.png'].data
-          
-
-          this.db.getAttachment(type +row.doc.title, row.doc.title + '.png' ).then( (blob) => {
-
-            //var url = URL.createObjectURL(blob);
-
-            blobUtil.blobToDataURL(blob).then( (dataURL) => {
-              //console.log(dataURL)
-              posterURL = dataURL
-              movie = {title: rowDocTitle, poster: posterURL}
-              //console.log(movie)
-              this.movies[type].push(movie);
-              
-              resolve(this.movies[type]);
-            }).catch(function (err) {
-              // error
-            });
-
-
-           
-
-            
-          })
-
-
-        })
-        
-      }).catch((error) => {
-        console.log(error);
-      })
-
-  })
-}
 }
 

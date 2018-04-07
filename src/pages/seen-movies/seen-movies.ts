@@ -42,12 +42,18 @@ export class SeenMoviesPage {
 
 
   ionViewDidLoad() {
-    this.movieProvider.getMovies("seen").then(data => this.movies = data)
+    //this.movieProvider.getMovies("seen").then(data => this.movies = data)
 
+    this.setup();
+    
  
       
       
 
+  }
+
+  async setup() {
+    this.movies = await this.movieProvider.getMovies_async("seen");
   }
   
 
