@@ -24,9 +24,9 @@ export class MovieDetailPage {
     let movie = this.navParams.get("movie")
     console.log(movie)
     this.movieProvider.addMovie("seen", movie)
-    this.movieProvider.getMovies("seen").then(
-      data => console.log(data)
-    )
+   // this.movieProvider.getMovies("seen").then(
+  //    data => console.log(data)
+   // )
     
   }
 

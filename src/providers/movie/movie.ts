@@ -139,53 +139,16 @@ export class MovieProvider {
     });
   }
 
-  addMovie(type: string, movie: any) {
+  async addMovie(type: string, movie: any) {
 
-
-    
-    this.db.put({
+    await this.db.put({
       _id: type + movie.title,
       title: movie.title
-    }).then(function (response) {
-      console.log("succes!")
-    }).catch(function (err) {
-      console.log(err);
-    });
-
-    blobUtil.imgSrcToBlob(movie.poster, 'image/jpeg',
-    'Anonymous', 1.0).then(blob => {
-
-
-    // success
-
-    this.putIntoDB(blob, movie, type);
-
-
-  }).catch(function (err) {
-    console.log(err)
-  })
-   
-  }
-
-  putIntoDB(blob, movie, type)
-  {
-
-    
-
-    this.db.get(type + movie.title).then(doc => {
-       this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png').then(function () {
-      console.log("succes???")
-    }).then(function (doc) {
-      console.log(doc);
-    });
     })
-    //db.putAttachment(docId, attachmentId, [rev], attachment, type, [callback]);
-
-
-   
+    let blob = await blobUtil.imgSrcToBlob(movie.poster, 'image/jpeg','Anonymous', 1.0)
+    let doc = await this.db.get(type + movie.title);
+    await this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
   }
-
-
 
   async getMovies_async(type: string)
   {
@@ -196,7 +159,7 @@ export class MovieProvider {
       endkey: type + '\ufff0',
       attachments: true
     })
-    console.log(result)
+    
     result.rows.forEach(async movieRow => {
       let blob = await this.db.getAttachment(type + movieRow.doc.title, movieRow.doc.title + '.png' )
       let posterURL = await blobUtil.blobToDataURL(blob)
