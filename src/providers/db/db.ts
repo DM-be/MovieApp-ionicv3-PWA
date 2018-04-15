@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
 import pouchdbfind from 'pouchdb-find';
+import blobUtil from 'blob-util';
 
 /*
   Generated class for the DbProvider provider.
@@ -18,6 +19,7 @@ export class DbProvider {
   private sharedRemote: string;
   private remote: string;
   private user: string;
+  private movies = {};
 
   constructor() {
     this.options = {
@@ -108,6 +110,38 @@ export class DbProvider {
       
     }
     catch(err) { console.log(err)}
+  }
+
+
+  async addMovie(type: string, movie: any) {
+
+    await this.db.put({
+      _id: type + movie.title,
+      title: movie.title
+    })
+    let blob = await blobUtil.imgSrcToBlob(movie.poster, 'image/jpeg','Anonymous', 1.0)
+    let doc = await this.db.get(type + movie.title);
+    await this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
+  }
+
+
+  async getMovies_async(type: string)
+  {
+    this.movies[type] = [];
+    let result = await this.db.allDocs({
+      include_docs: true,
+      startkey: type,
+      endkey: type + '\ufff0',
+      attachments: true
+    })
+    
+    result.rows.forEach(async movieRow => {
+      let blob = await this.db.getAttachment(type + movieRow.doc.title, movieRow.doc.title + '.png' )
+      let posterURL = await blobUtil.blobToDataURL(blob)
+      let movie = {title: movieRow.doc.title, poster: posterURL}
+      this.movies[type].push(movie)
+    })
+    return this.movies[type];
   }
 
   }

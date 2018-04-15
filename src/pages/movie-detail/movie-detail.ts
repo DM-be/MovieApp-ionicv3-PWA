@@ -74,4 +74,12 @@ export class MovieDetailPage {
     alert.present();
   }
 
+  addToWatch() {
+    this.dbProvider.addMovie("watch", this.movie);
+  }
+
+  addToSeen() {
+    this.dbProvider.addMovie("seen", this.movie);
+  }
+
 }

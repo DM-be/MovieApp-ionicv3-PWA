@@ -7,6 +7,7 @@ import { Content } from 'ionic-angular';
 import { SuperTabs } from 'ionic2-super-tabs';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
+import { DbProvider } from '../../providers/db/db';
 
 /**
  * Generated class for the SeenMoviesPage page.
@@ -33,6 +34,7 @@ export class SeenMoviesPage {
     public navParams: NavParams,
     public movieProvider: MovieProvider,
     public platform: Platform,
+    public dbProvider: DbProvider
     ) {
 
 
@@ -43,15 +45,10 @@ export class SeenMoviesPage {
     //this.movieProvider.getMovies("seen").then(data => this.movies = data)
 
     this.setup();
-    
- 
-      
-      
 
   }
-
   async setup() {
-    this.movies = await this.movieProvider.getMovies_async("seen");
+    this.movies = await this.dbProvider.getMovies_async("seen")
   }
   
 

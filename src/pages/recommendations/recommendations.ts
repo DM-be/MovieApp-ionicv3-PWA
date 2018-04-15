@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DbProvider } from '../../providers/db/db';
+import { MovieDetailPage } from '../movie-detail/movie-detail';
 
 /**
  * Generated class for the RecommendationsPage page.
@@ -17,7 +18,7 @@ import { DbProvider } from '../../providers/db/db';
 export class RecommendationsPage {
 
   recommendations = [];
-
+  movieDetailPage = MovieDetailPage;
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider) {
     this.setup();
   }
@@ -28,7 +29,13 @@ export class RecommendationsPage {
 
   async setup() {
     let user = this.dbProvider.getUser();
-    this.recommendations = await this.dbProvider.getRecommendations("dennistest");
+    this.recommendations = await this.dbProvider.getRecommendations(user);
+  }
+
+  openMovieDetail(i) {
+    let movie = this.recommendations[i];
+      this.navCtrl.push(this.movieDetailPage, {movie: movie}
+      );
   }
 
 
