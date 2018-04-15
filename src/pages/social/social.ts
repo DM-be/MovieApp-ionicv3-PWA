@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { SocialProvider } from '../../providers/social/social';
+import { AddFriendPage } from '../add-friend/add-friend';
 
 /**
  * Generated class for the SocialPage page.
@@ -17,10 +18,11 @@ import { SocialProvider } from '../../providers/social/social';
 export class SocialPage {
 
   friends: any;
+  private allUsers: any;
 
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public socialProvider: SocialProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public socialProvider: SocialProvider, public modalCtrl: ModalController) {
   }
 
   ionViewDidLoad() {
@@ -32,4 +34,12 @@ export class SocialPage {
     this.friends = await this.socialProvider.getFriends();
   }
 
+  addFriendAction(){
+    let modal = this.modalCtrl.create(AddFriendPage);
+    modal.onDidDismiss(data => {
+      this.setup();
+    })
+    modal.present();
+
+  }
 }

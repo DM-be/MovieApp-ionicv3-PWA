@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { DbProvider } from '../db/db';
+import {AutoCompleteService} from 'ionic2-auto-complete';
 
 /*
   Generated class for the SocialProvider provider.
@@ -9,9 +10,11 @@ import { DbProvider } from '../db/db';
   and Angular DI.
 */
 @Injectable()
-export class SocialProvider {
+export class SocialProvider implements AutoCompleteService {
 
   private friends = [];
+  private allUsers;
+  labelAttribute = "username";
 
 
 
@@ -19,11 +22,26 @@ export class SocialProvider {
     this.getFriends();
   }
 
+  getAllUsers() {
+    return [{"username": "dennis", "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png"},{"username": "rianne", "avatar": "bla"} ]
+  }
+
   
 
   async getFriends() {
     this.friends = await this.dbProvider.getFriends(this.dbProvider.getUser());
     return this.friends;
+  }
+
+  async getResults(keyword:string) {
+    
+    return this.allUsers
+      .map(
+        result =>
+        {
+          return result
+            .filter(item => item.username.toLowerCase().startsWith(keyword.toLowerCase()) )
+        });
   }
 
 }

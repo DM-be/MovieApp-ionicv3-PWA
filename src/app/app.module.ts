@@ -1,3 +1,9 @@
+import { AutoCompleteModule } from 'ionic2-auto-complete';
+import { Ng2CompleterModule } from "ng2-completer";
+import { FormsModule } from "@angular/forms";
+
+
+
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -22,6 +28,8 @@ import { ImagePreload } from '../directives/imgpreload/imgpreload';
 import { SocialPage } from '../pages/social/social';
 import { SocialProvider } from '../providers/social/social';
 import { DbProvider } from '../providers/db/db';
+import { AddFriendPage } from '../pages/add-friend/add-friend';
+
 
 
 
@@ -36,12 +44,16 @@ import { DbProvider } from '../providers/db/db';
     DiscoverPage,
     MovieDetailPage,
     ImagePreload,
-    SocialPage
+    SocialPage,
+    AddFriendPage
     
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    AutoCompleteModule,
+    Ng2CompleterModule,
+    FormsModule,
     IonicModule.forRoot(MyApp),
     SuperTabsModule.forRoot()
   ],
@@ -55,7 +67,8 @@ import { DbProvider } from '../providers/db/db';
     TabsPage,
     DiscoverPage,
     MovieDetailPage,
-    SocialPage
+    SocialPage,
+    AddFriendPage
   ],
   providers: [
     StatusBar,
