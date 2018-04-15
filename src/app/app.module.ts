@@ -19,6 +19,9 @@ import { Content } from 'ionic-angular/components/content/content';
 import { DiscoverPage } from '../pages/discover/discover';
 import { MovieDetailPage } from '../pages/movie-detail/movie-detail';
 import { ImagePreload } from '../directives/imgpreload/imgpreload';
+import { SocialPage } from '../pages/social/social';
+import { SocialProvider } from '../providers/social/social';
+import { DbProvider } from '../providers/db/db';
 
 
 
@@ -32,7 +35,8 @@ import { ImagePreload } from '../directives/imgpreload/imgpreload';
     TabsPage,
     DiscoverPage,
     MovieDetailPage,
-    ImagePreload  
+    ImagePreload,
+    SocialPage
     
   ],
   imports: [
@@ -50,13 +54,16 @@ import { ImagePreload } from '../directives/imgpreload/imgpreload';
     SeenMoviesPage,
     TabsPage,
     DiscoverPage,
-    MovieDetailPage
+    MovieDetailPage,
+    SocialPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    MovieProvider, 
+    MovieProvider,
+    SocialProvider,
+    DbProvider, 
     
 
   ]

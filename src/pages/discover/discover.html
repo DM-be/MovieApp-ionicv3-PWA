@@ -6,17 +6,17 @@
 -->
 <ion-header>
   <ion-toolbar fixed>
-    <ion-row align-items-center> 
-      <ion-col>
-        <ion-buttons text-center>test</ion-buttons>
+    <ion-row > 
+      <ion-col col-3>
+        <ion-buttons text-center >MovieTracker</ion-buttons>
       </ion-col>
-      <ion-col>
+      <ion-col col-6 >
         <ion-searchbar [(ngModel)]="searchTerm" [formControl]="searchControl" ></ion-searchbar>
       </ion-col>
-      <ion-col>
-        <ion-buttons >
-          <button ion-button color="secondary" >Log in</button>
-          <button ion-button color="secondary" >Sign up</button>
+      <ion-col col-3>
+        <ion-buttons  >
+          <button ion-button color="favorite" clear="false">Log in</button>
+          <button ion-button color="favorite">Sign up</button>
         </ion-buttons>
       </ion-col>
     </ion-row>

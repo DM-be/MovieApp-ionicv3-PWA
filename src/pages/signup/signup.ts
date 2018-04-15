@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Http, Headers } from '@angular/http';
 
 import { HomePage } from '../home/home';
+import { DbProvider } from '../../providers/db/db';
+import { TabsPage } from '../tabs/tabs';
 
 
 
@@ -29,7 +31,8 @@ export class SignupPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public http: Http) {
+    public http: Http,
+    public dbProvider: DbProvider) {
   }
 
   register() {
@@ -47,7 +50,13 @@ export class SignupPage {
       this.http.post('http://localhost:3000/auth/register', JSON.stringify(user), {headers: headers})
         .subscribe(res => {
          // this.todoService.init(res.json());
-          this.navCtrl.setRoot(HomePage);
+
+          this.navCtrl.setRoot(TabsPage);
+          this.dbProvider.init(res.json())
+          console.log(res.json())
+          this.dbProvider.register(user);
+          this.dbProvider.addFriend("testfriend")
+          
         }, (err) => {
           console.log(err);
         });

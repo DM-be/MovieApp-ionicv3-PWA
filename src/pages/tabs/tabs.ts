@@ -4,6 +4,7 @@ import { Platform } from 'ionic-angular/platform/platform';
 import { SeenMoviesPage } from '../seen-movies/seen-movies';
 import { SuperTabs } from 'ionic2-super-tabs';
 import { DiscoverPage } from '../discover/discover';
+import { SocialPage } from '../social/social';
 
 
 /**
@@ -26,6 +27,7 @@ export class TabsPage {
   discover: any = DiscoverPage;
   seen: any = SeenMoviesPage;
   page1: any = SeenMoviesPage;
+  social: any = SocialPage;
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform) {

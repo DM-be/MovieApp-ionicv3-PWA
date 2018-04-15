@@ -59,7 +59,6 @@ export class DiscoverPage {
 
     openMovieDetail(i) {
       let movie = this.movies[i];
-
       this.navCtrl.push(this.movieDetailPage, {movie: movie}
       );
     }
@@ -67,12 +66,8 @@ export class DiscoverPage {
 
     async setMoviesByKeyWords_async(keyword)
     {
-
       try {
-        let loading = this.loadingCtrl.create({
-          cssClass: 'transparent'
-
-      });
+        let loading = this.loadingCtrl.create({cssClass: 'transparent'});
       loading.present();
       const keywords = await this.movieProvider.getKeyWords(keyword);
       const movies = await this.movieProvider.getRelatedMovies(keywords)
@@ -84,26 +79,6 @@ export class DiscoverPage {
       }
 
       
-    }
-
-
-
-    setMoviesByKeyWords(keyword)
-    {
-      
-    
-
-      this.movieProvider.getKeyWords(keyword).then((keywords) => {
-        console.log(keywords)
-        this.movieProvider.getRelatedMovies(keywords).then((movies) => {
-          this.movies = movies;
-          
-        //  console.log(this.content.scrollHeight)
-        console.log(this.movies)
-          
-
-        })
-      })
     }
 
 }

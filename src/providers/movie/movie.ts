@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 
 import PouchDB from 'pouchdb';
+import pouchdbfind from 'pouchdb-find';
 import moment from 'moment';
 import {
   Http,
@@ -19,10 +20,15 @@ import blobUtil from 'blob-util';
 @Injectable()
 export class MovieProvider {
 
+  
+
+
 
   movies = {};
+  sdb: any; // shared db with userlists 
   db: any;
   remote: any;
+  user: string;
 
   api_key = "4e60ba1292b6c1d4bbf05e0fe3542a92";
   headers = new Headers();
@@ -31,6 +37,8 @@ export class MovieProvider {
 
   constructor(public http: Http, ) {
     this.headers.append('Content-Type', 'application/json');
+    PouchDB.plugin(pouchdbfind);
+
   }
 
   // api functions
@@ -121,15 +129,33 @@ export class MovieProvider {
 
   // DB functions
   init(details) {
-
     this.db = new PouchDB('cloudo');
     this.remote = details.userDBs.supertest;
+    this.user = details.user_id;
+    console.log(details)
     let options = {
       live: true,
       retry: true,
       continuous: true
     };
     this.db.sync(this.remote, options);
+
+
+    this.sdb = new PouchDB('shared');
+    let sharedRemote = "http://localhost:5984/shared";
+    this.sdb.sync(sharedRemote, options)
+    // to do sync etc
+    setTimeout(() => {
+       this.showAllListsBySubscribers();
+    }, 1000);
+   
+  }
+
+  showAllListsBySubscribers() {
+
+    this.sdb.find(
+      { selector: {subscribers: { $elemMatch: {$eq: "riannetest"}}}}
+   ).then(data => console.log(data))
   }
 
   logout() {
@@ -137,6 +163,8 @@ export class MovieProvider {
     this.db.destroy().then(() => {
       console.log("db removed")
     });
+
+    this.sdb.destroy();
   }
 
   async addMovie(type: string, movie: any) {
@@ -149,6 +177,7 @@ export class MovieProvider {
     let doc = await this.db.get(type + movie.title);
     await this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
   }
+
 
   async getMovies_async(type: string)
   {

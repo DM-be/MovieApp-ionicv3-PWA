@@ -9,6 +9,7 @@ import { LoadingController } from 'ionic-angular/components/loading/loading-cont
 import { MovieProvider } from '../../providers/movie/movie';
 import { SeenMoviesPage } from '../seen-movies/seen-movies';
 import { TabsPage } from '../tabs/tabs';
+import { DbProvider } from '../../providers/db/db';
 
 /**
  * Generated class for the LoginPage page.
@@ -34,7 +35,8 @@ export class LoginPage {
     public navParams: NavParams,
     public http: Http,
     public loadingController: LoadingController,
-    public movieProvider: MovieProvider
+    public movieProvider: MovieProvider,
+    public dbProvider: DbProvider
     
   ) {
   }
@@ -69,8 +71,8 @@ export class LoginPage {
         
 
        // this.todoService.init(res.json());
-        this.movieProvider.init(res.json());
-        
+        this.dbProvider.init(res.json());
+        console.log(res.json())
         loader.dismiss();
         this.navCtrl.setRoot(TabsPage);
 
