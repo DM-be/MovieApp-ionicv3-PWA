@@ -29,6 +29,7 @@ import { SocialPage } from '../pages/social/social';
 import { SocialProvider } from '../providers/social/social';
 import { DbProvider } from '../providers/db/db';
 import { AddFriendPage } from '../pages/add-friend/add-friend';
+import { RecommendationsPage } from '../pages/recommendations/recommendations';
 
 
 
@@ -45,7 +46,8 @@ import { AddFriendPage } from '../pages/add-friend/add-friend';
     MovieDetailPage,
     ImagePreload,
     SocialPage,
-    AddFriendPage
+    AddFriendPage,
+    RecommendationsPage,
     
   ],
   imports: [
@@ -68,7 +70,8 @@ import { AddFriendPage } from '../pages/add-friend/add-friend';
     DiscoverPage,
     MovieDetailPage,
     SocialPage,
-    AddFriendPage
+    AddFriendPage,
+    RecommendationsPage
   ],
   providers: [
     StatusBar,

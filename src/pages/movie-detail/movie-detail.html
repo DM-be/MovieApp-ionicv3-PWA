@@ -14,5 +14,49 @@
 
 
 <ion-content padding>
+<ion-grid fixed >
 
+ <ion-card hideWhen="android,ios">
+    <ion-card-content>
+      <ion-row>
+        <ion-col col-3 ><img src="{{movie.poster}}"/> </ion-col>     
+     <ion-col ><ion-card-title>
+        {{movie.title}}
+      </ion-card-title>
+      <p>
+      {{movie.overview}}
+      </p> </ion-col>       
+    </ion-row>
+
+    <ion-row justify-content-center >
+      <ion-col col-4><button ion-button color="dark" (click)="recommendMovie()">recommend</button> </ion-col>
+      <ion-col col-4><button ion-button color="dark">watch</button> </ion-col>
+      <ion-col col-4><button ion-button color="dark">seen</button> </ion-col>
+       
+      </ion-row>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card showWhen="android,ios">
+      <ion-card-content>
+        <ion-row justify-content-center >
+
+          <img src="{{movie.poster}}"/>   
+        </ion-row>
+          
+       <ion-row><ion-card-title>
+          {{movie.title}}
+        </ion-card-title>
+        <p>
+        {{movie.overview}}
+        </p>   
+    </ion-row>
+      
+       
+      </ion-card-content>
+    </ion-card>
+  
+</ion-grid>
+ 
 </ion-content>

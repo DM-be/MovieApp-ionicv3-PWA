@@ -52,8 +52,7 @@ export class DiscoverPage {
 
     this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
        this.setMoviesByKeyWords_async(this.searchTerm); 
-      
-
+    
   });
     }
 

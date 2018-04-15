@@ -79,9 +79,13 @@ export class DbProvider {
     catch(err) { console.log(err)}
   }
 
-  async addRecommendation(movie) {
+
+  // {
+  
+
+  async addRecommendation(movie: {"id": string, "title": string, "poster": string, "overview": string}, username ) {
     try {
-      let doc = await this.sdb.get(this.user);
+      let doc = await this.sdb.get(username);
       let recommendations = doc.recommendations;
       recommendations.push(movie)
       let response = await this.sdb.put({
@@ -98,7 +102,10 @@ export class DbProvider {
   async getRecommendations(username) {
     try {
       let doc =  await this.sdb.get(username)
+      console.log(doc)
+      console.log(username)
       return doc.recommendations;
+      
     }
     catch(err) { console.log(err)}
   }

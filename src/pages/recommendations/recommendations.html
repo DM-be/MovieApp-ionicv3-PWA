@@ -14,5 +14,21 @@
 
 
 <ion-content padding>
-
+    <ion-grid fixed>
+        <ion-row>
+          <ion-card ion-col *ngFor="let movie of recommendations; let i =index" col-6 col-md-4 col-lg-3 (click)="openMovieDetail(i)">
+              <img imgpreload src="{{movie.poster}}">
+              <ion-card-content>
+                <ion-card-title>
+                  {{movie.title}}
+                </ion-card-title>
+                <p>
+                  {{movie.description}}
+                </p>
+              </ion-card-content>
+             
+            </ion-card>
+          
+        </ion-row>
+      </ion-grid>
 </ion-content>
