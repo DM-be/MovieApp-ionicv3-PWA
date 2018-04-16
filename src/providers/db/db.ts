@@ -59,24 +59,26 @@ export class DbProvider {
   {
     try {
       let doc = await this.sdb.get(this.user);
-      let friends = doc.friends;
-      friends.push({"username": username, "accepted": false, "declined": false})
+      let sentInvites = doc.sentInvites;
+      sentInvites.push({"username": username, "accepted": false, "declined": false})
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
-        friends: friends,
+        friends: doc.friends,
+        sentInvites: sentInvites,
+        recievedInvites: doc.recievedInvites,
         recommendations: doc.recommendations
       });
 
-      // add to the other guy
-
       let otherdoc = await this.sdb.get(username);
-      let otherfriends = otherdoc.friends;
-      otherfriends.push({"username": this.user, "accepted": false, "declined": false})
+      let recievedInvites = otherdoc.recievedInvites;
+      recievedInvites.push({"username": this.user, "accepted": false, "declined": false})
       let response2 = await this.sdb.put({
         _id: otherdoc._id,
         _rev: otherdoc._rev,
-        friends: otherfriends,
+        friends: otherdoc.friends,
+        sentInvites: otherdoc.sentInvites,
+        recievedInvites: recievedInvites,
         recommendations: otherdoc.recommendations
       });
 
@@ -101,7 +103,7 @@ export class DbProvider {
     // return array of usernames 
     try {
       let doc =  await this.sdb.get(this.user)
-      return doc.friends.filter((friend) => {
+      return doc.recievedInvites.filter((friend) => {
         return (!friend.accepted && !friend.declined)
       })
     }
@@ -154,17 +156,22 @@ export class DbProvider {
   {
     try {
       let doc = await this.sdb.get(this.user);
-      let friends = doc.friends;
-
-      let index = this.findFriend(friends, username);
+      
+      let recievedInvites = doc.recievedInvites
+      
+      let index = this.findFriend(recievedInvites, username);
       if (index > -1) {
-        friends.splice(index, 1);
+        recievedInvites.splice(index, 1);
       }
+
+      let friends = doc.friends;
       friends.push({"username": username, "accepted": true, "declined": false})
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
         friends: friends,
+        sentInvites: doc.sentInvites,
+        recievedInvites: recievedInvites,
         recommendations: doc.recommendations
       });
 
@@ -182,11 +189,11 @@ export class DbProvider {
          _id: otherdoc._id,
          _rev: otherdoc._rev,
          friends: otherfriends,
+         sentInvites: doc.sentInvites,
+          recievedInvites: doc.recievedInvites,
          recommendations: otherdoc.recommendations
        });
  
-
-
 
     } catch (err) {
       console.log(err);
