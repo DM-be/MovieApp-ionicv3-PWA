@@ -15,6 +15,6 @@
 
 <ion-content padding>
 
-    <ng2-completer [(ngModel)]="searchStr" [datasource]="dataService" [minSearchLength]="0" (selected)="setSelected($event)" ></ng2-completer>
+    <ion-auto-complete [dataProvider]="socialProvider" [options]="{ placeholder : 'type in your friends username here!' }" (itemSelected)="itemSelected($event)" ></ion-auto-complete>
 
 </ion-content>

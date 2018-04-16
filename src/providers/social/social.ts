@@ -3,6 +3,11 @@ import { Injectable } from '@angular/core';
 import { DbProvider } from '../db/db';
 import {AutoCompleteService} from 'ionic2-auto-complete';
 
+
+import { Http } from '@angular/http';
+
+import 'rxjs/add/operator/map'
+
 /*
   Generated class for the SocialProvider provider.
 
@@ -18,7 +23,7 @@ export class SocialProvider implements AutoCompleteService {
 
 
 
-  constructor(public dbProvider: DbProvider) {
+  constructor(public dbProvider: DbProvider, public http: Http) {
     this.getFriends();
   }
 
@@ -33,15 +38,11 @@ export class SocialProvider implements AutoCompleteService {
     return this.friends;
   }
 
-  async getResults(keyword:string) {
-    
-    return this.allUsers
-      .map(
-        result =>
-        {
-          return result
-            .filter(item => item.username.toLowerCase().startsWith(keyword.toLowerCase()) )
-        });
-  }
 
-}
+  getResults(keyword:string) {
+    return this.getAllUsers()
+      .filter(
+        result => {return result.username.toLowerCase().startsWith(keyword.toLowerCase())
+  })
+
+}}

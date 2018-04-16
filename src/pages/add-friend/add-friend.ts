@@ -17,24 +17,20 @@ import { DbProvider } from '../../providers/db/db';
 })
 export class AddFriendPage {
 
-  searchStr: string;
-  protected dataService: CompleterData;
-  searchData;
+  
   constructor(public navCtrl: NavController, public navParams: NavParams, public socialProvider: SocialProvider, private completerService: CompleterService,
   public dbProvider: DbProvider) {
-  this.searchData = this.socialProvider.getAllUsers();
-  this.dataService = completerService.local(this.searchData, 'username', 'username').imageField("avatar").descriptionField("username");
   }
 
   ionViewDidLoad() {
   }
 
-  setSelected(event)
+  itemSelected(event)
   {
-    let username = event.originalObject.username;
+    console.log(event)
+    let username = event.username;
     this.dbProvider.addFriend(username);
     this.navCtrl.pop();
-    
   }
 
 }
