@@ -155,43 +155,38 @@ export class DbProvider {
   async acceptFriendInvite(username)
   {
     try {
+      // invitee gets the invite and accepts it by pushing it into his friends array
       let doc = await this.sdb.get(this.user);
-      
       let recievedInvites = doc.recievedInvites
-      
       let index = this.findFriend(recievedInvites, username);
       if (index > -1) {
-        recievedInvites.splice(index, 1);
+        recievedInvites.splice(index, 1); // remove from recievedInvites when accepting
       }
-
       let friends = doc.friends;
       friends.push({"username": username, "accepted": true, "declined": false})
+      // push the friend to the friends array
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
         friends: friends,
         sentInvites: doc.sentInvites,
-        recievedInvites: recievedInvites,
+        recievedInvites: recievedInvites, // update recievedinvites (cleared it so we wont prompt again)
         recommendations: doc.recommendations
       });
 
-       // accept the other guy
+       // add the invitee to the inviters friends array
 
        let otherdoc = await this.sdb.get(username);
        let otherfriends = otherdoc.friends;
 
-       let otherindex = this.findFriend(friends, username);
-       if (otherindex > -1) {
-        otherfriends.splice(otherindex, 1);
-       }
        otherfriends.push({"username": this.user, "accepted": true, "declined": false})
        let response2 = await this.sdb.put({
-         _id: otherdoc._id,
-         _rev: otherdoc._rev,
-         friends: otherfriends,
-         sentInvites: doc.sentInvites,
-          recievedInvites: doc.recievedInvites,
-         recommendations: otherdoc.recommendations
+        _id: otherdoc._id,
+        _rev: otherdoc._rev,
+        friends: otherfriends,
+        sentInvites: doc.sentInvites,
+        recievedInvites: doc.recievedInvites,
+        recommendations: otherdoc.recommendations
        });
  
 
