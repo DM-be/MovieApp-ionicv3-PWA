@@ -184,8 +184,8 @@ export class DbProvider {
         _id: otherdoc._id,
         _rev: otherdoc._rev,
         friends: otherfriends,
-        sentInvites: doc.sentInvites,
-        recievedInvites: doc.recievedInvites,
+        sentInvites: otherdoc.sentInvites,
+        recievedInvites: otherdoc.recievedInvites,
         recommendations: otherdoc.recommendations
        });
  
