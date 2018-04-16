@@ -36,7 +36,6 @@ export class DbProvider {
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
     this.db.sync(this.remote, this.options);
-    console.log(this.remote)
     this.sdb = new PouchDB('shared');
     this.sdb.sync(this.sharedRemote, this.options)
   }
@@ -110,47 +109,27 @@ export class DbProvider {
     catch(err) { console.log(err)}
   }
 
-
   async declineFriendInvite(username)
   {
     try {
       let doc = await this.sdb.get(this.user);
-      let friends = doc.friends;
-
-      let index = this.findFriend(friends, username);
+      let recievedInvites = doc.recievedInvites
+      let index = this.findFriend(recievedInvites, username);
       if (index > -1) {
-        friends.splice(index, 1);
+        recievedInvites.splice(index, 1); // remove from recievedInvites when declining
       }
-      friends.push({"username": username, "accepted": false, "declined": true})
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
-        friends: friends,
+        friends: doc.friends,
+        sentInvites: doc.sentInvites,
+        recievedInvites: recievedInvites, // update recievedinvites (one less recievedinvite)
         recommendations: doc.recommendations
       });
-
-
-       // decline the other guy
-
-       let otherdoc = await this.sdb.get(username);
-       let otherfriends = otherdoc.friends;
-       otherfriends.push({"username": this.user, "accepted": false, "declined": true})
-       let response2 = await this.sdb.put({
-         _id: otherdoc._id,
-         _rev: otherdoc._rev,
-         friends: otherfriends,
-         recommendations: otherdoc.recommendations
-       });
- 
-
-
     } catch (err) {
       console.log(err);
     }
-
   }
-
-
 
   async acceptFriendInvite(username)
   {
@@ -220,6 +199,7 @@ export class DbProvider {
         _id: doc._id,
         _rev: doc._rev,
         friends: friends,
+        
         recommendations: doc.recommendations
       });
     } catch (err) {
@@ -249,6 +229,8 @@ export class DbProvider {
         _id: doc._id,
         _rev: doc._rev,
         friends: doc.friends,
+        sentInvites: doc.sentInvites,
+        recievedInvites: doc.recievedInvites,
         recommendations: recommendations
       });
     } catch (err) {
@@ -256,11 +238,9 @@ export class DbProvider {
     }
 
   }
-  async getRecommendations(username) {
+  async getRecommendations(username) { // remove username into this.user
     try {
       let doc =  await this.sdb.get(username)
-      console.log(doc)
-      console.log(username)
       return doc.recommendations;
       
     }

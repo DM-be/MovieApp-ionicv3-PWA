@@ -45,8 +45,8 @@ export class MovieDetailPage {
     friends.forEach(friend => {
       alert.addInput({
         type: 'checkbox',
-        label: friend,
-        value: friend,
+        label: friend.username,
+        value: friend.username,
     });
       
     });
