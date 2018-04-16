@@ -29,7 +29,8 @@ export class AddFriendPage {
   {
     console.log(event)
     let username = event.username;
-    this.dbProvider.addFriend(username);
+    //this.dbProvider.addFriend(username);
+    this.dbProvider.inviteFriend(username);
     this.navCtrl.pop();
   }
 

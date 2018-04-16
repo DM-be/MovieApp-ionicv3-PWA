@@ -28,7 +28,7 @@ export class SocialProvider implements AutoCompleteService {
   }
 
   getAllUsers() {
-    return [{"username": "dennis", "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png"},{"username": "rianne", "avatar": "bla"} ]
+    return [{"username": "dennistest", "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png"},{"username": "rianne", "avatar": "bla"} ]
   }
 
   
@@ -38,6 +38,15 @@ export class SocialProvider implements AutoCompleteService {
     return this.friends;
   }
 
+  async getAcceptedFriends() {
+    return await this.dbProvider.getAcceptedFriends();
+  }
+
+  async getOpenInvitedFriends() {
+    let openFriends = await this.dbProvider.getOpenFriendInvites();
+    return openFriends;
+  }
+
 
   getResults(keyword:string) {
     return this.getAllUsers()
@@ -45,4 +54,9 @@ export class SocialProvider implements AutoCompleteService {
         result => {return result.username.toLowerCase().startsWith(keyword.toLowerCase())
   })
 
-}}
+
+}
+
+
+
+}

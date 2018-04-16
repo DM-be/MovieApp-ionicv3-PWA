@@ -55,6 +55,83 @@ export class DbProvider {
     return this.user;
   }
 
+  async inviteFriend(username)
+  {
+    try {
+      let doc = await this.sdb.get(this.user);
+      let friends = doc.friends;
+      friends.push({"username": username, "accepted": false})
+      let response = await this.sdb.put({
+        _id: doc._id,
+        _rev: doc._rev,
+        friends: friends,
+        recommendations: doc.recommendations
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  findFriend(friends, username)
+  {
+    for (let index = 0; index < friends.length; index++) {
+      const friendObject = friends[index];
+      if(friendObject.username === username)
+      {
+        return index;
+      }
+      
+    }
+  }
+
+  async getOpenFriendInvites(){
+    // return array of usernames 
+    try {
+      let doc =  await this.sdb.get(this.user)
+      return doc.friends.filter((friend) => {
+        return !friend.accepted
+      })
+    }
+    catch(err) { console.log(err)}
+
+
+  }
+
+  async acceptFriendInvite(username)
+  {
+    try {
+      let doc = await this.sdb.get(this.user);
+      let friends = doc.friends;
+
+      let index = this.findFriend(friends, username);
+      if (index > -1) {
+        friends.splice(index, 1);
+      }
+      friends.push({"username": username, "accepted": true})
+      let response = await this.sdb.put({
+        _id: doc._id,
+        _rev: doc._rev,
+        friends: friends,
+        recommendations: doc.recommendations
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+  }
+
+  async getAcceptedFriends()
+  {
+    try {
+      let doc =  await this.sdb.get(this.user)
+      return doc.friends.filter((friend) => {
+        return friend.accepted
+      })
+    }
+    catch(err) { console.log(err)}
+
+  }
+
   async addFriend(username)
   {
     try {

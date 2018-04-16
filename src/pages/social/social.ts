@@ -28,10 +28,14 @@ export class SocialPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad SocialPage');
     this.setup();
+    this.checkForFriendInvites();
   }
 
   async setup(){
     this.friends = await this.socialProvider.getFriends();
+    let test = await this.socialProvider.getAcceptedFriends();
+    console.log("accepted friends: " );
+    console.log(test)
   }
 
   addFriendAction(){
@@ -40,6 +44,12 @@ export class SocialPage {
       this.setup();
     })
     modal.present();
-
   }
+
+  async checkForFriendInvites(){
+    console.log("open invites")
+    let openFriends = await this.socialProvider.getOpenInvitedFriends();
+    console.log(openFriends)
+  }
+
 }
