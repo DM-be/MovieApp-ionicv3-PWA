@@ -1,8 +1,8 @@
 import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { Ng2CompleterModule } from "ng2-completer";
 import { FormsModule } from "@angular/forms";
-
-
+import { IonicImageLoader } from 'ionic-image-loader';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -59,7 +59,10 @@ import { WatchedMoviesPage } from '../pages/watched-movies/watched-movies';
     Ng2CompleterModule,
     FormsModule,
     IonicModule.forRoot(MyApp),
-    SuperTabsModule.forRoot()
+    SuperTabsModule.forRoot(),
+    IonicImageLoader.forRoot(),
+    IonicImageLoader,
+    LazyLoadImageModule 
   ],
   bootstrap: [IonicApp],
   entryComponents: [

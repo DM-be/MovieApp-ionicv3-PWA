@@ -8,7 +8,7 @@ import { SuperTabs } from 'ionic2-super-tabs';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import { MovieDetailPage } from '../movie-detail/movie-detail';
-
+import { ImageLoaderConfig } from 'ionic-image-loader';
 
 
 @Component({
@@ -18,6 +18,10 @@ import { MovieDetailPage } from '../movie-detail/movie-detail';
 export class DiscoverPage {
 
   @ViewChild(Content) content: Content;
+
+  offset = 100;
+
+  defaultImage = "../assets/imgs/preloader.gif"
 
   searchTerm: string = '';
   searchControl: FormControl;
@@ -32,7 +36,8 @@ export class DiscoverPage {
     public navParams: NavParams,
     public movieProvider: MovieProvider,
     public platform: Platform,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    private imageLoaderConfig: ImageLoaderConfig
     ) {
 
       this.searchControl = new FormControl();
@@ -41,7 +46,7 @@ export class DiscoverPage {
         'horror',
         'drama'
       ]
-
+      imageLoaderConfig.enableSpinner(true);
       
       
       
