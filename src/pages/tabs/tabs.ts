@@ -6,6 +6,7 @@ import { SuperTabs } from 'ionic2-super-tabs';
 import { DiscoverPage } from '../discover/discover';
 import { SocialPage } from '../social/social';
 import { RecommendationsPage } from '../recommendations/recommendations';
+import { WatchedMoviesPage } from '../watched-movies/watched-movies';
 
 
 /**
@@ -27,7 +28,7 @@ export class TabsPage {
 
   discover: any = DiscoverPage;
   seen: any = SeenMoviesPage;
-  page1: any = SeenMoviesPage;
+  watch: any = WatchedMoviesPage;
   social: any = SocialPage;
   recommendation: any = RecommendationsPage;
 
