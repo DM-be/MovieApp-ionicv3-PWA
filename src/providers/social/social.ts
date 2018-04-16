@@ -24,7 +24,7 @@ export class SocialProvider implements AutoCompleteService {
 
 
   constructor(public dbProvider: DbProvider, public http: Http) {
-    this.getFriends();
+    this.getAcceptedFriends();
   }
 
   getAllUsers() {
@@ -33,10 +33,7 @@ export class SocialProvider implements AutoCompleteService {
 
   
 
-  async getFriends() {
-    this.friends = await this.dbProvider.getFriends(this.dbProvider.getUser());
-    return this.friends;
-  }
+  
 
   async getAcceptedFriends() {
     let acceptedFriends = await this.dbProvider.getAcceptedFriends();

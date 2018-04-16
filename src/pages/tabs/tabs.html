@@ -11,11 +11,13 @@
 
 
 <ion-tabs [tabsPlacement]="tabsPlacement" [tabsLayout]="tabsLayout">
-<ion-tab [root]="discover" tabTitle="Discover" tabIcon="film"></ion-tab>
-<ion-tab [root]="watch" tabTitle="Watch" tabIcon="eye"></ion-tab>
-<ion-tab [root]="seen" tabTitle="Seen" tabIcon="checkmark"></ion-tab>
-<ion-tab [root]="recommendation" tabTitle="recommended" tabIcon="flag"></ion-tab>
-<ion-tab [root]="social" tabTitle="Friends" tabIcon="people"></ion-tab>
+<ion-tab [root]="discover" tabTitle="Discover" tabIcon="film" ></ion-tab>
+<ion-tab [root]="watch" tabTitle="Watch" tabIcon="eye" *ngIf="loggedIn" ></ion-tab>
+<ion-tab [root]="seen" tabTitle="Seen" tabIcon="checkmark" *ngIf="loggedIn"  ></ion-tab>
+<ion-tab [root]="recommendation" tabTitle="recommended" tabIcon="flag"  *ngIf="loggedIn" ></ion-tab>
+<ion-tab [root]="social" tabTitle="Friends" tabIcon="people" *ngIf="loggedIn"  ></ion-tab>
+<ion-tab [root]="social" tabTitle="Log in" tabIcon="log-in" *ngIf="!loggedIn" ></ion-tab>
+<ion-tab [root]="social" tabTitle="Sign up" tabIcon="clipboard" *ngIf="!loggedIn" ></ion-tab>
 
 
 

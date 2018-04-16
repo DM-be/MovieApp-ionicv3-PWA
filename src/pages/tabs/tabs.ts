@@ -7,6 +7,7 @@ import { DiscoverPage } from '../discover/discover';
 import { SocialPage } from '../social/social';
 import { RecommendationsPage } from '../recommendations/recommendations';
 import { WatchedMoviesPage } from '../watched-movies/watched-movies';
+import { DbProvider } from '../../providers/db/db';
 
 
 /**
@@ -31,15 +32,16 @@ export class TabsPage {
   watch: any = WatchedMoviesPage;
   social: any = SocialPage;
   recommendation: any = RecommendationsPage;
+  loggedIn: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public dbProvider: DbProvider) {
    
-    
-
     if (!this.platform.is('mobile')) {
       this.tabsPlacement = 'top';
       this.tabsLayout = 'icon-left';
     }
+
+    this.loggedIn = this.dbProvider.isloggedIn();
   }
 
   ionViewDidLoad() {

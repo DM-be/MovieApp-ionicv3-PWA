@@ -55,7 +55,6 @@ export class SignupPage {
           this.dbProvider.init(res.json())
           console.log(res.json())
           this.dbProvider.register(user);
-          this.dbProvider.addFriend("testfriend")
           
         }, (err) => {
           console.log(err);

@@ -1,5 +1,5 @@
 import { Component, ViewChild  } from '@angular/core';
-import {  NavController, NavParams, LoadingController } from 'ionic-angular';
+import {  NavController, NavParams, LoadingController, ModalController } from 'ionic-angular';
 import { MovieProvider } from '../../providers/movie/movie';
 import { Platform } from 'ionic-angular/platform/platform';
 import { HomePage } from '../home/home';
@@ -9,6 +9,7 @@ import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import { MovieDetailPage } from '../movie-detail/movie-detail';
 import { ImageLoaderConfig } from 'ionic-image-loader';
+import { LoginPage } from '../login/login';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class DiscoverPage {
   searchControl: FormControl;
   
   movieDetailPage = MovieDetailPage;
-
+  loginPage = LoginPage
   movies: any;
 
 
@@ -37,19 +38,22 @@ export class DiscoverPage {
     public movieProvider: MovieProvider,
     public platform: Platform,
     public loadingCtrl: LoadingController,
-    private imageLoaderConfig: ImageLoaderConfig
+    private imageLoaderConfig: ImageLoaderConfig,
+    public modalCtrl: ModalController
     ) {
 
       this.searchControl = new FormControl();
     
-      let genres = [
-        'horror',
-        'drama'
-      ]
-      imageLoaderConfig.enableSpinner(true);
+      
+      //imageLoaderConfig.enableSpinner(true);
       
       
       
+  }
+
+  login() {
+    let loginModal = this.modalCtrl.create(this.loginPage);
+    loginModal.present();
   }
 
 

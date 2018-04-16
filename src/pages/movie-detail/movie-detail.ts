@@ -41,7 +41,7 @@ export class MovieDetailPage {
   async recommendMovie() {
     let alert = this.alertCtrl.create();
 
-    let friends = await this.dbProvider.getFriends(this.username);
+    let friends = await this.dbProvider.getAcceptedFriends();
     friends.forEach(friend => {
       alert.addInput({
         type: 'checkbox',

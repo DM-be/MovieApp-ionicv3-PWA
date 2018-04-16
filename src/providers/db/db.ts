@@ -20,6 +20,7 @@ export class DbProvider {
   private remote: string;
   private user: string;
   private movies = {};
+  private loggedIn: boolean = false;
 
   constructor() {
     this.options = {
@@ -37,7 +38,8 @@ export class DbProvider {
     this.user = details.user_id;
     this.db.sync(this.remote, this.options);
     this.sdb = new PouchDB('shared');
-    this.sdb.sync(this.sharedRemote, this.options)
+    this.sdb.sync(this.sharedRemote, this.options);
+    this.loggedIn = true;
   }
 
   register(user)
@@ -50,6 +52,11 @@ export class DbProvider {
       recievedInvites: [],
       recommendations: [],
     })
+    this.loggedIn = true;
+  }
+
+  isloggedIn() {
+    return this.loggedIn;
   }
 
   getUser() {
