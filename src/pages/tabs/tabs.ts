@@ -8,6 +8,8 @@ import { SocialPage } from '../social/social';
 import { RecommendationsPage } from '../recommendations/recommendations';
 import { WatchedMoviesPage } from '../watched-movies/watched-movies';
 import { DbProvider } from '../../providers/db/db';
+import { SignupPage } from '../signup/signup';
+import { LoginPage } from '../login/login';
 
 
 /**
@@ -34,6 +36,11 @@ export class TabsPage {
   recommendation: any = RecommendationsPage;
   loggedIn: boolean;
 
+  signup: any = SignupPage;
+  login: any = LoginPage;
+
+  tabBarElement;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public dbProvider: DbProvider) {
    
     if (!this.platform.is('mobile')) {
@@ -42,11 +49,25 @@ export class TabsPage {
     }
 
     this.loggedIn = this.dbProvider.isloggedIn();
+    this.tabBarElement = document.querySelector('#notLoggedIntabs');
   }
 
   ionViewDidLoad() {
-    
-    
+    this.loggedIn = this.dbProvider.isloggedIn();
+  }
+
+  ionViewWillEnter() {
+    this.loggedIn = this.dbProvider.isloggedIn();
+    console.log(this.loggedIn)
+    if(this.loggedIn)
+    {
+     // this.tabBarElement.style.display = 'none';
+    }
+  }
+
+  ionViewDidEnter()
+  {
+    this.loggedIn = this.dbProvider.isloggedIn();
   }
 
 }

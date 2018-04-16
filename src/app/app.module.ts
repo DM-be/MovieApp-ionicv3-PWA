@@ -31,6 +31,7 @@ import { DbProvider } from '../providers/db/db';
 import { AddFriendPage } from '../pages/add-friend/add-friend';
 import { RecommendationsPage } from '../pages/recommendations/recommendations';
 import { WatchedMoviesPage } from '../pages/watched-movies/watched-movies';
+import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
 
 
 
@@ -49,7 +50,8 @@ import { WatchedMoviesPage } from '../pages/watched-movies/watched-movies';
     SocialPage,
     AddFriendPage,
     RecommendationsPage,
-    WatchedMoviesPage
+    WatchedMoviesPage,
+    LoggedInTabsPage
     
   ],
   imports: [
@@ -77,7 +79,8 @@ import { WatchedMoviesPage } from '../pages/watched-movies/watched-movies';
     SocialPage,
     AddFriendPage,
     RecommendationsPage,
-    WatchedMoviesPage
+    WatchedMoviesPage,
+    LoggedInTabsPage
   ],
   providers: [
     StatusBar,

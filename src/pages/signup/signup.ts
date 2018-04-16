@@ -51,7 +51,7 @@ export class SignupPage {
         .subscribe(res => {
          // this.todoService.init(res.json());
 
-          this.navCtrl.setRoot(TabsPage);
+         // this.navCtrl.setRoot(TabsPage);
           this.dbProvider.init(res.json())
           console.log(res.json())
           this.dbProvider.register(user);

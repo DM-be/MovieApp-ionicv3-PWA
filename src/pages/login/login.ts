@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
 
 import { Http, Headers } from '@angular/http';
 import { HomePage } from '../home/home';
@@ -10,6 +10,8 @@ import { MovieProvider } from '../../providers/movie/movie';
 import { SeenMoviesPage } from '../seen-movies/seen-movies';
 import { TabsPage } from '../tabs/tabs';
 import { DbProvider } from '../../providers/db/db';
+import { LoggedInTabsPage } from '../logged-in-tabs/logged-in-tabs';
+import { App } from 'ionic-angular';
 
 /**
  * Generated class for the LoginPage page.
@@ -36,7 +38,8 @@ export class LoginPage {
     public http: Http,
     public loadingController: LoadingController,
     public movieProvider: MovieProvider,
-    public dbProvider: DbProvider
+    public dbProvider: DbProvider,
+    public appCtrl: App
     
   ) {
   }
@@ -74,7 +77,9 @@ export class LoginPage {
         this.dbProvider.init(res.json());
         console.log(res.json())
         loader.dismiss();
-        this.navCtrl.setRoot(TabsPage);
+        
+        this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
+        
 
       }, err => console.log(err));
 
