@@ -21,7 +21,7 @@
             <ion-fab bottom right #fab showWhen="android,ios" (click)="addFriendAction()">
                 <button ion-fab><ion-icon name="add"></ion-icon></button>
             </ion-fab>
- <ion-item *ngFor="let friend of friends; let i =index">{{friend}}
+ <ion-item *ngFor="let friend of friends; let i =index">{{friend.username}}
         <ion-avatar item-start>
             <img src="https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png">
           </ion-avatar>

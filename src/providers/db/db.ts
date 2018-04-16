@@ -60,13 +60,26 @@ export class DbProvider {
     try {
       let doc = await this.sdb.get(this.user);
       let friends = doc.friends;
-      friends.push({"username": username, "accepted": false})
+      friends.push({"username": username, "accepted": false, "declined": false})
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
         friends: friends,
         recommendations: doc.recommendations
       });
+
+      // add to the other guy
+
+      let otherdoc = await this.sdb.get(username);
+      let otherfriends = otherdoc.friends;
+      otherfriends.push({"username": this.user, "accepted": false, "declined": false})
+      let response2 = await this.sdb.put({
+        _id: otherdoc._id,
+        _rev: otherdoc._rev,
+        friends: otherfriends,
+        recommendations: otherdoc.recommendations
+      });
+
     } catch (err) {
       console.log(err);
     }
@@ -89,13 +102,53 @@ export class DbProvider {
     try {
       let doc =  await this.sdb.get(this.user)
       return doc.friends.filter((friend) => {
-        return !friend.accepted
+        return (!friend.accepted && !friend.declined)
       })
     }
     catch(err) { console.log(err)}
+  }
 
+
+  async declineFriendInvite(username)
+  {
+    try {
+      let doc = await this.sdb.get(this.user);
+      let friends = doc.friends;
+
+      let index = this.findFriend(friends, username);
+      if (index > -1) {
+        friends.splice(index, 1);
+      }
+      friends.push({"username": username, "accepted": false, "declined": true})
+      let response = await this.sdb.put({
+        _id: doc._id,
+        _rev: doc._rev,
+        friends: friends,
+        recommendations: doc.recommendations
+      });
+
+
+       // decline the other guy
+
+       let otherdoc = await this.sdb.get(username);
+       let otherfriends = otherdoc.friends;
+       otherfriends.push({"username": this.user, "accepted": false, "declined": true})
+       let response2 = await this.sdb.put({
+         _id: otherdoc._id,
+         _rev: otherdoc._rev,
+         friends: otherfriends,
+         recommendations: otherdoc.recommendations
+       });
+ 
+
+
+    } catch (err) {
+      console.log(err);
+    }
 
   }
+
+
 
   async acceptFriendInvite(username)
   {
@@ -107,16 +160,39 @@ export class DbProvider {
       if (index > -1) {
         friends.splice(index, 1);
       }
-      friends.push({"username": username, "accepted": true})
+      friends.push({"username": username, "accepted": true, "declined": false})
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
         friends: friends,
         recommendations: doc.recommendations
       });
+
+       // accept the other guy
+
+       let otherdoc = await this.sdb.get(username);
+       let otherfriends = otherdoc.friends;
+
+       let otherindex = this.findFriend(friends, username);
+       if (otherindex > -1) {
+        otherfriends.splice(otherindex, 1);
+       }
+       otherfriends.push({"username": this.user, "accepted": true, "declined": false})
+       let response2 = await this.sdb.put({
+         _id: otherdoc._id,
+         _rev: otherdoc._rev,
+         friends: otherfriends,
+         recommendations: otherdoc.recommendations
+       });
+ 
+
+
+
     } catch (err) {
       console.log(err);
     }
+
+
 
   }
 
@@ -125,7 +201,7 @@ export class DbProvider {
     try {
       let doc =  await this.sdb.get(this.user)
       return doc.friends.filter((friend) => {
-        return friend.accepted
+        return (!friend.declined && friend.accepted)
       })
     }
     catch(err) { console.log(err)}

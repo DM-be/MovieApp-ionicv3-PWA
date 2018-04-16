@@ -39,7 +39,8 @@ export class SocialProvider implements AutoCompleteService {
   }
 
   async getAcceptedFriends() {
-    return await this.dbProvider.getAcceptedFriends();
+    let acceptedFriends = await this.dbProvider.getAcceptedFriends();
+    return acceptedFriends;
   }
 
   async getOpenInvitedFriends() {
@@ -47,6 +48,13 @@ export class SocialProvider implements AutoCompleteService {
     return openFriends;
   }
 
+  async acceptInvite(username) {
+   await this.dbProvider.acceptFriendInvite(username);
+  }
+
+  async declineInvite(username) {
+   await this.dbProvider.declineFriendInvite(username);
+  }
 
   getResults(keyword:string) {
     return this.getAllUsers()
