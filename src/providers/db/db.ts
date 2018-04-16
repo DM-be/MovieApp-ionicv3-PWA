@@ -46,7 +46,9 @@ export class DbProvider {
     this.sdb.put({
       _id: user.username,
       friends: [],
-      recommendations: []
+      sentInvites: [],
+      recievedInvites: [],
+      recommendations: [],
     })
   }
 
@@ -56,6 +58,7 @@ export class DbProvider {
 
   async inviteFriend(username)
   {
+    // todo: check sentinvites of a user before allowing to send another invite
     try {
       let doc = await this.sdb.get(this.user);
       let sentInvites = doc.sentInvites;
@@ -68,6 +71,8 @@ export class DbProvider {
         recievedInvites: doc.recievedInvites,
         recommendations: doc.recommendations
       });
+      
+
 
       let otherdoc = await this.sdb.get(username);
       let recievedInvites = otherdoc.recievedInvites;
@@ -94,12 +99,11 @@ export class DbProvider {
       {
         return index;
       }
-      
     }
   }
 
   async getOpenFriendInvites(){
-    // return array of usernames 
+
     try {
       let doc =  await this.sdb.get(this.user)
       return doc.recievedInvites.filter((friend) => {
@@ -134,6 +138,8 @@ export class DbProvider {
   async acceptFriendInvite(username)
   {
     try {
+      // todo: rename to make more sense, refactor
+
       // invitee gets the invite and accepts it by pushing it into his friends array
       let doc = await this.sdb.get(this.user);
       let recievedInvites = doc.recievedInvites
@@ -189,37 +195,7 @@ export class DbProvider {
 
   }
 
-  async addFriend(username)
-  {
-    try {
-      let doc = await this.sdb.get(this.user);
-      let friends = doc.friends;
-      friends.push(username)
-      let response = await this.sdb.put({
-        _id: doc._id,
-        _rev: doc._rev,
-        friends: friends,
-        
-        recommendations: doc.recommendations
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async getFriends(username)
-  {
-    try {
-      let doc =  await this.sdb.get(username)
-      return doc.friends;
-    }
-    catch(err) { console.log(err)}
-  }
-
-
-  // {
-  
-
+  // todo: blob the images of recommendations as well
   async addRecommendation(movie: {"id": string, "title": string, "poster": string, "overview": string}, username ) {
     try {
       let doc = await this.sdb.get(username);
@@ -248,8 +224,8 @@ export class DbProvider {
   }
 
 
+  // todo: rename movie ids etc, now has empty spaces..., maybe add movie id?
   async addMovie(type: string, movie: any) {
-
     await this.db.put({
       _id: type + movie.title,
       title: movie.title
@@ -259,7 +235,7 @@ export class DbProvider {
     await this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
   }
 
-
+  // todo: rename, refactor, make it work for recommendations as well
   async getMovies_async(type: string)
   {
     this.movies[type] = [];
