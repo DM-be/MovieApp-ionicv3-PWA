@@ -33,7 +33,7 @@ import { RecommendationsPage } from '../pages/recommendations/recommendations';
 import { WatchedMoviesPage } from '../pages/watched-movies/watched-movies';
 import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
 import { FilterProvider } from '../providers/filter/filter';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -65,7 +65,10 @@ import { FilterProvider } from '../providers/filter/filter';
     SuperTabsModule.forRoot(),
     IonicImageLoader.forRoot(),
     IonicImageLoader,
-    LazyLoadImageModule 
+    LazyLoadImageModule,
+    BrowserAnimationsModule
+    
+    
   ],
   bootstrap: [IonicApp],
   entryComponents: [

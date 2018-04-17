@@ -78,14 +78,25 @@ export class LoggedInTabsPage {
     this.selectedTabPage = event.root.name
     this.searchTerm = "";
     this.toggled = false;
-    switch(this.selectedTabPage)
-    {
-      case "DiscoverPage": this.searchBarPlaceholder = "Discover new movies"
-      break;
-      case "SeenMoviesPage": this.searchBarPlaceholder = "Filter your seen movies"
-      break;
+    console.log(this.selectedTabPage)
+    if(this.selectedTabPage == "SeenMoviesPage"){
       
     }
+    switch(this.selectedTabPage) {
+      case "SeenMoviesPage": this.searchBarPlaceholder = "Filter your seen movies";
+      break;
+      case "DiscoverPage": this.searchBarPlaceholder = "Discover new movies";
+      break;
+      case "RecommendationsPage": this.searchBarPlaceholder = "Filter your recommendations";
+      break;
+      case "WatchedMoviesPage": this.searchBarPlaceholder = "Filter your watched movies";
+      break;
+      case "SocialPage": this.searchBarPlaceholder = "Look for a friend";
+      break;
+
+    }
+
+    
   }
   
   
