@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, Events, Tab } from 'ionic-angular';
 import { DiscoverPage } from '../discover/discover';
 import { SeenMoviesPage } from '../seen-movies/seen-movies';
 import { WatchedMoviesPage } from '../watched-movies/watched-movies';
 import { SocialPage } from '../social/social';
 import { RecommendationsPage } from '../recommendations/recommendations';
-
+import { FormControl } from '@angular/forms';
+import 'rxjs/add/operator/map';
 /**
  * Generated class for the LoggedInTabsPage page.
  *
@@ -23,6 +24,13 @@ export class LoggedInTabsPage {
 
   tabsPlacement: string;
   tabsLayout: string;
+  toggled = false;
+
+  searchBarPlaceholder = "Discover new movies"
+  selectedTabPage: string = "DiscoverPage"
+
+  searchTerm: string = '';
+  searchControl: FormControl
 
   discover: any = DiscoverPage;
   seen: any = SeenMoviesPage;
@@ -30,15 +38,55 @@ export class LoggedInTabsPage {
   social: any = SocialPage;
   recommendation: any = RecommendationsPage;
   
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public events: Events) {
     if (!this.platform.is('mobile')) {
       this.tabsPlacement = 'top';
       this.tabsLayout = 'icon-left';
     }
+    this.searchControl = new FormControl();
   }
+
+  toggleSearch() {
+    this.toggled = this.toggled ? false : true;
+}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoggedInTabsPage');
+
+
+    this.searchControl.valueChanges.debounceTime(1000).subscribe(search => {
+      if(this.selectedTabPage == "DiscoverPage" && search !== "")
+      {
+        this.events.publish("discover:updated", search)
+      }
+      else{
+
+      }
+
+
+      
+      
+  });
+
   }
 
+  onInput(event) {
+    console.log(event)
+  }
+
+  tabSelected(event) {
+    this.selectedTabPage = event.root.name
+    this.searchTerm = "";
+    this.toggled = false;
+    switch(this.selectedTabPage)
+    {
+      case "DiscoverPage": this.searchBarPlaceholder = "Discover new movies"
+      break;
+      case "SeenMoviesPage": this.searchBarPlaceholder = "Filter your seen movies"
+      break;
+      
+    }
+  }
+  
+  
 }

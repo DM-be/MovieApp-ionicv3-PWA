@@ -1,5 +1,5 @@
 import { Component, ViewChild  } from '@angular/core';
-import {  NavController, NavParams, LoadingController, ModalController } from 'ionic-angular';
+import {  NavController, NavParams, LoadingController, ModalController, Events } from 'ionic-angular';
 import { MovieProvider } from '../../providers/movie/movie';
 import { Platform } from 'ionic-angular/platform/platform';
 import { HomePage } from '../home/home';
@@ -39,7 +39,8 @@ export class DiscoverPage {
     public platform: Platform,
     public loadingCtrl: LoadingController,
     private imageLoaderConfig: ImageLoaderConfig,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    public events: Events
     ) {
 
       this.searchControl = new FormControl();
@@ -59,10 +60,20 @@ export class DiscoverPage {
 
   ionViewDidLoad() {
 
-    this.searchControl.valueChanges.debounceTime(700).subscribe(search => {
-       this.setMoviesByKeyWords_async(this.searchTerm); 
     
-  });
+ this.events.subscribe("discover:updated", (searchTerm) => {
+     this.setMoviesByKeyWords_async(searchTerm);
+   })}
+   
+   
+  
+ 
+    
+    
+    
+
+  ionViewDidEnter() {
+     
     }
 
     openMovieDetail(i) {

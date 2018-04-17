@@ -32,6 +32,7 @@ import { AddFriendPage } from '../pages/add-friend/add-friend';
 import { RecommendationsPage } from '../pages/recommendations/recommendations';
 import { WatchedMoviesPage } from '../pages/watched-movies/watched-movies';
 import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
+import { FilterProvider } from '../providers/filter/filter';
 
 
 
@@ -88,7 +89,8 @@ import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     MovieProvider,
     SocialProvider,
-    DbProvider, 
+    DbProvider,
+    FilterProvider, 
     
 
   ]

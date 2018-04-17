@@ -5,7 +5,19 @@
   Ionic pages and navigation.
 -->
 
-
+<ion-header>
+  <ion-navbar color="primary">
+    <button *ngIf="!toggled" ion-button icon-only menuToggle><ion-icon name="menu"></ion-icon></button>
+    <!-- Title -->
+    <ion-title *ngIf="!toggled">Discover</ion-title>
+    <!-- Search Bar -->
+    <ion-searchbar *ngIf="toggled" [(ngModel)]="searchTerm" [showCancelButton]="true" (ionCancel)="toggleSearch()" (ionInput)="triggerInput($event)"></ion-searchbar>
+    <!-- Search Icon -->    
+    <ion-buttons end *ngIf="!toggled">
+      <button ion-button icon-only (click)="toggleSearch()"><ion-icon name="search"></ion-icon></button>
+    </ion-buttons>  
+  </ion-navbar>
+</ion-header>
 
 <ion-content scroll="false">
 

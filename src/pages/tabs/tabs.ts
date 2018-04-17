@@ -40,6 +40,7 @@ export class TabsPage {
   login: any = LoginPage;
 
   tabBarElement;
+  toggled = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public dbProvider: DbProvider) {
    
@@ -51,6 +52,11 @@ export class TabsPage {
     this.loggedIn = this.dbProvider.isloggedIn();
     this.tabBarElement = document.querySelector('#notLoggedIntabs');
   }
+
+  toggleSearch() {
+    this.toggled = this.toggled ? false : true;
+}
+
 
   ionViewDidLoad() {
     this.loggedIn = this.dbProvider.isloggedIn();
