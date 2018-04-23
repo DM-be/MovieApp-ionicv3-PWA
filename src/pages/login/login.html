@@ -1,14 +1,10 @@
 
 <ion-content fixed>
  
+  <ion-grid fixed>
   <div padding [@flyInBottomFast]="cloudState" id="cloud-layer">
  
-    <ion-row>
-      <ion-col>
-        <img [@flyInBottomSlow]="logoState" src="assets/imgs/joshuamorony.png" />
-      </ion-col>
-    </ion-row>
- 
+  
     <ion-row>
       <ion-col>
         <ion-list inset [@bounceInBottom]="formState">
@@ -34,5 +30,5 @@
     </ion-row>
  
   </div>
- 
+</ion-grid>
 </ion-content>
