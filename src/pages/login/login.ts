@@ -107,7 +107,7 @@ export class LoginPage {
 
     let loader = this.loadingController.create(
       {
-        content: "aan het laden efkes geduld"
+        content: "loading"
       }
     )
     loader.present();
@@ -124,18 +124,23 @@ export class LoginPage {
     this.http.post(
       'http://localhost:3000/auth/login',
       JSON.stringify(credentials),
-      {headers: headers}).subscribe(res => {
+      {headers: headers}).subscribe(async res => {
         
 
        // this.todoService.init(res.json());
-        this.dbProvider.init(res.json());
-        console.log(res.json())
-        loader.dismiss();
+        this.dbProvider.init(res.json()).then(() => {
+          loader.dismiss();
+          this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
+
+        }) 
+
         
-        this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
         
 
-      }, err => console.log(err));
+          
+        })
+       
+  
 
   }
 

@@ -32,8 +32,6 @@ export class DbProvider {
     }
     this.sharedRemote = "http://localhost:5984/shared";
     PouchDB.plugin(pouchdbfind);
-
-
     this.sdb = new PouchDB('shared');
     this.sdb.sync(this.sharedRemote, this.options);
     this.sdb.changes({
@@ -50,9 +48,7 @@ export class DbProvider {
         this.dataChanged();
       }
     })
-
     
-
   }
 
   getSeenMovies() {
@@ -67,7 +63,8 @@ export class DbProvider {
     this.events.publish("data:changed"); // for both recommendations and resyncing friends
   }
 
-  init(details) {
+   async init(details) {
+    return new Promise(async resolve => { 
     this.db = new PouchDB('cloudo');
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
@@ -75,9 +72,10 @@ export class DbProvider {
     
     this.loggedIn = true;
 
-    
-
-    
+    this.movies["seen"] =  await this.getMovies_async("seen");
+    this.movies["watch"] = await this.getMovies_async("watch");
+    resolve()
+    })
 
   }
 
@@ -286,6 +284,7 @@ export class DbProvider {
   // todo: rename, refactor, make it work for recommendations as well
   async getMovies_async(type: string)
   {
+    return new Promise(async resolve => {
     this.movies[type] = [];
     let result = await this.db.allDocs({
       include_docs: true,
@@ -300,7 +299,10 @@ export class DbProvider {
       let movie = {title: movieRow.doc.title, poster: posterURL}
       this.movies[type].push(movie)
     })
-    return this.movies[type];
+
+    resolve(this.movies[type])
+  })
+    
   }
 
   }

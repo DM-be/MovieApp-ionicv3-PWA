@@ -55,8 +55,10 @@ export class DiscoverPage {
   }
 
   async setup() {
-    this.watchedMovies = await this.dbProvider.getMovies_async("watch")
-    this.seenMovies =  await this.dbProvider.getMovies_async("seen")
+    // this.watchedMovies = await this.dbProvider.getMovies_async("watch")
+    // this.seenMovies =  await this.dbProvider.getMovies_async("seen")
+    this.watchedMovies = this.dbProvider.getWatchedMovies()
+    this.seenMovies = this.dbProvider.getSeenMovies();
     console.log(this.seenMovies)
   }
 
@@ -94,7 +96,7 @@ export class DiscoverPage {
 
 
   ionViewWillEnter(){
-    this.setup();
+
 
     
  this.events.subscribe("discover:updated", (searchTerm) => {
@@ -103,7 +105,7 @@ export class DiscoverPage {
     
 
   ionViewDidEnter() {
-     
+    this.setup();
     }
 
     openMovieDetail(i) {
