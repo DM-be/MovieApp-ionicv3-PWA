@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, AlertController, Events } from 'ionic-angular';
 import { SocialProvider } from '../../providers/social/social';
 import { AddFriendPage } from '../add-friend/add-friend';
 
@@ -27,18 +27,22 @@ export class SocialPage {
     public navParams: NavParams,
     public socialProvider: SocialProvider,
     public modalCtrl: ModalController,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController,
+    public events: Events) {
+
+      this.events.subscribe("data:changed", () => {
+        this.setup();
+        this.checkForFriendInvites();
+      })
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     this.setup();
     this.checkForFriendInvites();
   }
 
   async setup(){
-    console.log("setup executed")
     this.friends = await this.socialProvider.getAcceptedFriends();
-    console.log(this.friends)
   }
 
   addFriendAction(){
@@ -50,11 +54,15 @@ export class SocialPage {
   }
 
   async checkForFriendInvites(){
-    console.log("open invites")
+   // console.log("open invites")
     let openFriends = await this.socialProvider.getOpenInvitedFriends();
-    openFriends.forEach(friend => {
+    if(openFriends.length > 0)
+    {
+      openFriends.forEach(friend => {
       this.createPrompt(friend);
     });
+    }
+   
   }
 
   createPrompt(friend) {

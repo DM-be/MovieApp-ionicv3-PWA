@@ -21,15 +21,13 @@ export class RecommendationsPage {
   movieDetailPage = MovieDetailPage;
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public events: Events) {
     this.setup();
-    this.events.subscribe("recommendations:updated", () => {
+    this.events.subscribe("data:changed", () => {
       this.setup();
-      console.log("recommendationsupdating")
     })
     
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad RecommendationsPage');
   }
 
   async setup() {

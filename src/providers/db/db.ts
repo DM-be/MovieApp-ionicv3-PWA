@@ -47,11 +47,7 @@ export class DbProvider {
       console.log(change)
       if(change.id == this.user)
       {
-        
-        console.log("something changed on my data")
-      //  this.events.publish("userData", "blabla")
-        this.recommendationsUpdated();
-        console.log(this.events)
+        this.dataChanged();
       }
     })
 
@@ -59,8 +55,8 @@ export class DbProvider {
 
   }
 
-  recommendationsUpdated() {
-    this.events.publish("recommendations:updated");
+  dataChanged() {
+    this.events.publish("data:changed"); // for both recommendations and resyncing friends
   }
 
   init(details) {
