@@ -74,7 +74,7 @@ export class DbProvider {
 
     this.movies["seen"] =  await this.getMovies_async("seen");
     this.movies["watch"] = await this.getMovies_async("watch");
-    resolve()
+    return resolve();
     })
 
   }
