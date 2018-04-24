@@ -41,11 +41,21 @@ $grid-max-widths: (
 // colors so you can add, rename and remove colors as needed.
 // The "primary" color is the only required color in the map.
 
+// $colors: (
+//   primary: #85ccbe,
+//   secondary: #3d4e5e,
+//   danger:     #f53d3d,
+//   light:      #f4f4f4,
+//   dark:       #222,
+//   favorite:   #69BB7B
+// );
+
+
 $colors: (
-  primary: #85ccbe,
+  primary: #FE5F55,
   secondary: #3d4e5e,
-  danger:     #f53d3d,
-  light:      #f4f4f4,
+  danger:     #FE5F55,
+  light:      #EEF5DB,
   dark:       #222,
   favorite:   #69BB7B
 );

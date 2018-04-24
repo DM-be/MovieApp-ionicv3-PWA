@@ -6,22 +6,29 @@
 -->
 
 
- <ion-content > 
+<ion-content #container>
+
   <ion-grid fixed>
     <ion-row>
 
-      <ion-col col-sm-12 col-md-4 col-lg-3 *ngFor="let movie of movies">
-      <ion-card   >
-          <img src="{{movie.poster}}" />
+      <ion-col col-12 col-sm-12 col-md-4 col-lg-3 *ngFor="let movie of movies; let i = index">
+        <ion-card (click)="openMovieDetail(i)">
           <ion-card-content>
-            <ion-card-title>
-              {{movie.title}}
-            </ion-card-title>
-            <p>
-           
-            </p>
+            <img src="{{movie.poster}}">
           </ion-card-content>
-         
+          <ion-row no-padding>
+            
+            <ion-col>
+              <button ion-button clear icon-only color="primary" icon-start>
+                <ion-icon name='checkmark'></ion-icon>
+              </button>
+            </ion-col>
+            <ion-col>
+              <button ion-button clear icon-only color="primary" icon-start>
+                <ion-icon name='flag'></ion-icon>
+              </button>
+            </ion-col>
+          </ion-row>
         </ion-card>
       </ion-col>
     </ion-row>

@@ -8,6 +8,7 @@ import { SuperTabs } from 'ionic2-super-tabs';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import { DbProvider } from '../../providers/db/db';
+import { MovieDetailPage } from '../movie-detail/movie-detail';
 
 /**
  * Generated class for the SeenMoviesPage page.
@@ -28,6 +29,8 @@ export class SeenMoviesPage {
   searchControl: FormControl;
 
   movies: any;
+
+  movieDetailPage = MovieDetailPage
 
   constructor(
     public navCtrl: NavController,
@@ -52,6 +55,13 @@ export class SeenMoviesPage {
   }
   async setup() {
     this.movies = await this.dbProvider.getMovies_async("seen")
+  }
+
+  openMovieDetail(i) {
+    let movie = this.movies[i];
+      this.navCtrl.push(this.movieDetailPage, {movie: movie}
+      );
+
   }
   
 

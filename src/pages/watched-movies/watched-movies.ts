@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DbProvider } from '../../providers/db/db';
+import { MovieDetailPage } from '../movie-detail/movie-detail';
 
 /**
  * Generated class for the WatchedMoviesPage page.
@@ -16,6 +17,7 @@ import { DbProvider } from '../../providers/db/db';
 })
 export class WatchedMoviesPage {
 
+  movieDetailPage = MovieDetailPage
   movies: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider) {
@@ -32,6 +34,13 @@ export class WatchedMoviesPage {
 
   async setup() {
     this.movies = await this.dbProvider.getMovies_async("watch")
+  }
+
+  openMovieDetail(i) {
+    let movie = this.movies[i];
+      this.navCtrl.push(this.movieDetailPage, {movie: movie}
+      );
+
   }
 
 }
