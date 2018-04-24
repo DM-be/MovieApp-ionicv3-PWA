@@ -55,6 +55,14 @@ export class DbProvider {
 
   }
 
+  getSeenMovies() {
+    return this.movies["seen"];
+  }
+
+  getWatchedMovies() {
+    return this.movies["watch"]
+  }
+
   dataChanged() {
     this.events.publish("data:changed"); // for both recommendations and resyncing friends
   }

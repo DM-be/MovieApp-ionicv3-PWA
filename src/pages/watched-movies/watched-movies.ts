@@ -19,8 +19,13 @@ export class WatchedMoviesPage {
 
   movieDetailPage = MovieDetailPage
   movies: any;
+  seenMovies: any;
+  watchedMovies: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider) {
+  this.setup(); // its in here so that we get the movies propertie in the provider populated
+  // we need this to disable buttons already in seen / watch lists 
+    
   }
 
   ionViewDidLoad() {
@@ -28,12 +33,13 @@ export class WatchedMoviesPage {
     
   }
 
-  ionViewWillEnter() {
-    this.setup();
-  }
+  // ionViewWillEnter() {
+  //   this.setup();
+  // }
 
   async setup() {
     this.movies = await this.dbProvider.getMovies_async("watch")
+    console.log(this.movies)
   }
 
   openMovieDetail(i) {

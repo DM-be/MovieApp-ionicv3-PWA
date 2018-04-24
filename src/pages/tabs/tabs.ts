@@ -29,7 +29,7 @@ export class TabsPage {
   tabsPlacement: string;
   tabsLayout: string;
 
-  discover: any = DiscoverPage;
+
   seen: any = SeenMoviesPage;
   watch: any = WatchedMoviesPage;
   social: any = SocialPage;

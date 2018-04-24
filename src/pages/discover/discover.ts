@@ -10,6 +10,7 @@ import 'rxjs/add/operator/debounceTime';
 import { MovieDetailPage } from '../movie-detail/movie-detail';
 import { ImageLoaderConfig } from 'ionic-image-loader';
 import { LoginPage } from '../login/login';
+import { DbProvider } from '../../providers/db/db';
 
 
 @Component({
@@ -18,6 +19,8 @@ import { LoginPage } from '../login/login';
 })
 export class DiscoverPage {
 
+  // TODO: because of async waiting we have to wait a while before we can enable/disable search results...
+  
   @ViewChild(Content) content: Content;
 
   offset = 100;
@@ -31,6 +34,8 @@ export class DiscoverPage {
   loginPage = LoginPage
   movies: any;
 
+  seenMovies: any;
+  watchedMovies: any;
 
   constructor(
     public navCtrl: NavController,
@@ -40,36 +45,61 @@ export class DiscoverPage {
     public loadingCtrl: LoadingController,
     private imageLoaderConfig: ImageLoaderConfig,
     public modalCtrl: ModalController,
-    public events: Events
+    public events: Events,
+    public dbProvider: DbProvider
     ) {
 
       this.searchControl = new FormControl();
+     // this.setup();
     
-      
-      //imageLoaderConfig.enableSpinner(true);
-      
-      
-      
   }
 
-  login() {
-    let loginModal = this.modalCtrl.create(this.loginPage);
-    loginModal.present();
+  async setup() {
+    this.watchedMovies = await this.dbProvider.getMovies_async("watch")
+    this.seenMovies =  await this.dbProvider.getMovies_async("seen")
+    console.log(this.seenMovies)
+  }
+
+  // todo refactor
+  isInWatched(i) {
+    let movieToCheck = this.movies[i]
+    let bool = false;
+    this.watchedMovies.forEach(movie => {
+      if(movieToCheck.title == movie.title)
+      {
+        bool = true;
+      }
+    });
+    return bool;
+  }
+
+  isInSeen(i)
+  {
+    let movieToCheck = this.movies[i]
+    let bool = false;
+    this.seenMovies.forEach(movie => {
+      if(movieToCheck.title == movie.title)
+      {
+        bool = true;
+      }
+    });
+    return bool;
+  }
+  
+
+
+  logIt() {
+    console.log("button is working")
   }
 
 
-  ionViewDidLoad() {
+  ionViewWillEnter(){
+    this.setup();
 
     
  this.events.subscribe("discover:updated", (searchTerm) => {
      this.setMoviesByKeyWords_async(searchTerm);
    })}
-   
-   
-  
- 
-    
-    
     
 
   ionViewDidEnter() {
@@ -81,7 +111,6 @@ export class DiscoverPage {
       this.navCtrl.push(this.movieDetailPage, {movie: movie}
       );
     }
-
 
     async setMoviesByKeyWords_async(keyword)
     {

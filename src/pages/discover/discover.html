@@ -18,12 +18,12 @@
           </ion-card-content>
           <ion-row no-padding>
             <ion-col>
-              <button ion-button clear icon-only color="primary" icon-start>
+              <button ion-button clear icon-only color="primary" [disabled]="isInWatched(i)" icon-start (click)="logIt()">
                 <ion-icon name='eye'></ion-icon>
               </button>
             </ion-col>
             <ion-col>
-              <button ion-button clear icon-only color="primary" icon-start>
+              <button ion-button clear icon-only color="primary" [disabled]="isInSeen(i)" icon-start>
                 <ion-icon name='checkmark'></ion-icon>
               </button>
             </ion-col>

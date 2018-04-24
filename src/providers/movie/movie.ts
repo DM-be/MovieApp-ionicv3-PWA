@@ -42,6 +42,13 @@ export class MovieProvider {
   }
 
   // api functions
+  getMoviesSeen() {
+    return this.movies["seen"]
+  }
+
+  getMoviesWatched() {
+    return this.movies["watch"]
+  }
 
 
 
@@ -178,7 +185,7 @@ export class MovieProvider {
     await this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
   }
 
-
+// TODO MOVE TO DB PROVIDER
   async getMovies_async(type: string)
   {
     this.movies[type] = [];
