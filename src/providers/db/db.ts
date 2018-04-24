@@ -1,8 +1,9 @@
-
+import { Events } from 'ionic-angular';
 import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
 import pouchdbfind from 'pouchdb-find';
 import blobUtil from 'blob-util';
+
 
 /*
   Generated class for the DbProvider provider.
@@ -21,8 +22,9 @@ export class DbProvider {
   private user: string;
   private movies = {};
   private loggedIn: boolean = false;
+  
 
-  constructor() {
+  constructor(public events: Events) {
     this.options = {
       live: true,
       retry: true,
@@ -30,6 +32,35 @@ export class DbProvider {
     }
     this.sharedRemote = "http://localhost:5984/shared";
     PouchDB.plugin(pouchdbfind);
+
+
+    this.sdb = new PouchDB('shared');
+    this.sdb.sync(this.sharedRemote, this.options);
+    this.sdb.changes({
+      live: true,
+      since: "now",
+      include_docs: true
+
+    }).on("change", (change) => {
+     // console.log(change)
+      console.log(change.id)
+      console.log(change)
+      if(change.id == this.user)
+      {
+        
+        console.log("something changed on my data")
+      //  this.events.publish("userData", "blabla")
+        this.recommendationsUpdated();
+        console.log(this.events)
+      }
+    })
+
+    
+
+  }
+
+  recommendationsUpdated() {
+    this.events.publish("recommendations:updated");
   }
 
   init(details) {
@@ -37,9 +68,13 @@ export class DbProvider {
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
     this.db.sync(this.remote, this.options);
-    this.sdb = new PouchDB('shared');
-    this.sdb.sync(this.sharedRemote, this.options);
+    
     this.loggedIn = true;
+
+    
+
+    
+
   }
 
   register(user)
@@ -62,6 +97,8 @@ export class DbProvider {
   getUser() {
     return this.user;
   }
+
+
 
   async inviteFriend(username)
   {

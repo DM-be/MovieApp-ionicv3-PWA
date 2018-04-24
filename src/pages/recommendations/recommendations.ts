@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { DbProvider } from '../../providers/db/db';
 import { MovieDetailPage } from '../movie-detail/movie-detail';
 
@@ -19,8 +19,13 @@ export class RecommendationsPage {
 
   recommendations = [];
   movieDetailPage = MovieDetailPage;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public events: Events) {
     this.setup();
+    this.events.subscribe("recommendations:updated", () => {
+      this.setup();
+      console.log("recommendationsupdating")
+    })
+    
   }
 
   ionViewDidLoad() {
