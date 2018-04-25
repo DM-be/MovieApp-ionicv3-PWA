@@ -31,7 +31,7 @@ export class DbProvider {
 
     this.username = 'bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix';
     this.password = '142963408785f5c6fe057bd73c7e0db10527bd0003ab1b889bdf7421a3025c39';
-    this.sharedRemote = 'bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix.cloudant.com/shared';
+    this.sharedRemote = 'https://bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix.cloudant.com/shared-new';
     this.sharedOptions =  {
       live: true,
       retry: true,
@@ -53,8 +53,9 @@ export class DbProvider {
   }
 
   init(details) {
-    this.db = new PouchDB('cloudo');
+    this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
+    console.log(this.remote)
     this.user = details.user_id;
     this.db.sync(this.remote, this.options);
     console.log(this.db.adapter)
@@ -66,6 +67,7 @@ export class DbProvider {
 
   register(user)
   {
+    console.log(user)
     this.user = user.username;
     this.sdb.put({
       _id: user.username,
@@ -77,6 +79,14 @@ export class DbProvider {
     this.loggedIn = true;
   }
 
+  logout() {
+    this.movies = null;
+    this.db.destroy().then(() => {
+      console.log("db removed")
+    });
+    this.sdb.destroy();
+  }
+  
   isloggedIn() {
     return this.loggedIn;
   }
@@ -84,6 +94,18 @@ export class DbProvider {
   getUser() {
     return this.user;
   }
+
+  async getAllUsers() {
+
+    let allUsers = [];
+    let doc = await this.db.allDocs({
+        include_docs: true,
+        attachments: false
+      })
+    doc.forEach(userDoc => {
+      allUsers.push(userDoc._id)
+    });
+}
 
   async inviteFriend(username)
   {

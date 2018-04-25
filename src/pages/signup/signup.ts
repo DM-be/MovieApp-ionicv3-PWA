@@ -59,7 +59,7 @@ export class SignupPage {
           this.dbProvider.register(user);
         
           this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
-          console.log(res)
+          
 
         }, (err) => {
           console.log(err);

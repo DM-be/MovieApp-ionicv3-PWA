@@ -59,11 +59,13 @@ export class DiscoverPage {
 
 
   ionViewDidLoad() {
-
+    
     
  this.events.subscribe("discover:updated", (searchTerm) => {
      this.setMoviesByKeyWords_async(searchTerm);
    })}
+
+   
    
    
   

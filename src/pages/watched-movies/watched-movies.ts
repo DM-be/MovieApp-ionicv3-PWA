@@ -25,6 +25,7 @@ export class WatchedMoviesPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WatchedMoviesPage');
+    console.log(this.dbProvider.getAllUsers())
     
   }
 

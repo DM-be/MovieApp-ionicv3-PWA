@@ -31,7 +31,9 @@ export class SocialProvider implements AutoCompleteService {
     return [{"username": "dennistest", "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png"},{"username": "rianne", "avatar": "bla"} ]
   }
 
-  
+  getAllUsers2() {
+    return this.dbProvider.getAllUsers();
+  }
 
   
 

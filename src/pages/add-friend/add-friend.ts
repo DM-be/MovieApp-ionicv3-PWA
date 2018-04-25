@@ -23,6 +23,7 @@ export class AddFriendPage {
   }
 
   ionViewDidLoad() {
+    this.socialProvider.getAllUsers2()
   }
 
   itemSelected(event)
