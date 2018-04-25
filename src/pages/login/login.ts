@@ -107,7 +107,7 @@ export class LoginPage {
 
     let loader = this.loadingController.create(
       {
-        content: "aan het laden efkes geduld"
+        content: "Signing in..."
       }
     )
     loader.present();
@@ -129,7 +129,7 @@ export class LoginPage {
 
        // this.todoService.init(res.json());
         this.dbProvider.init(res.json());
-        console.log(res.json())
+
         loader.dismiss();
         
         this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
