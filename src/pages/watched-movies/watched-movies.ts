@@ -25,7 +25,7 @@ export class WatchedMoviesPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WatchedMoviesPage');
-    console.log(this.dbProvider.getAllUsers())
+    
     
   }
 
@@ -35,6 +35,8 @@ export class WatchedMoviesPage {
 
   async setup() {
     this.movies = await this.dbProvider.getMovies_async("watch")
+    let users = await this.dbProvider.getAllUsers();
+    console.log(users)
   }
 
   openMovieDetail(i) {

@@ -97,14 +97,22 @@ export class DbProvider {
 
   async getAllUsers() {
 
-    let allUsers = [];
-    let doc = await this.db.allDocs({
+    try {
+      let allUsers = [];
+    let doc = await this.sdb.allDocs({
         include_docs: true,
         attachments: false
       })
-    doc.forEach(userDoc => {
-      allUsers.push(userDoc._id)
+    doc.rows.forEach(userDoc => {
+      console.log(userDoc)
+      allUsers.push({"username": userDoc.doc._id}); // todo add avatars
     });
+    return allUsers;
+    }
+    catch(err) {
+      console.log(err)
+    }
+    
 }
 
   async inviteFriend(username)

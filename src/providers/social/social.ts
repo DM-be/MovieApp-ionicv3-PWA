@@ -55,8 +55,9 @@ export class SocialProvider implements AutoCompleteService {
    await this.dbProvider.declineFriendInvite(username);
   }
 
-  getResults(keyword:string) {
-    return this.getAllUsers()
+   async getResults(keyword:string) {
+     let users = await this.dbProvider.getAllUsers()
+    return users
       .filter(
         result => {return result.username.toLowerCase().startsWith(keyword.toLowerCase())
   })
