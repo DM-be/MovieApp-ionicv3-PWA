@@ -122,7 +122,7 @@ export class LoginPage {
     }
 
     this.http.post(
-      'http://localhost:3000/auth/login',
+      'https://mighty-ravine-91955.herokuapp.com/auth/login',
       JSON.stringify(credentials),
       {headers: headers}).subscribe(res => {
         

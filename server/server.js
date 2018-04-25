@@ -21,10 +21,12 @@ app.use(function(req, res, next) {
  
 var config = {
   dbServer: {
-    protocol: 'http://',
-    host: 'localhost:5984',
-    user: '',
-    password: '',
+    protocol: "https://" ,
+    host: "bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix.cloudant.com",
+    user: "bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix",
+    password: "142963408785f5c6fe057bd73c7e0db10527bd0003ab1b889bdf7421a3025c39",
+    // automatically detect if the host is Cloudant
+    cloudant: true,
     userDB: 'sl-users',
     couchAuthDB: '_users'
   },

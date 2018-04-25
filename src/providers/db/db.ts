@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
 import pouchdbfind from 'pouchdb-find';
 import blobUtil from 'blob-util';
-
+import pouchdbadapteridb from 'pouchdb-adapter-idb';
 /*
   Generated class for the DbProvider provider.
 
@@ -22,14 +22,34 @@ export class DbProvider {
   private movies = {};
   private loggedIn: boolean = false;
 
+  private username = "";
+  private password = "";
+  private sharedOptions: any;
+
+
   constructor() {
+
+    this.username = 'bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix';
+    this.password = '142963408785f5c6fe057bd73c7e0db10527bd0003ab1b889bdf7421a3025c39';
+    this.sharedRemote = 'bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix.cloudant.com/shared';
+    this.sharedOptions =  {
+      live: true,
+      retry: true,
+      continuous: true,
+      auth: {
+        username: this.username,
+        password: this.password
+      }
+    } 
+
     this.options = {
       live: true,
       retry: true,
       continuous: true
     }
-    this.sharedRemote = "http://localhost:5984/shared";
-    PouchDB.plugin(pouchdbfind);
+
+   // this.sharedRemote = "http://localhost:5984/shared";
+    PouchDB.plugin(pouchdbadapteridb);
   }
 
   init(details) {
@@ -37,8 +57,10 @@ export class DbProvider {
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
     this.db.sync(this.remote, this.options);
-    this.sdb = new PouchDB('shared');
-    this.sdb.sync(this.sharedRemote, this.options);
+    console.log(this.db.adapter)
+    this.sdb = new PouchDB('shared', {adapter : 'idb'});
+    console.log(this.sdb.adapter)
+    this.sdb.sync(this.sharedRemote, this.sharedOptions);
     this.loggedIn = true;
   }
 
