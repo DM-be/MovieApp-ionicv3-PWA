@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { DbProvider } from '../../providers/db/db';
 import { MovieDetailPage } from '../movie-detail/movie-detail';
 
@@ -22,10 +22,12 @@ export class WatchedMoviesPage {
   seenMovies: any;
   watchedMovies: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public events: Events) {
  // this.setup(); // its in here so that we get the movies propertie in the provider populated
   // we need this to disable buttons already in seen / watch lists 
   
+ // this.setup();
+ 
   }
 
   ionViewDidLoad() {
@@ -35,11 +37,13 @@ export class WatchedMoviesPage {
   }
 
    ionViewWillEnter() {
-    this.setup();
+  //  this.setup();
+  this.movies = this.dbProvider.getWatchedMovies();
+  console.log(this.movies)
    }
 
   async setup() {
-    this.movies = await this.dbProvider.getMovies_async("watch")
+   // this.movies = await this.dbProvider.getMovies_async("watch")
     let users = await this.dbProvider.getAllUsers();
     console.log(users)
   }

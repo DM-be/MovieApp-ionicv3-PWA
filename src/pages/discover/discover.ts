@@ -84,8 +84,8 @@ export class DiscoverPage {
   }
 
   async refreshMovies() {
-    this.seenMovies = await this.dbProvider.getMovies_async("seen");
-    this.watchedMovies = await this.dbProvider.getMovies_async("watch")
+   // this.seenMovies = await this.dbProvider.getMovies_async("seen");
+    //this.watchedMovies = await this.dbProvider.getMovies_async("watch")
   }
 
   ionViewDidLoad() {

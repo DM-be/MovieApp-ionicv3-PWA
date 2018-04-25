@@ -29,6 +29,8 @@ export class DbProvider {
 
   private basicOptions;
 
+  watchedMovies = [];
+
   constructor(public events: Events) {
 
     this.username = 'bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix';
@@ -58,17 +60,32 @@ export class DbProvider {
 
    // this.sharedRemote = "http://localhost:5984/shared";
     PouchDB.plugin(pouchdbadapteridb);
+
+
+
+    this.events.subscribe("addedMovie", () => {
+      this.getMovies_async("watch")
+    })
   }
 
   getlocalDb () {
     return this.db;
   }
+
+  getWatchedMovies() {
+    return this.watchedMovies;
+  }
   init(details) {
+    
+    this.movies = undefined;
+    this.movies = {};
+    
+
     this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
     console.log(this.remote)
     this.user = details.user_id;
-    
+
     console.log(this.db.adapter)
     this.sdb = new PouchDB('shared', {adapter : 'idb'});
     console.log(this.sdb.adapter)
@@ -76,6 +93,7 @@ export class DbProvider {
     this.db.sync(this.remote).on('complete', (info) => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
         this.db.sync(this.remote, this.options);
         this.events.publish("localsync:completed");
+        this.initializeMovies();
     })
 
     this.sdb.sync(this.sharedRemote, this.sharedOptions);
@@ -83,7 +101,11 @@ export class DbProvider {
 
 
     }
-
+  
+  async initializeMovies() {
+    await this.getMovies_async("watch");
+    await this.getMovies_async("seen");
+  }
   
 
   register(user)
@@ -313,29 +335,44 @@ export class DbProvider {
     })
     let blob = await blobUtil.imgSrcToBlob(movie.poster, 'image/jpeg','Anonymous', 1.0)
     let doc = await this.db.get(type + movie.title);
-    await this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
+    this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png').then(() => {
+       this.events.publish("addedMovie");
+    })
+   
+    
   }
 
   // todo: rename, refactor, make it work for recommendations as well
   async getMovies_async(type: string)
   {
     return new Promise(async resolve => {
-    this.movies[type] = [];
+    
     let result = await this.db.allDocs({
       include_docs: true,
       startkey: type,
       endkey: type + '\ufff0',
       attachments: true
     })
-    
+    console.log(result)
     result.rows.forEach(async movieRow => {
-      let blob = await this.db.getAttachment(type + movieRow.doc.title, movieRow.doc.title + '.png' )
-      let posterURL = await blobUtil.blobToDataURL(blob)
-      let movie = {title: movieRow.doc.title, poster: posterURL}
-      this.movies[type].push(movie)
+      if((this.watchedMovies.findIndex(i => i.title === movieRow.doc.title)) === -1 )
+      {
+        let blob = await this.db.getAttachment(type + movieRow.doc.title, movieRow.doc.title + '.png' )
+        let posterURL = await blobUtil.blobToDataURL(blob)
+        let movie = {title: movieRow.doc.title, poster: posterURL}
+      if(type === "watch")
+      {
+        this.watchedMovies.push(movie)
+      }
+      else {
+        this.movies[type].push(movie)
+      }
+      }
+      
+      
     })
 
-    resolve(this.movies[type])
+    resolve()
   })
     
   }

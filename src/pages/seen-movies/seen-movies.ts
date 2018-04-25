@@ -54,7 +54,7 @@ export class SeenMoviesPage {
     this.setup();
    }
   async setup() {
-    this.movies = await this.dbProvider.getMovies_async("seen")
+    //this.movies = await this.dbProvider.getMovies_async("seen")
   }
 
   openMovieDetail(i) {
