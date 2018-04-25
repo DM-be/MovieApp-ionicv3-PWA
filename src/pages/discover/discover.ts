@@ -79,6 +79,8 @@ export class DiscoverPage {
   ) 
   {
     this.searchControl = new FormControl();
+    this.getMoviesInTheatre();
+    this.refreshMovies();
   }
 
   async refreshMovies() {
@@ -90,7 +92,9 @@ export class DiscoverPage {
     this.events.subscribe("discover:updated", (searchTerm) => {
       this.setMoviesByKeyWords_async(searchTerm);
     })
+    
   }
+
 
   logOut() {
     this.dbProvider.logOut();
@@ -106,14 +110,23 @@ export class DiscoverPage {
     return (this.seenMovies.findIndex(i => i.title === movie.title) > -1)
   }
 
+  async addToWatch(event,movie) {
+    event.preventDefault();
+    event.target.offsetParent.setAttribute("disabled", "disabled");
+    await this.dbProvider.addMovie("watch", movie);
+    console.log(event)
+   // window.dispatchEvent(new Event('resize'));
+    
+  }
+
   async getMoviesInTheatre() {
     this.movies = await this.movieProvider.getMoviesInTheater();
   }
 
-   ionViewWillEnter() {
-    this.refreshMovies();
-    this.getMoviesInTheatre();
+   ionViewDidLeave() {
+  //  this.refreshMovies();
   }
+
 
   openMovieDetail(i) {
     let movie = this.movies[i];
@@ -131,7 +144,9 @@ export class DiscoverPage {
       const keywords = await this.movieProvider.getKeyWords(keyword);
       const movies = await this.movieProvider.getRelatedMovies(keywords)
       this.movies = movies;
+      this.refreshMovies();  // update to disable buttons
       loading.dismiss();
+     
     } catch (err) {
       console.log("error in setting the movies by keyword : " + err);
     }

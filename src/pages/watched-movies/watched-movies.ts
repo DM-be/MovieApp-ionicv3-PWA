@@ -25,7 +25,7 @@ export class WatchedMoviesPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider) {
  // this.setup(); // its in here so that we get the movies propertie in the provider populated
   // we need this to disable buttons already in seen / watch lists 
-    
+  
   }
 
   ionViewDidLoad() {

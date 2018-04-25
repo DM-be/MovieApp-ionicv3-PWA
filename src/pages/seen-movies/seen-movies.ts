@@ -50,9 +50,9 @@ export class SeenMoviesPage {
 
   }
 
-  // ionViewWillEnter() {
-  //   this.setup();
-  // }
+  ionViewWillEnter() {
+    this.setup();
+   }
   async setup() {
     this.movies = await this.dbProvider.getMovies_async("seen")
   }
