@@ -101,13 +101,22 @@ export class DiscoverPage {
     this.appCtrl.getRootNav().setRoot(TabsPage);
   }
   isInWatched(movie) {
-    return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
+    if(this.watchedMovies !== undefined) // new users do not have watched movies
+    {
+       return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
+    }
+   
      // stops after returning a match
   }
 
   isInSeen(movie)
+  
   {
-    return (this.seenMovies.findIndex(i => i.title === movie.title) > -1)
+    if(this.seenMovies !== undefined)
+    {
+      return (this.seenMovies.findIndex(i => i.title === movie.title) > -1)
+    }
+    
   }
 
   async addToWatch(event,movie) {
