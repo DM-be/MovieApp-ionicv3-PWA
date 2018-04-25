@@ -37,6 +37,7 @@ import {
 import {
   LoginPage
 } from '../login/login';
+import { DbProvider } from '../../providers/db/db';
 
 
 @Component({
@@ -58,6 +59,8 @@ export class DiscoverPage {
   loginPage = LoginPage
   movies: any;
 
+  seenMovies: any;
+  watchedMovies: any;
 
   constructor(
     public navCtrl: NavController,
@@ -67,12 +70,20 @@ export class DiscoverPage {
     public loadingCtrl: LoadingController,
     private imageLoaderConfig: ImageLoaderConfig,
     public modalCtrl: ModalController,
-    public events: Events
+    public events: Events,
+    public dbProvider: DbProvider
   ) 
   {
     this.searchControl = new FormControl();
     this.getMoviesInTheatre();
+    //this.refreshMovies()
     
+  }
+
+  async refreshMovies() {
+    this.seenMovies = await this.dbProvider.getMovies_async("seen");
+    this.watchedMovies = await this.dbProvider.getMovies_async("watch")
+    console.log(this.watchedMovies);
   }
 
   login() {
@@ -85,11 +96,25 @@ export class DiscoverPage {
     })
   }
 
+  isInWatched(movie) {
+    return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1);
+     // stops after returning a match
+  }
+
+  isInSeen(movie)
+  {
+    return (this.seenMovies.findIndex(i => i.title === movie.title) > -1);
+  }
+
   async getMoviesInTheatre() {
     this.movies = await this.movieProvider.getMoviesInTheater();
   }
 
-  ionViewDidEnter() {}
+  ionViewWillEnter() {
+    this.refreshMovies();
+    console.log(this.seenMovies)
+    console.log(this.watchedMovies);
+  }
 
   openMovieDetail(i) {
     let movie = this.movies[i];
