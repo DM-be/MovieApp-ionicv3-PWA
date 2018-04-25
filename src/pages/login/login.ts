@@ -1,5 +1,5 @@
 
-import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Tabs, Events } from 'ionic-angular';
 import { Component, trigger, state, style, transition, animate, keyframes } from '@angular/core';
 
 import { Http, Headers } from '@angular/http';
@@ -93,7 +93,8 @@ export class LoginPage {
     public loadingController: LoadingController,
     public movieProvider: MovieProvider,
     public dbProvider: DbProvider,
-    public appCtrl: App
+    public appCtrl: App,
+    public events: Events
     
   ) {
   }
@@ -107,7 +108,7 @@ export class LoginPage {
 
     let loader = this.loadingController.create(
       {
-        content: "loading"
+        content: "Signing in..."
       }
     )
     loader.present();
@@ -122,22 +123,21 @@ export class LoginPage {
     }
 
     this.http.post(
-      'http://localhost:3000/auth/login',
+      'https://mighty-ravine-91955.herokuapp.com/auth/login',
       JSON.stringify(credentials),
       {headers: headers}).subscribe(async res => {
         
 
-       // this.todoService.init(res.json());
-        this.dbProvider.init(res.json()).then(() => {
+       
+        this.dbProvider.init(res.json());
+        this.events.subscribe("localsync:completed", () => {
           loader.dismiss();
+          console.log("localsync should be complete")
+          console.log(this.dbProvider.getlocalDb());
           this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
-
-        }) 
-
+        }) // have to wait for the data to be in sync, how else can we check the seen/watch list?
         
-        
-
-          
+      
         })
        
   

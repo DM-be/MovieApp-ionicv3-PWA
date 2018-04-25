@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
 import pouchdbfind from 'pouchdb-find';
 import blobUtil from 'blob-util';
-
-
+import pouchdbadapteridb from 'pouchdb-adapter-idb';
 /*
   Generated class for the DbProvider provider.
 
@@ -24,63 +23,72 @@ export class DbProvider {
   private loggedIn: boolean = false;
   
 
+  private username = "";
+  private password = "";
+  private sharedOptions: any;
+
+  private basicOptions;
+
   constructor(public events: Events) {
+
+    this.username = 'bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix';
+    this.password = '142963408785f5c6fe057bd73c7e0db10527bd0003ab1b889bdf7421a3025c39';
+    this.sharedRemote = 'https://bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix.cloudant.com/shared-new';
+    this.sharedOptions =  {
+      live: true,
+      retry: true,
+      continuous: true,
+      auth: {
+        username: this.username,
+        password: this.password
+      }
+    } 
+    this.basicOptions = {
+      auth: {
+        username: this.username,
+        password: this.password
+      }
+    }
+
     this.options = {
       live: true,
       retry: true,
       continuous: true
     }
-    this.sharedRemote = "http://localhost:5984/shared";
-    PouchDB.plugin(pouchdbfind);
-    this.sdb = new PouchDB('shared');
-    this.sdb.sync(this.sharedRemote, this.options);
-    this.sdb.changes({
-      live: true,
-      since: "now",
-      include_docs: true
 
-    }).on("change", (change) => {
-     // console.log(change)
-      console.log(change.id)
-      console.log(change)
-      if(change.id == this.user)
-      {
-        this.dataChanged();
-      }
-    })
-    
+   // this.sharedRemote = "http://localhost:5984/shared";
+    PouchDB.plugin(pouchdbadapteridb);
   }
 
-  getSeenMovies() {
-    return this.movies["seen"];
+  getlocalDb () {
+    return this.db;
   }
-
-  getWatchedMovies() {
-    return this.movies["watch"]
-  }
-
-  dataChanged() {
-    this.events.publish("data:changed"); // for both recommendations and resyncing friends
-  }
-
-   async init(details) {
-    return new Promise(async resolve => { 
-    this.db = new PouchDB('cloudo');
+  init(details) {
+    this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
+    console.log(this.remote)
     this.user = details.user_id;
-    this.db.sync(this.remote, this.options);
     
+    console.log(this.db.adapter)
+    this.sdb = new PouchDB('shared', {adapter : 'idb'});
+    console.log(this.sdb.adapter)
+
+    this.db.sync(this.remote).on('complete', (info) => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
+        this.db.sync(this.remote, this.options);
+        this.events.publish("localsync:completed");
+    })
+
+    this.sdb.sync(this.sharedRemote, this.sharedOptions);
     this.loggedIn = true;
 
-    this.movies["seen"] =  await this.getMovies_async("seen");
-    this.movies["watch"] = await this.getMovies_async("watch");
-    return resolve();
-    })
 
-  }
+    }
+
+  
 
   register(user)
   {
+    console.log(user)
     this.user = user.username;
     this.sdb.put({
       _id: user.username,
@@ -92,6 +100,14 @@ export class DbProvider {
     this.loggedIn = true;
   }
 
+  logOut() {
+    this.movies = {};
+    this.db.destroy().then(() => {
+      console.log("db removed")
+    });
+    this.sdb.destroy();
+  }
+  
   isloggedIn() {
     return this.loggedIn;
   }
@@ -101,6 +117,25 @@ export class DbProvider {
   }
 
 
+  async getAllUsers() {
+
+    try {
+      let allUsers = [];
+    let doc = await this.sdb.allDocs({
+        include_docs: true,
+        attachments: false
+      })
+    doc.rows.forEach(userDoc => {
+      console.log(userDoc)
+      allUsers.push({"username": userDoc.doc._id}); // todo add avatars
+    });
+    return allUsers;
+    }
+    catch(err) {
+      console.log(err)
+    }
+    
+}
 
   async inviteFriend(username)
   {

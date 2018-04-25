@@ -1,16 +1,45 @@
-import { Component, ViewChild  } from '@angular/core';
-import {  NavController, NavParams, LoadingController, ModalController, Events } from 'ionic-angular';
-import { MovieProvider } from '../../providers/movie/movie';
-import { Platform } from 'ionic-angular/platform/platform';
-import { HomePage } from '../home/home';
-import { Content } from 'ionic-angular';
-import { SuperTabs } from 'ionic2-super-tabs';
-import { FormControl } from '@angular/forms';
+import {
+  Component,
+  ViewChild
+} from '@angular/core';
+import {
+  NavController,
+  NavParams,
+  LoadingController,
+  ModalController,
+  Events,
+  App
+} from 'ionic-angular';
+import {
+  MovieProvider
+} from '../../providers/movie/movie';
+import {
+  Platform
+} from 'ionic-angular/platform/platform';
+import {
+  HomePage
+} from '../home/home';
+import {
+  Content
+} from 'ionic-angular';
+import {
+  SuperTabs
+} from 'ionic2-super-tabs';
+import {
+  FormControl
+} from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
-import { MovieDetailPage } from '../movie-detail/movie-detail';
-import { ImageLoaderConfig } from 'ionic-image-loader';
-import { LoginPage } from '../login/login';
+import {
+  MovieDetailPage
+} from '../movie-detail/movie-detail';
+import {
+  ImageLoaderConfig
+} from 'ionic-image-loader';
+import {
+  LoginPage
+} from '../login/login';
 import { DbProvider } from '../../providers/db/db';
+import { TabsPage } from '../tabs/tabs';
 
 
 @Component({
@@ -19,8 +48,6 @@ import { DbProvider } from '../../providers/db/db';
 })
 export class DiscoverPage {
 
-  // TODO: because of async waiting we have to wait a while before we can enable/disable search results...
-  
   @ViewChild(Content) content: Content;
 
   offset = 100;
@@ -29,10 +56,11 @@ export class DiscoverPage {
 
   searchTerm: string = '';
   searchControl: FormControl;
-  
+
   movieDetailPage = MovieDetailPage;
   loginPage = LoginPage
   movies: any;
+  tabsPage = TabsPage
 
   seenMovies: any;
   watchedMovies: any;
@@ -46,89 +74,69 @@ export class DiscoverPage {
     private imageLoaderConfig: ImageLoaderConfig,
     public modalCtrl: ModalController,
     public events: Events,
-    public dbProvider: DbProvider
-    ) {
-
-      this.searchControl = new FormControl();
-     // this.setup();
-    
-  }
-
-  async setup() {
-    // this.watchedMovies = await this.dbProvider.getMovies_async("watch")
-    // this.seenMovies =  await this.dbProvider.getMovies_async("seen")
-    this.watchedMovies = this.dbProvider.getWatchedMovies()
-    this.seenMovies = this.dbProvider.getSeenMovies();
-    console.log(this.seenMovies)
-  }
-
-  // todo refactor
-  isInWatched(i) {
-    let movieToCheck = this.movies[i]
-    let bool = false;
-    this.watchedMovies.forEach(movie => {
-      if(movieToCheck.title == movie.title)
-      {
-        bool = true;
-      }
-    });
-    return bool;
-  }
-
-  isInSeen(i)
+    public dbProvider: DbProvider,
+    public appCtrl: App
+  ) 
   {
-    let movieToCheck = this.movies[i]
-    let bool = false;
-    this.seenMovies.forEach(movie => {
-      if(movieToCheck.title == movie.title)
-      {
-        bool = true;
-      }
+    this.searchControl = new FormControl();
+  }
+
+  async refreshMovies() {
+    this.seenMovies = await this.dbProvider.getMovies_async("seen");
+    this.watchedMovies = await this.dbProvider.getMovies_async("watch")
+  }
+
+  ionViewDidLoad() {
+    this.events.subscribe("discover:updated", (searchTerm) => {
+      this.setMoviesByKeyWords_async(searchTerm);
+    })
+  }
+
+  logOut() {
+    this.dbProvider.logOut();
+    this.appCtrl.getRootNav().setRoot(TabsPage);
+  }
+  isInWatched(movie) {
+    return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
+     // stops after returning a match
+  }
+
+  isInSeen(movie)
+  {
+    return (this.seenMovies.findIndex(i => i.title === movie.title) > -1)
+  }
+
+  async getMoviesInTheatre() {
+    this.movies = await this.movieProvider.getMoviesInTheater();
+  }
+
+   ionViewWillEnter() {
+    this.refreshMovies();
+    this.getMoviesInTheatre();
+  }
+
+  openMovieDetail(i) {
+    let movie = this.movies[i];
+    this.navCtrl.push(this.movieDetailPage, {
+      movie: movie
     });
-    return bool;
-  }
-  
-
-
-  logIt() {
-    console.log("button is working")
   }
 
-
-  ionViewWillEnter(){
-
-
-    
- this.events.subscribe("discover:updated", (searchTerm) => {
-     this.setMoviesByKeyWords_async(searchTerm);
-   })}
-    
-
-  ionViewDidEnter() {
-    this.setup();
-    }
-
-    openMovieDetail(i) {
-      let movie = this.movies[i];
-      this.navCtrl.push(this.movieDetailPage, {movie: movie}
-      );
-    }
-
-    async setMoviesByKeyWords_async(keyword)
-    {
-      try {
-        let loading = this.loadingCtrl.create({cssClass: 'transparent'});
+  async setMoviesByKeyWords_async(keyword) {
+    try {
+      let loading = this.loadingCtrl.create({
+        cssClass: 'transparent'
+      });
       loading.present();
       const keywords = await this.movieProvider.getKeyWords(keyword);
       const movies = await this.movieProvider.getRelatedMovies(keywords)
       this.movies = movies;
       loading.dismiss();
-      }
-      catch(err) {
-        console.log("error in setting the movies by keyword : " + err);
-      }
-
-      
+    } catch (err) {
+      console.log("error in setting the movies by keyword : " + err);
     }
+
+
+  }
 
 }

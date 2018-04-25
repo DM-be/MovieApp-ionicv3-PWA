@@ -45,7 +45,7 @@ export class HomePage {
   }
  
   logout(){
-    this.movieProvider.logout();
+   // this.movieProvider.logout();
     this.foundMovies = null;
     this.navCtrl.setRoot(LoginPage);
   }
@@ -60,7 +60,7 @@ export class HomePage {
   addToList(type: string, movie: any)
   {
     // add to seen movie list, based on type!
-    this.movieProvider.addMovie(type, movie);
+   // this.movieProvider.addMovie(type, movie);
   }
  
   

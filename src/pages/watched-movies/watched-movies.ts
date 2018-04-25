@@ -31,6 +31,7 @@ export class WatchedMoviesPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad WatchedMoviesPage');
     
+    
   }
 
   // ionViewWillEnter() {
@@ -39,7 +40,8 @@ export class WatchedMoviesPage {
 
   async setup() {
     this.movies = await this.dbProvider.getMovies_async("watch")
-    console.log(this.movies)
+    let users = await this.dbProvider.getAllUsers();
+    console.log(users)
   }
 
   openMovieDetail(i) {

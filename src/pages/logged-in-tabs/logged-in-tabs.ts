@@ -51,6 +51,7 @@ export class LoggedInTabsPage {
 }
 
   ionViewDidLoad() {
+    
     console.log('ionViewDidLoad LoggedInTabsPage');
 
 
