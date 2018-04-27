@@ -38,7 +38,7 @@ export class WatchedMoviesPage {
 
    ionViewWillEnter() {
   //  this.setup();
-  this.movies = this.dbProvider.getWatchedMovies();
+  this.movies = this.dbProvider.getMovies("watch")
   console.log(this.movies)
    }
 
