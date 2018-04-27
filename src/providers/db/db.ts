@@ -19,7 +19,7 @@ export class DbProvider {
   private sharedRemote: string;
   private remote: string;
   private user: string;
-  private movies: Object;
+  private movies: Object = {}
   private loggedIn: boolean = false;
   
 
@@ -99,6 +99,7 @@ export class DbProvider {
     this.loggedIn = true;
 
 
+
     }
   
   async initializeMovies() {
@@ -122,7 +123,7 @@ export class DbProvider {
   }
 
   logOut() {
-    this.movies = undefined;
+    this.movies = {};
     this.db.destroy().then(() => {
       console.log("db removed")
     });
@@ -349,7 +350,7 @@ export class DbProvider {
   {
 
 
-    if(this.movies)
+    if(typeof this.movies[type] !== 'undefined')
     {
       console.log(this.movies)
       console.log(`movies of type: ${type} are loaded, no need to call the remote`)
@@ -361,7 +362,8 @@ export class DbProvider {
     
     return new Promise(async resolve => {
 
-    this.movies = {} ;
+  
+    this.movies[type] = [];
     
     let result = await this.db.allDocs({
       include_docs: true,
@@ -371,7 +373,6 @@ export class DbProvider {
       binary: true
     })
    // console.log(result)
-    this.movies[type] = [];
     result.rows.forEach(async movieRow => {
       if((this.movies[type].findIndex(i => i.title === movieRow.doc.title)) === -1 )
       {
