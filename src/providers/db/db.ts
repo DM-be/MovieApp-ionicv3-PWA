@@ -335,7 +335,8 @@ export class DbProvider {
     })
     let blob = await blobUtil.imgSrcToBlob(movie.poster, 'image/jpeg','Anonymous', 1.0)
     let doc = await this.db.get(type + movie.title);
-    this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png').then(() => {
+    this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
+    .then(() => {
        this.events.publish("addedMovie");
     })
    
@@ -351,14 +352,19 @@ export class DbProvider {
       include_docs: true,
       startkey: type,
       endkey: type + '\ufff0',
-      attachments: true
+      attachments: true,
+      binary: true
     })
     console.log(result)
     result.rows.forEach(async movieRow => {
       if((this.watchedMovies.findIndex(i => i.title === movieRow.doc.title)) === -1 )
       {
-        let blob = await this.db.getAttachment(type + movieRow.doc.title, movieRow.doc.title + '.png' )
-        let posterURL = await blobUtil.blobToDataURL(blob)
+
+     //   let blob2 = new Blob(movieRow.doc._attachments[movieRow.doc.title + '.png'])
+       // console.log()
+       let blob2 = movieRow.doc._attachments[movieRow.doc.title + '.png'].data
+      // let blob = await this.db.getAttachment(type + movieRow.doc.title, movieRow.doc.title + '.png' )
+        let posterURL = await blobUtil.blobToDataURL(blob2)
         let movie = {title: movieRow.doc.title, poster: posterURL}
       if(type === "watch")
       {
