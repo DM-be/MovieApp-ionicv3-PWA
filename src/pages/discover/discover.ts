@@ -8,7 +8,8 @@ import {
   LoadingController,
   ModalController,
   Events,
-  App
+  App,
+  ToastController
 } from 'ionic-angular';
 import {
   MovieProvider
@@ -48,20 +49,14 @@ import { TabsPage } from '../tabs/tabs';
 })
 export class DiscoverPage {
 
-  @ViewChild(Content) content: Content;
-
   offset = 100;
-
   defaultImage = "../assets/imgs/preloader.gif"
-
   searchTerm: string = '';
   searchControl: FormControl;
-
   movieDetailPage = MovieDetailPage;
   loginPage = LoginPage
   movies: any;
   tabsPage = TabsPage
-
   seenMovies: any;
   watchedMovies: any;
 
@@ -75,7 +70,8 @@ export class DiscoverPage {
     public modalCtrl: ModalController,
     public events: Events,
     public dbProvider: DbProvider,
-    public appCtrl: App
+    public appCtrl: App,
+    private toastCtrl: ToastController
   ) 
   {
     this.searchControl = new FormControl();
@@ -91,19 +87,26 @@ export class DiscoverPage {
   // });
   }
 
-  async refreshMovies() {
-   // this.seenMovies = await this.dbProvider.getMovies_async("seen");
-    //this.watchedMovies = await this.dbProvider.getMovies_async("watch")
+  presentToast(movieTitle: string, typeOfList: string) {
+    let toast = this.toastCtrl.create({
+      message: `${movieTitle} was added to your ${typeOfList}list`,
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
   }
-
+  refreshMovies() {
+    this.seenMovies = this.dbProvider.getMovies("seen")
+    this.watchedMovies = this.dbProvider.getMovies("watch")
+  }
   ionViewDidLoad() {
     this.events.subscribe("discover:updated", (searchTerm) => {
       this.setMoviesByKeyWords_async(searchTerm);
     })
-    
   }
-
-
+  ionViewWillEnter() {
+    this.refreshMovies();
+  }
   logOut() {
     this.dbProvider.logOut();
     this.appCtrl.getRootNav().setRoot(TabsPage);
@@ -113,8 +116,6 @@ export class DiscoverPage {
     {
        return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
     }
-   
-     // stops after returning a match
   }
 
   isInSeen(movie)
@@ -131,10 +132,17 @@ export class DiscoverPage {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     await this.dbProvider.addMovie("watch", movie);
-    console.log(event)
-   // window.dispatchEvent(new Event('resize'));
-    
+    this.presentToast(movie.title, "watch");
   }
+
+  async addToSeen(event,movie) {
+    event.preventDefault();
+    event.target.offsetParent.setAttribute("disabled", "disabled");
+    await this.dbProvider.addMovie("seen", movie);
+    this.presentToast(movie.title, "seen");
+  }
+
+
 
   async getMoviesInTheatre() {
     this.movies = await this.movieProvider.getMoviesInTheater();

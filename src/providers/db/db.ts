@@ -78,8 +78,6 @@ export class DbProvider {
   }
   init(details) {
     
-    
-
     this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
     console.log(this.remote)
@@ -348,20 +346,22 @@ export class DbProvider {
   // todo: rename, refactor, make it work for recommendations as well
   async getMovies_async(type: string)
   {
+    // console.log(type in this.movies)
+    // console.log(type);
+    // console.log(this.movies["watch"])
 
-
-    if(typeof this.movies[type] !== 'undefined')
+    if(this.movies[type] !== undefined)
     {
-      console.log(this.movies)
+      console.log(this.movies[type])
       console.log(`movies of type: ${type} are loaded, no need to call the remote`)
       return Promise.resolve();
     }
 
     else {
-    console.log(`gotta get moves of type: ${type} from the db, calling remote`)
+   
     
     return new Promise(async resolve => {
-
+    console.log(`gotta get moves of type: ${type} from the db, calling remote`)
   
     this.movies[type] = [];
     
