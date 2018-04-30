@@ -144,7 +144,7 @@ export class DbProvider {
       
 
       return doc.users.filter(user => {
-        return ((declinedFriends.findIndex(u => u.username === user.username) === -1) && user.username !== this.user) 
+        return ((declinedFriends.findIndex(u => u.username === user.username) === -1) && user.username !== this.user && user.isPublic) 
         // filter out declined friends in the searchbar and the logged in user
         
    //((this.movies[type].findIndex(i => i.title === movieRow.doc.title)) === -1 )     
