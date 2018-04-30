@@ -83,21 +83,29 @@ export class DbProvider {
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
     this.sdb = new PouchDB('shared', {adapter : 'idb'});
-    this.db.sync(this.remote).on('complete', info => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
-        this.db.sync(this.remote, this.options);
-        this.events.publish("localsync:completed");
-        this.initializeMovies();
-    })
+    
     this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', info => {
       this.sdb.sync(this.sharedRemote, this.sharedOptions);
-      this.events.publish("sharedsync:completed");
+      this.db.sync(this.remote).on('complete', info => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
+        this.db.sync(this.remote, this.options);
+        this.events.publish("localsync:completed");
+        this.events.publish("sharedsync:completed");
+        this.initializeMovies();
+    })
+      
     });
     this.loggedIn = true;
     }
   
   async initializeMovies() {
-    await this.getMovies_async("watch");
-    await this.getMovies_async("seen");
+   // await this.getMovies_async("watch");
+   // await this.getMovies_async("seen");
+   this.movies["watch"] = [];
+   this.movies["seen"] = [];
+   await this.getMoviesByType("watch");
+   await this.getMoviesByType("seen");
+   
+   
     
   }
   async register(user)
@@ -116,6 +124,10 @@ export class DbProvider {
     let doc = await this.sdb.get("allUsers");
     doc.users.push({"username": this.user, "isPublic": true, "avatar": "","email": user.email});
     this.sdb.put(doc);
+    this.db.put({
+      _id: user.username,
+      movies: []
+    }) 
     this.loggedIn = true;
   }
 
@@ -141,8 +153,6 @@ export class DbProvider {
       let declinedFriends =  await this.getDeclinedFriends();
       console.log(declinedFriends)
       let doc = await this.sdb.get("allUsers");
-      
-
       return doc.users.filter(user => {
         return ((declinedFriends.findIndex(u => u.username === user.username) === -1) && user.username !== this.user && user.isPublic) 
         // filter out declined friends in the searchbar and the logged in user
@@ -301,23 +311,44 @@ export class DbProvider {
 
   // todo: rename movie ids etc, now has empty spaces..., maybe add movie id?
   async addMovie(type: string, movie: any) {
-    await this.db.put({
-      _id: type + movie.title,
-      title: movie.title
-    })
+    let doc = await this.db.get(this.user);
+    // convert to blob
     let blob = await blobUtil.imgSrcToBlob(movie.poster, 'image/jpeg','Anonymous', 1.0);
-    let dataURL = await blobUtil.blobToDataURL(blob);
-    let doc = await this.db.get(type + movie.title);
-    await this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
-    let newMovie = {title: movie.title, poster: dataURL}
-    this.movies[type].push(newMovie);
+    // get a dataURL for the local variable
+    let dataURL = await blobUtil.blobToDataURL(blob); 
+    let newMovie = {title: movie.title, poster: dataURL, type: type}
+    doc.movies.push({title: movie.title, type: type});
       // this.events.publish("addedMovie");
-    
-   
-    
+    let response = await this.db.put(doc);
+    this.movies[type].push(newMovie);
+    this.db.putAttachment(this.user, movie.title + ".png", response.rev, blob, 'image/png' )
   }
 
   // todo: rename, refactor, make it work for recommendations as well
+
+  async getMoviesByType(type: string) {
+   
+    
+
+    return new Promise(async resolve => {
+      console.log("getting from the remote provider")
+      let doc = await this.db.get(this.user, {binary: true, attachments: true, include_docs: true});
+      doc.movies.forEach(async movie => {
+        if(movie.type === type)
+        {
+          let blob = doc._attachments[movie.title + '.png'].data;
+          let posterURL = await blobUtil.blobToDataURL(blob)
+          let convertedMovie = {title: movie.title, poster: posterURL, type: type}
+          this.movies[type].push(convertedMovie)
+        }
+      });
+      resolve();
+    })
+
+    
+  }
+
+
   async getMovies_async(type: string)
   {
     // console.log(type in this.movies)

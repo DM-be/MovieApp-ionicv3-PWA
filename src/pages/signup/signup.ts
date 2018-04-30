@@ -68,11 +68,12 @@ export class SignupPage {
          // this.navCtrl.setRoot(TabsPage);
           this.dbProvider.init(res.json())
           //console.log(res.json())o
-          this.events.subscribe("sharedsync:completed", () => {
-            loader.dismiss();
-            console.log("sharedsync should be complete")
-            this.dbProvider.register(user);
-            this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
+          
+            this.events.subscribe("sharedsync:completed", () => {
+                this.dbProvider.register(user);
+                this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
+                loader.dismiss();
+            
           }) // have to wait for the shared DB to be in sync to register new users
 
         
