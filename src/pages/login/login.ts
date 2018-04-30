@@ -133,7 +133,6 @@ export class LoginPage {
         this.events.subscribe("localsync:completed", () => {
           loader.dismiss();
           console.log("localsync should be complete")
-          console.log(this.dbProvider.getlocalDb());
           this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
         }) // have to wait for the data to be in sync, how else can we check the seen/watch list?
         

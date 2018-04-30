@@ -20,6 +20,7 @@ export class DbProvider {
   private remote: string;
   private user: string;
   private movies: Object = {}
+
   private loggedIn: boolean = false;
   
 
@@ -82,20 +83,24 @@ export class DbProvider {
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
     this.sdb = new PouchDB('shared', {adapter : 'idb'});
-    this.db.sync(this.remote).on('complete', (info) => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
+    this.db.sync(this.remote).on('complete', info => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
         this.db.sync(this.remote, this.options);
         this.events.publish("localsync:completed");
         this.initializeMovies();
     })
-    this.sdb.sync(this.sharedRemote, this.sharedOptions);
+    this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', info => {
+      this.sdb.sync(this.sharedRemote, this.sharedOptions);
+      this.events.publish("sharedsync:completed");
+    });
     this.loggedIn = true;
     }
   
   async initializeMovies() {
     await this.getMovies_async("watch");
     await this.getMovies_async("seen");
+    
   }
-  register(user)
+  async register(user)
   {
     this.user = user.username;
     this.sdb.put({
@@ -108,6 +113,9 @@ export class DbProvider {
       recievedInvites: [],
       recommendations: [],
     })
+    let doc = await this.sdb.get("allUsers");
+    doc.users.push({"username": this.user, "isPublic": true, "avatar": "","email": user.email});
+    this.sdb.put(doc);
     this.loggedIn = true;
   }
 
@@ -129,68 +137,35 @@ export class DbProvider {
 
 
   async getAllUsers() {
-
-    
     try {
+      let declinedFriends =  await this.getDeclinedFriends();
+      console.log(declinedFriends)
+      let doc = await this.sdb.get("allUsers");
+      
 
-    
-    let allUsers = [];
-    let doc = await this.sdb.allDocs({
-        include_docs: true,
-        attachments: false
+      return doc.users.filter(user => {
+        return ((declinedFriends.findIndex(u => u.username === user.username) === -1) && user.username !== this.user) 
+        // filter out declined friends in the searchbar and the logged in user
+        
+   //((this.movies[type].findIndex(i => i.title === movieRow.doc.title)) === -1 )     
       })
-    doc.rows.forEach(userDoc => {
-      // (this.movies[type].findIndex(i => i.title === movieRow.doc.title)) === -1
-      if(userDoc.doc.isPublic)
-      {
-        allUsers.push({"username": userDoc.doc._id, "avatar": userDoc.doc.avatar}); 
-      }
-    });
-    return allUsers;
     }
     catch(err) {
       console.log(err)
     }
-    
 }
-
   
-
   async inviteFriend(username)
   {
     // todo: check sentinvites of a user before allowing to send another invite
     try {
       let doc = await this.sdb.get(this.user);
-      let sentInvites = doc.sentInvites;
-      sentInvites.push({"username": username, "accepted": false, "declined": false})
-      let response = await this.sdb.put({
-        _id: doc._id,
-        _rev: doc._rev,
-        isPublic: doc.isPublic,
-        avatar: doc.avatar,
-        email: doc.email,
-        friends: doc.friends,
-        sentInvites: sentInvites,
-        recievedInvites: doc.recievedInvites,
-        recommendations: doc.recommendations
-      });
-      
-
+      doc.sentInvites.push({"username": username, "accepted": false, "declined": false})
+      this.sdb.put(doc);
 
       let otherdoc = await this.sdb.get(username);
-      let recievedInvites = otherdoc.recievedInvites;
-      recievedInvites.push({"username": this.user, "accepted": false, "declined": false})
-      let response2 = await this.sdb.put({
-        _id: otherdoc._id,
-        _rev: otherdoc._rev,
-        isPublic: otherdoc.isPublic,
-        avatar: otherdoc.avatar,
-        email: otherdoc.email,
-        friends: otherdoc.friends,
-        sentInvites: otherdoc.sentInvites,
-        recievedInvites: recievedInvites,
-        recommendations: otherdoc.recommendations
-      });
+      otherdoc.recievedInvites.push({"username": this.user, "accepted": false, "declined": false})
+      this.sdb.put(otherdoc);
 
     } catch (err) {
       console.log(err);
@@ -223,22 +198,12 @@ export class DbProvider {
   {
     try {
       let doc = await this.sdb.get(this.user);
-      let recievedInvites = doc.recievedInvites
-      let index = this.findFriend(recievedInvites, username);
+      let index = this.findFriend(doc.recievedInvites, username);
       if (index > -1) {
-        recievedInvites.splice(index, 1); // remove from recievedInvites when declining
+        doc.recievedInvites.splice(index, 1); // remove from recievedInvites when declining
       }
-      let response = await this.sdb.put({
-        _id: doc._id,
-        _rev: doc._rev,
-        isPublic: doc.isPublic,
-        avatar: doc.avatar,
-        email:  doc.email,
-        friends: doc.friends,
-        sentInvites: doc.sentInvites,
-        recievedInvites: recievedInvites, // update recievedinvites (one less recievedinvite)
-        recommendations: doc.recommendations
-      });
+      doc.friends.push({"username": username, "accepted": false, "declined": true})
+      this.sdb.put(doc);
     } catch (err) {
       console.log(err);
     }
@@ -251,45 +216,20 @@ export class DbProvider {
 
       // invitee gets the invite and accepts it by pushing it into his friends array
       let doc = await this.sdb.get(this.user);
-      let recievedInvites = doc.recievedInvites
-      let index = this.findFriend(recievedInvites, username);
+      
+      let index = this.findFriend(doc.recievedInvites, username);
       if (index > -1) {
-        recievedInvites.splice(index, 1); // remove from recievedInvites when accepting
+        doc.recievedInvites.splice(index, 1); // remove from recievedInvites when accepting
       }
-      let friends = doc.friends;
-      friends.push({"username": username, "accepted": true, "declined": false})
+      doc.friends.push({"username": username, "accepted": true, "declined": false})
       // push the friend to the friends array
-      let response = await this.sdb.put({
-        _id: doc._id,
-        _rev: doc._rev,
-        isPublic: doc.isPublic,
-        avatar: doc.avatar,
-        email:  doc.email,
-        friends: friends,
-        sentInvites: doc.sentInvites,
-        recievedInvites: recievedInvites, // update recievedinvites (cleared it so we wont prompt again)
-        recommendations: doc.recommendations
-      });
-
-       // add the invitee to the inviters friends array
-
+      this.sdb.put(doc);
+// update recievedinvites (cleared it so we wont prompt again)
+       
+// add the invitee to the inviters friends array
        let otherdoc = await this.sdb.get(username);
-       let otherfriends = otherdoc.friends;
-
-       otherfriends.push({"username": this.user, "accepted": true, "declined": false})
-       let response2 = await this.sdb.put({
-        _id: otherdoc._id,
-        _rev: otherdoc._rev,
-        isPublic: otherdoc.isPublic,
-        avatar: otherdoc.avatar,
-        email:  otherdoc.email,
-        friends: otherfriends,
-        sentInvites: otherdoc.sentInvites,
-        recievedInvites: otherdoc.recievedInvites,
-        recommendations: otherdoc.recommendations
-       });
- 
-
+       otherdoc.friends.push({"username": this.user, "accepted": true, "declined": false})
+       this.sdb.put(otherdoc);
     } catch (err) {
       console.log(err);
     }

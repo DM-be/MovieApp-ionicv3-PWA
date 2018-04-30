@@ -32,7 +32,7 @@ export class SocialProvider implements AutoCompleteService {
   }
 
   getAllUsers2() {
-    return this.dbProvider.getAllUsers();
+   // return this.dbProvider.getAllUsers();
   }
 
   
@@ -56,7 +56,7 @@ export class SocialProvider implements AutoCompleteService {
   }
 
    async getResults(keyword:string) {
-     let users = await this.dbProvider.getAllUsers()
+    let users = await this.dbProvider.getAllUsers()
     return users
       .filter(
         result => {return result.username.toLowerCase().startsWith(keyword.toLowerCase())

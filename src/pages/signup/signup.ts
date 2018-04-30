@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, LoadingController, Events } from 'ionic-angular';
 import { Http, Headers } from '@angular/http';
 
 import { HomePage } from '../home/home';
@@ -36,7 +36,8 @@ export class SignupPage {
     public http: Http,
     public dbProvider: DbProvider,
     public appCtrl: App,
-    public loadingController: LoadingController) {
+    public loadingController: LoadingController,
+    public events: Events) {
   }
 
   register() {
@@ -67,9 +68,14 @@ export class SignupPage {
          // this.navCtrl.setRoot(TabsPage);
           this.dbProvider.init(res.json())
           //console.log(res.json())o
-          this.dbProvider.register(user);
-          loader.dismiss();
-          this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
+          this.events.subscribe("sharedsync:completed", () => {
+            loader.dismiss();
+            console.log("sharedsync should be complete")
+            this.dbProvider.register(user);
+            this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
+          }) // have to wait for the shared DB to be in sync to register new users
+
+        
           
 
         }, (err) => {
