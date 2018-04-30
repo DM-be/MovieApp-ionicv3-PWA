@@ -204,6 +204,12 @@ export class DbProvider {
       }
       doc.friends.push({"username": username, "accepted": false, "declined": true})
       this.sdb.put(doc);
+      
+      let otherdoc = await this.sdb.get(username);
+      otherdoc.friends.push({"username": this.user, "accepted": false, "declined": true});
+      this.sdb.put(otherdoc);
+      
+      // you cant reinvite other friends that declined you, not very subtle
     } catch (err) {
       console.log(err);
     }
