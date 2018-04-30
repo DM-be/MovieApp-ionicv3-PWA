@@ -80,38 +80,29 @@ export class DbProvider {
     
     this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
-    console.log(this.remote)
     this.user = details.user_id;
-
-    console.log(this.db.adapter)
     this.sdb = new PouchDB('shared', {adapter : 'idb'});
-    console.log(this.sdb.adapter)
-
     this.db.sync(this.remote).on('complete', (info) => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
         this.db.sync(this.remote, this.options);
         this.events.publish("localsync:completed");
         this.initializeMovies();
     })
-
     this.sdb.sync(this.sharedRemote, this.sharedOptions);
     this.loggedIn = true;
-
-
-
     }
   
   async initializeMovies() {
     await this.getMovies_async("watch");
     await this.getMovies_async("seen");
   }
-  
-
   register(user)
   {
-    console.log(user)
     this.user = user.username;
     this.sdb.put({
       _id: user.username,
+      email: user.email,
+      isPublic: true,
+      avatar: "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png",// set a default avatar
       friends: [],
       sentInvites: [],
       recievedInvites: [],
@@ -139,15 +130,21 @@ export class DbProvider {
 
   async getAllUsers() {
 
+    
     try {
-      let allUsers = [];
+
+    
+    let allUsers = [];
     let doc = await this.sdb.allDocs({
         include_docs: true,
         attachments: false
       })
     doc.rows.forEach(userDoc => {
-      console.log(userDoc)
-      allUsers.push({"username": userDoc.doc._id}); // todo add avatars
+      // (this.movies[type].findIndex(i => i.title === movieRow.doc.title)) === -1
+      if(userDoc.doc.isPublic)
+      {
+        allUsers.push({"username": userDoc.doc._id, "avatar": userDoc.doc.avatar}); 
+      }
     });
     return allUsers;
     }
@@ -156,6 +153,8 @@ export class DbProvider {
     }
     
 }
+
+  
 
   async inviteFriend(username)
   {
@@ -167,6 +166,9 @@ export class DbProvider {
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
+        isPublic: doc.isPublic,
+        avatar: doc.avatar,
+        email: doc.email,
         friends: doc.friends,
         sentInvites: sentInvites,
         recievedInvites: doc.recievedInvites,
@@ -181,6 +183,9 @@ export class DbProvider {
       let response2 = await this.sdb.put({
         _id: otherdoc._id,
         _rev: otherdoc._rev,
+        isPublic: otherdoc.isPublic,
+        avatar: otherdoc.avatar,
+        email: otherdoc.email,
         friends: otherdoc.friends,
         sentInvites: otherdoc.sentInvites,
         recievedInvites: recievedInvites,
@@ -226,6 +231,9 @@ export class DbProvider {
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
+        isPublic: doc.isPublic,
+        avatar: doc.avatar,
+        email:  doc.email,
         friends: doc.friends,
         sentInvites: doc.sentInvites,
         recievedInvites: recievedInvites, // update recievedinvites (one less recievedinvite)
@@ -254,6 +262,9 @@ export class DbProvider {
       let response = await this.sdb.put({
         _id: doc._id,
         _rev: doc._rev,
+        isPublic: doc.isPublic,
+        avatar: doc.avatar,
+        email:  doc.email,
         friends: friends,
         sentInvites: doc.sentInvites,
         recievedInvites: recievedInvites, // update recievedinvites (cleared it so we wont prompt again)
@@ -269,6 +280,9 @@ export class DbProvider {
        let response2 = await this.sdb.put({
         _id: otherdoc._id,
         _rev: otherdoc._rev,
+        isPublic: otherdoc.isPublic,
+        avatar: otherdoc.avatar,
+        email:  otherdoc.email,
         friends: otherfriends,
         sentInvites: otherdoc.sentInvites,
         recievedInvites: otherdoc.recievedInvites,
@@ -288,13 +302,27 @@ export class DbProvider {
   {
     try {
       let doc =  await this.sdb.get(this.user)
-      return doc.friends.filter((friend) => {
+      return doc.friends.filter(friend => {
         return (!friend.declined && friend.accepted)
       })
     }
     catch(err) { console.log(err)}
 
   }
+
+  async getDeclinedFriends()
+  {
+    try {
+      let doc =  await this.sdb.get(this.user)
+      return doc.friends.filter(friend => {
+        return friend.declined;
+      })
+    }
+    catch(err) { console.log(err)}
+
+  }
+
+  
 
   // todo: blob the images of recommendations as well
   async addRecommendation(movie: {"id": string, "title": string, "poster": string, "overview": string}, username ) {
