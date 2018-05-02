@@ -129,7 +129,7 @@ export class LoginPage {
         
 
        
-        this.dbProvider.init(res.json());
+        this.dbProvider.init(res.json(), credentials);
         this.events.subscribe("localsync:completed", () => {
           loader.dismiss();
           console.log("localsync should be complete")

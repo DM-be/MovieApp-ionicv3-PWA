@@ -40,7 +40,6 @@ export class DbProvider {
     this.sharedOptions =  {
       live: true,
       retry: true,
-      continuous: true,
       auth: {
         username: this.username,
         password: this.password
@@ -77,13 +76,16 @@ export class DbProvider {
   {
     return this.movies[type];
   }
-  init(details) {
+  async init(details, user) {
     
     this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
     this.sdb = new PouchDB('shared', {adapter : 'idb'});
-    
+    if(user.email)
+    {
+      await this.register(user);
+    }
     this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', info => {
       this.sdb.sync(this.sharedRemote, this.sharedOptions);
       this.db.sync(this.remote).on('complete', info => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
@@ -94,6 +96,7 @@ export class DbProvider {
     })
       
     });
+    this.initializeMovies();
     this.loggedIn = true;
     }
   
@@ -124,6 +127,7 @@ export class DbProvider {
     let doc = await this.sdb.get("allUsers");
     doc.users.push({"username": this.user, "isPublic": true, "avatar": "","email": user.email});
     this.sdb.put(doc);
+    
     this.db.put({
       _id: user.username,
       movies: []
@@ -332,7 +336,8 @@ export class DbProvider {
 
     return new Promise(async resolve => {
       console.log("getting from the remote provider")
-      let doc = await this.db.get(this.user, {binary: true, attachments: true, include_docs: true});
+      let doc = await this.db.get(this.user, {binary: true, include_docs: true,attachments: true,});
+      console.log(doc._attachments)
       doc.movies.forEach(async movie => {
         if(movie.type === type)
         {

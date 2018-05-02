@@ -38,8 +38,13 @@ export class WatchedMoviesPage {
 
    ionViewWillEnter() {
   //  this.setup();
-  this.movies = this.dbProvider.getMovies("watch")
-  console.log(this.movies)
+//  this.movies = this.dbProvider.getMovies("watch")
+  
+  this.refreshMovies();
+   }
+
+   async refreshMovies() {
+    this.movies = await this.dbProvider.getMovies("watch");
    }
 
   async setup() {

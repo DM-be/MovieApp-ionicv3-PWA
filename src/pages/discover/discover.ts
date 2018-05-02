@@ -74,6 +74,8 @@ export class DiscoverPage {
     private toastCtrl: ToastController
   ) 
   {
+
+    
     this.searchControl = new FormControl();
     this.getMoviesInTheatre();
     this.refreshMovies();
