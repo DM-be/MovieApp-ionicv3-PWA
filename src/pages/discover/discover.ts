@@ -103,6 +103,7 @@ export class DiscoverPage {
     this.events.subscribe("discover:updated", (searchTerm) => {
       this.setMoviesByKeyWords_async(searchTerm);
     })
+    this.refreshMovies();
   }
   ionViewWillEnter() {
     this.refreshMovies();

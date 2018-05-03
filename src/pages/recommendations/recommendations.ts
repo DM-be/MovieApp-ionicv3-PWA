@@ -32,7 +32,7 @@ export class RecommendationsPage {
 
   async setup() {
     let user = this.dbProvider.getUser();
-    this.recommendations = await this.dbProvider.getRecommendations(user);
+    this.recommendations = await this.dbProvider.getRecommendations();
   }
 
   openMovieDetail(i) {

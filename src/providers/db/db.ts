@@ -94,8 +94,8 @@ export class DbProvider {
     this.sdb = new PouchDB('shared', {adapter : 'idb'});
     this.db.sync(this.remote).on('complete', info => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
         this.db.sync(this.remote, this.options);
+        this.initializeMovies(); //todo: cleanup, call this first to get the isinseen etc working
         this.events.publish("localsync:completed");
-        this.initializeMovies();
     })
     this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', info => {
       this.sdb.sync(this.sharedRemote, this.sharedOptions);
@@ -118,6 +118,8 @@ export class DbProvider {
    // await this.getMovies_async("watch");
    // await this.getMovies_async("seen");
    await this.getMoviesByType("watch");
+   await this.getMoviesByType("seen");
+
     
   }
   async register(user)
@@ -141,9 +143,7 @@ export class DbProvider {
   }
 
   logOut() {
-    this.db.destroy().then(() => {
-      console.log("db removed")
-    });
+    this.db.destroy();
     this.sdb.destroy();
   }
   
@@ -271,7 +271,6 @@ export class DbProvider {
     catch(err) { console.log(err)}
 
   }
-
   async getDeclinedFriends()
   {
     try {
@@ -281,121 +280,45 @@ export class DbProvider {
       })
     }
     catch(err) { console.log(err)}
-
   }
 
-  
-
-  // todo: blob the images of recommendations as well
   async addRecommendation(movie: {"id": string, "title": string, "poster": string, "overview": string}, username ) {
     try {
       let doc = await this.sdb.get(username);
       let recommendations = doc.recommendations;
       recommendations.push(movie)
-      let response = await this.sdb.put({
-        _id: doc._id,
-        _rev: doc._rev,
-        friends: doc.friends,
-        sentInvites: doc.sentInvites,
-        recievedInvites: doc.recievedInvites,
-        recommendations: recommendations
-      });
+      await this.sdb.put(doc);
     } catch (err) {
       console.log(err);
     }
-
   }
-  async getRecommendations(username) { // remove username into this.user
+  async getRecommendations() { // remove username into this.user
     try {
-      let doc =  await this.sdb.get(username)
+      let doc =  await this.sdb.get(this.user)
       return doc.recommendations;
-      
     }
     catch(err) { console.log(err)}
   }
 
-
-  // todo: rename movie ids etc, now has empty spaces..., maybe add movie id?
+  // todo:add overview etc
   async addMovie(type: string, movie: any) {
-
-    let doc = await this.db.get(this.user)
+    try {
+      let doc = await this.db.get(this.user)
     let newMovie = {"title": movie.title, "poster": movie.poster, "type":type}
     doc.movies.push(newMovie);
     await this.db.put(doc);
     this.movies[type].push(newMovie);
-      // this.events.publish("addedMovie");
+    }
+    catch(err) {console.log(err)}
+    
   }
-
-  // todo: rename, refactor, make it work for recommendations as well
 
   async getMoviesByType(type: string){
-    console.log(this.movies[type])
-
-    
-    if(this.movies[type].length > 0)
-    {
-      console.log("movies already existed: ")
-      console.log(this.movies[type])
-      return Promise.resolve();
-    }
-    else
-    
-    {
       return new Promise(async resolve => {
         let doc = await this.db.get(this.user);
-        let watchedMovie =  doc.movies.filter(movie => movie.type === type )
-        this.movies[type] = watchedMovie
+        this.movies[type] =  doc.movies.filter(movie => movie.type === type);
         resolve();
-
-      })
-    }
-
-   
-
-  }
-  async getMovies_async(type: string)
-  {
-    // console.log(type in this.movies)
-    // console.log(type);
-    // console.log(this.movies["watch"])
-
-    if(this.movies[type])
-    {
-      console.log(this.movies[type])
-      console.log(`movies of type: ${type} are loaded, no need to call the remote`)
-      return Promise.resolve();
-    }
-
-    else {
-   
-    
-    return new Promise(async resolve => {
-    console.log(`gotta get moves of type: ${type} from the db, calling remote`)
-  
-    this.movies[type] = [];
-    
-    let result = await this.db.allDocs({
-      include_docs: true,
-      startkey: type,
-      endkey: type + '\ufff0',
-      attachments: true,
-      binary: true
-    })
-   // console.log(result)
-    result.rows.forEach(async movieRow => {
-      if((this.movies[type].findIndex(i => i.title === movieRow.doc.title)) === -1 )
-      {
-      let blob2 = movieRow.doc._attachments[movieRow.doc.title + '.png'].data
-      // let blob = await this.db.getAttachment(type + movieRow.doc.title, movieRow.doc.title + '.png' )
-      let posterURL = await blobUtil.blobToDataURL(blob2)
-      let newMovie = {title: movieRow.doc.title, poster: posterURL}
-      this.movies[type].push(newMovie)
-      }
-    })
-    resolve()
-  })
-}
-    
+      });
   }
 
   }

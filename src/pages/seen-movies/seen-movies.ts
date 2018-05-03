@@ -39,7 +39,6 @@ export class SeenMoviesPage {
     public platform: Platform,
     public dbProvider: DbProvider
     ) {
-      this.setup(); 
 
   }
 
@@ -47,16 +46,12 @@ export class SeenMoviesPage {
   ionViewDidLoad() {
     //this.movieProvider.getMovies("seen").then(data => this.movies = data)
 
-
   }
 
   ionViewWillEnter() {
-    this.setup();
-   }
-  async setup() {
-    //this.movies = await this.dbProvider.getMovies_async("seen")
     this.movies = this.dbProvider.getMovies("seen");
-  }
+   }
+
 
   openMovieDetail(i) {
     let movie = this.movies[i];
