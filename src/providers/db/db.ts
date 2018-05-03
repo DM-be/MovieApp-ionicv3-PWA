@@ -77,7 +77,7 @@ export class DbProvider {
   {
     return this.movies[type];
   }
-  init(details) {
+  init(details, signingUp: boolean) {
     
     this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
@@ -93,7 +93,17 @@ export class DbProvider {
       this.events.publish("sharedsync:completed");
     });
     this.loggedIn = true;
+     if(signingUp)
+      {
+        this.db.put({
+          _id: this.user,
+          movies: []
+        })
+
+      }
+
     }
+    
   
   async initializeMovies() {
     await this.getMovies_async("watch");
@@ -139,16 +149,12 @@ export class DbProvider {
   async getAllUsers() {
     try {
       let declinedFriends =  await this.getDeclinedFriends();
-      console.log(declinedFriends)
       let doc = await this.sdb.get("allUsers");
-      
-
       return doc.users.filter(user => {
         return ((declinedFriends.findIndex(u => u.username === user.username) === -1) && user.username !== this.user && user.isPublic) 
         // filter out declined friends in the searchbar and the logged in user
-        
-   //((this.movies[type].findIndex(i => i.title === movieRow.doc.title)) === -1 )     
       })
+      // todo add profile page to update this.public (default is now true)
     }
     catch(err) {
       console.log(err)

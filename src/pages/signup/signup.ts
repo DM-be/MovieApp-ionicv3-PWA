@@ -66,7 +66,7 @@ export class SignupPage {
          // this.todoService.init(res.json());
           
          // this.navCtrl.setRoot(TabsPage);
-          this.dbProvider.init(res.json())
+          this.dbProvider.init(res.json(), true)
           //console.log(res.json())o
           this.events.subscribe("sharedsync:completed", () => {
             loader.dismiss();
