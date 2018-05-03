@@ -19,7 +19,7 @@ export class DbProvider {
   private sharedRemote: string;
   private remote: string;
   private user: string;
-  private movies: Object = {}
+  private movies: Object;
 
   private loggedIn: boolean = false;
   
@@ -79,7 +79,15 @@ export class DbProvider {
   }
   init(details, signingUp: boolean) {
     
-    console.log(details);
+    if(this.movies === undefined)
+    {
+      this.movies = {"watch": [], "seen": []}
+    }
+    else {
+      console.log("variables not initialized")
+      console.log(this.movies)
+    }
+
     this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
@@ -107,8 +115,9 @@ export class DbProvider {
     
   
   async initializeMovies() {
-    await this.getMovies_async("watch");
-    await this.getMovies_async("seen");
+   // await this.getMovies_async("watch");
+   // await this.getMovies_async("seen");
+   await this.getMoviesByType("watch");
     
   }
   async register(user)
@@ -132,7 +141,6 @@ export class DbProvider {
   }
 
   logOut() {
-    this.movies = {};
     this.db.destroy().then(() => {
       console.log("db removed")
     });
@@ -319,13 +327,39 @@ export class DbProvider {
   }
 
   // todo: rename, refactor, make it work for recommendations as well
+
+  async getMoviesByType(type: string){
+    console.log(this.movies[type])
+
+    
+    if(this.movies[type].length > 0)
+    {
+      console.log("movies already existed: ")
+      console.log(this.movies[type])
+      return Promise.resolve();
+    }
+    else
+    
+    {
+      return new Promise(async resolve => {
+        let doc = await this.db.get(this.user);
+        let watchedMovie =  doc.movies.filter(movie => movie.type === type )
+        this.movies[type] = watchedMovie
+        resolve();
+
+      })
+    }
+
+   
+
+  }
   async getMovies_async(type: string)
   {
     // console.log(type in this.movies)
     // console.log(type);
     // console.log(this.movies["watch"])
 
-    if(this.movies[type] !== undefined)
+    if(this.movies[type])
     {
       console.log(this.movies[type])
       console.log(`movies of type: ${type} are loaded, no need to call the remote`)
