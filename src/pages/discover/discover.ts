@@ -129,6 +129,7 @@ export class DiscoverPage {
     
   }
 
+
   async addToWatch(event,movie) {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
@@ -154,8 +155,7 @@ export class DiscoverPage {
   }
 
 
-  openMovieDetail(i) {
-    let movie = this.movies[i];
+  openMovieDetail(movie) {
     this.navCtrl.push(this.movieDetailPage, {
       movie: movie
     });

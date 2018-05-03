@@ -92,7 +92,7 @@ export class DbProvider {
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
     this.sdb = new PouchDB('shared', {adapter : 'idb'});
-    this.db.sync(this.remote).on('complete', info => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
+    this.db.sync(this.remote).on('complete',() => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
         this.db.sync(this.remote, this.options);
         this.initializeMovies(); //todo: cleanup, call this first to get the isinseen etc working
         this.events.publish("localsync:completed");
@@ -290,11 +290,11 @@ export class DbProvider {
   // todo:add overview etc
   async addMovie(type: string, movie: any) {
     try {
-      let doc = await this.db.get(this.user)
-    let newMovie = {"title": movie.title, "poster": movie.poster, "type":type}
-    doc.movies.push(newMovie);
+    let doc = await this.db.get(this.user)
+    movie[type] = type;
+    doc.movies.push(movie);
     await this.db.put(doc);
-    this.movies[type].push(newMovie);
+    this.movies[type].push(movie);
     }
     catch(err) {console.log(err)}
     
@@ -303,7 +303,7 @@ export class DbProvider {
   async getMoviesByType(type: string){
       return new Promise(async resolve => {
         let doc = await this.db.get(this.user);
-        this.movies[type] =  doc.movies.filter(movie => movie.type === type);
+        this.movies[type] = doc.movies.filter(movie => movie.type === type);
         resolve();
       });
   }

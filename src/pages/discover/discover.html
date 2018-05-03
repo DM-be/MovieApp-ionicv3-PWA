@@ -15,7 +15,7 @@
 
       <ion-col col-6 col-sm-6 col-md-4 col-lg-3 *ngFor="let movie of movies; let i = index">
         <ion-card >
-          <ion-card-content>
+          <ion-card-content (click)=openMovieDetail(movie)>
             <img [defaultImage]="defaultImage" [lazyLoad]="movie.poster" [offset]="offset" [scrollObservable]="container.ionScroll">
           </ion-card-content>
           <ion-row no-padding>
