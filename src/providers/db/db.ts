@@ -115,16 +115,11 @@ export class DbProvider {
     
   
   async initializeMovies() {
-   // await this.getMovies_async("watch");
-   // await this.getMovies_async("seen");
    await this.getMoviesByType("watch");
    await this.getMoviesByType("seen");
-
-    
   }
   async register(user)
   {
-    //this.user = user.username;
     this.sdb.put({
       _id: this.user,
       email: user.email,
@@ -139,23 +134,19 @@ export class DbProvider {
     doc.users.push({"username": this.user, "isPublic": true, "avatar": "","email": user.email});
     this.sdb.put(doc);
     this.loggedIn = true;
-
   }
 
   logOut() {
     this.db.destroy();
     this.sdb.destroy();
   }
-  
+
   isloggedIn() {
     return this.loggedIn;
   }
-
   getUser() {
     return this.user;
   }
-
-
   async getAllUsers() {
     try {
       let declinedFriends =  await this.getDeclinedFriends();
@@ -178,11 +169,9 @@ export class DbProvider {
       let doc = await this.sdb.get(this.user);
       doc.sentInvites.push({"username": username, "accepted": false, "declined": false})
       this.sdb.put(doc);
-
       let otherdoc = await this.sdb.get(username);
       otherdoc.recievedInvites.push({"username": this.user, "accepted": false, "declined": false})
       this.sdb.put(otherdoc);
-
     } catch (err) {
       console.log(err);
     }
@@ -200,7 +189,6 @@ export class DbProvider {
   }
 
   async getOpenFriendInvites(){
-
     try {
       let doc =  await this.sdb.get(this.user)
       return doc.recievedInvites.filter((friend) => {
@@ -285,8 +273,7 @@ export class DbProvider {
   async addRecommendation(movie: {"id": string, "title": string, "poster": string, "overview": string}, username ) {
     try {
       let doc = await this.sdb.get(username);
-      let recommendations = doc.recommendations;
-      recommendations.push(movie)
+      doc.recommendations.push(movie)
       await this.sdb.put(doc);
     } catch (err) {
       console.log(err);
