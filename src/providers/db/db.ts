@@ -79,6 +79,7 @@ export class DbProvider {
   }
   init(details, signingUp: boolean) {
     
+    console.log(details);
     this.db = new PouchDB('cloudo', {adapter : 'idb'});
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
@@ -112,9 +113,9 @@ export class DbProvider {
   }
   async register(user)
   {
-    this.user = user.username;
+    //this.user = user.username;
     this.sdb.put({
-      _id: user.username,
+      _id: this.user,
       email: user.email,
       isPublic: true,
       avatar: "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png",// set a default avatar
@@ -127,6 +128,7 @@ export class DbProvider {
     doc.users.push({"username": this.user, "isPublic": true, "avatar": "","email": user.email});
     this.sdb.put(doc);
     this.loggedIn = true;
+
   }
 
   logOut() {
@@ -307,20 +309,13 @@ export class DbProvider {
 
   // todo: rename movie ids etc, now has empty spaces..., maybe add movie id?
   async addMovie(type: string, movie: any) {
-    await this.db.put({
-      _id: type + movie.title,
-      title: movie.title
-    })
-    let blob = await blobUtil.imgSrcToBlob(movie.poster, 'image/jpeg','Anonymous', 1.0);
-    let dataURL = await blobUtil.blobToDataURL(blob);
-    let doc = await this.db.get(type + movie.title);
-    await this.db.putAttachment(type + movie.title, movie.title + '.png', doc._rev, blob, 'image/png')
-    let newMovie = {title: movie.title, poster: dataURL}
+
+    let doc = await this.db.get(this.user)
+    let newMovie = {"title": movie.title, "poster": movie.poster, "type":type}
+    doc.movies.push(newMovie);
+    await this.db.put(doc);
     this.movies[type].push(newMovie);
       // this.events.publish("addedMovie");
-    
-   
-    
   }
 
   // todo: rename, refactor, make it work for recommendations as well
