@@ -103,10 +103,10 @@ export class DbProvider {
   async initializeMovies() {
    // await this.getMovies_async("watch");
    // await this.getMovies_async("seen");
-   this.movies["watch"] = [];
-   this.movies["seen"] = [];
-   await this.getMoviesByType("watch");
-   await this.getMoviesByType("seen");
+   this.movies["watch"] = await this.getMoviesByType("watch");
+   this.movies["seen"] = await this.getMoviesByType("seen");
+   
+   
    
    
     
@@ -331,24 +331,35 @@ export class DbProvider {
   // todo: rename, refactor, make it work for recommendations as well
 
   async getMoviesByType(type: string) {
+
+    if(this.movies[type])
+    {
+      console.log("movies already exist in cache");
+      return Promise.resolve(this.movies[type]);
+    }
    
     
 
     return new Promise(async resolve => {
       console.log("getting from the remote provider")
       let doc = await this.db.get(this.user, {binary: true, include_docs: true,attachments: true,});
-      console.log(doc._attachments)
-      doc.movies.forEach(async movie => {
+      if(doc.movies)
+      {
+        this.movies[type] = [];
+        doc.movies.forEach(async movie => {
         if(movie.type === type)
         {
+          this.movies[type] = [];
           let blob = doc._attachments[movie.title + '.png'].data;
           let posterURL = await blobUtil.blobToDataURL(blob)
           let convertedMovie = {title: movie.title, poster: posterURL, type: type}
           this.movies[type].push(convertedMovie)
         }
       });
-      resolve();
-    })
+      resolve(this.movies[type]);
+      }
+      
+    }).catch(err => console.log(err)) 
 
     
   }
