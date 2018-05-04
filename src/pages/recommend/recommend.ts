@@ -1,5 +1,5 @@
 import { Component, ApplicationRef, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { DbProvider } from '../../providers/db/db';
 
 /**
@@ -23,7 +23,7 @@ export class RecommendPage {
   private reset = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams,
-    private zone:NgZone) {
+    private toastCtrl: ToastController) {
   this.movie = this.navParams.get("movie");
   console.log(this.movie)
   this.setupFriends();
@@ -68,6 +68,13 @@ export class RecommendPage {
       this.selectedFriends.forEach(friend => {
         this.dbProvider.addRecommendation(this.movie, friend, this.recommendationText);
       });
+
+      let toast = this.toastCtrl.create({
+        message: 'recommendation sent!',
+        duration: 1500,
+        position: 'top'
+      });
+      toast.present();
 
       this.selectedFriends = [];
       this.recommendationText = "";

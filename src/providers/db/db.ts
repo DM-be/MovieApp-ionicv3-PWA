@@ -137,6 +137,7 @@ export class DbProvider {
   }
 
   logOut() {
+    this.movies = undefined;
     this.db.destroy();
     this.sdb.destroy();
   }
@@ -293,7 +294,8 @@ export class DbProvider {
   async addMovie(type: string, movie: any) {
     try {
     let doc = await this.db.get(this.user)
-    movie[type] = type;
+    movie["type"] = type;
+    console.log(movie)
     doc.movies.push(movie);
     await this.db.put(doc);
     this.movies[type].push(movie);
@@ -303,11 +305,9 @@ export class DbProvider {
   }
 
   async getMoviesByType(type: string){
-      return new Promise(async resolve => {
         let doc = await this.db.get(this.user);
         this.movies[type] = doc.movies.filter(movie => movie.type === type);
-        resolve();
-      });
+      // wrap into promise?
   }
 
   }
