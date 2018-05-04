@@ -34,6 +34,7 @@ import { WatchedMoviesPage } from '../pages/watched-movies/watched-movies';
 import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
 import { FilterProvider } from '../providers/filter/filter';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RecommendPage } from '../pages/recommend/recommend';
 
 
 
@@ -52,7 +53,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AddFriendPage,
     RecommendationsPage,
     WatchedMoviesPage,
-    LoggedInTabsPage
+    LoggedInTabsPage,
+    RecommendPage
     
   ],
   imports: [
@@ -84,7 +86,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AddFriendPage,
     RecommendationsPage,
     WatchedMoviesPage,
-    LoggedInTabsPage
+    LoggedInTabsPage,
+    RecommendPage
   ],
   providers: [
     StatusBar,

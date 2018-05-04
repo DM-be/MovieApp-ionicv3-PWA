@@ -41,6 +41,7 @@ import {
 } from '../login/login';
 import { DbProvider } from '../../providers/db/db';
 import { TabsPage } from '../tabs/tabs';
+import { RecommendPage } from '../recommend/recommend';
 
 
 @Component({
@@ -54,6 +55,7 @@ export class DiscoverPage {
   searchTerm: string = '';
   searchControl: FormControl;
   movieDetailPage = MovieDetailPage;
+  recommendPage = RecommendPage;
   loginPage = LoginPage
   movies: any;
   tabsPage = TabsPage
@@ -71,7 +73,8 @@ export class DiscoverPage {
     public events: Events,
     public dbProvider: DbProvider,
     public appCtrl: App,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+
   ) 
   {
     this.searchControl = new FormControl();
@@ -160,6 +163,11 @@ export class DiscoverPage {
       movie: movie
     });
   }
+
+  openRecommendMovie(movie) {
+   let recommendModal = this.modalCtrl.create(RecommendPage, movie);
+   recommendModal.present();
+  } 
 
   async setMoviesByKeyWords_async(keyword) {
     try {
