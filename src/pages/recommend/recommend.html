@@ -21,7 +21,7 @@
             <img src="https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png">
           </ion-avatar>
           <ion-label>{{friend.username}}</ion-label>
-          <ion-checkbox item-right (ionChange)="updateSelectedFriends(friend)"></ion-checkbox>
+          <ion-checkbox item-right (click)="updateSelectedFriends(friend)"  [checked]="inSelectedFriends(friend)"></ion-checkbox>
           </ion-item>
          
      </ion-list>

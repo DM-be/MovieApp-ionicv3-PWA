@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ApplicationRef, NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DbProvider } from '../../providers/db/db';
 
@@ -20,8 +20,10 @@ export class RecommendPage {
   private friends;
   private selectedFriends =  [];
   private recommendationText: string; 
+  private reset = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams,
+    private zone:NgZone) {
   this.movie = this.navParams.get("movie");
   console.log(this.movie)
   this.setupFriends();
@@ -41,11 +43,17 @@ export class RecommendPage {
     if(this.selectedFriends.findIndex(f => f.username === friend.username) === -1)
     {
       this.selectedFriends.push(friend);
+      console.log(this.selectedFriends)
     }
     else {
       this.selectedFriends = this.selectedFriends.filter(f => friend.username !== f.username )
+      console.log(this.selectedFriends)
     }
   }
+
+  inSelectedFriends(friend): boolean {
+    return (this.selectedFriends.findIndex(f => f.username === friend.username) >= 0)
+  } 
 
 
  async setupFriends() {
@@ -56,12 +64,13 @@ export class RecommendPage {
   recommendMovie() {
     if(this.recommendationText !== "" && this.selectedFriends.length > 0)
     {
+      console.log(this.selectedFriends)
       this.selectedFriends.forEach(friend => {
         this.dbProvider.addRecommendation(this.movie, friend, this.recommendationText);
       });
-   
-      // uncheck everything and empty text
-      // maybe give  apop up
+
+      this.selectedFriends = [];
+      this.recommendationText = "";
     }
     
   }
