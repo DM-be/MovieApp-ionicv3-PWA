@@ -27,6 +27,8 @@
       {{movie.overview}}
       </p> </ion-col>       
     </ion-row>
+    <div *ngIf="movie.recommendationText"> </div>
+    <p > {{movie.recommendationText}}</p>
 
     <ion-row justify-content-center >
       <ion-col col-4><button ion-button color="dark" (click)="recommendMovie()">recommend</button> </ion-col>

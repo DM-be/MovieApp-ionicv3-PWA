@@ -270,9 +270,11 @@ export class DbProvider {
     catch(err) { console.log(err)}
   }
 
-  async addRecommendation(movie: {"id": string, "title": string, "poster": string, "overview": string}, username ) {
+  async addRecommendation(movie: {"id": string, "title": string, "poster": string, "overview": string}, friend, recommendationText ) {
     try {
-      let doc = await this.sdb.get(username);
+      let doc = await this.sdb.get(friend.username);
+      movie["recommendationText"] = recommendationText;
+      movie["recommendedBy"] = friend;
       doc.recommendations.push(movie)
       await this.sdb.put(doc);
     } catch (err) {

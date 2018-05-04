@@ -165,7 +165,7 @@ export class DiscoverPage {
   }
 
   openRecommendMovie(movie) {
-   let recommendModal = this.modalCtrl.create(RecommendPage, movie);
+   let recommendModal = this.modalCtrl.create(RecommendPage, {"movie": movie});
    recommendModal.present();
   } 
 

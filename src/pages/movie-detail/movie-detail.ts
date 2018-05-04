@@ -62,7 +62,7 @@ export class MovieDetailPage {
           // handle the recommending to the db
 
           data.forEach(friend => {
-            this.dbProvider.addRecommendation(this.movie, friend);
+            this.dbProvider.addRecommendation(this.movie, friend, "bla");
           });
           
 

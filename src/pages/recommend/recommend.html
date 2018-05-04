@@ -8,10 +8,10 @@
 
 
 
-  <ion-content >
+  <ion-content padding="true" >
 
 
-<ion-scroll style="height: 200px">
+<ion-scroll style="height:30vh">
     <ion-list >
         <ion-list-header>
           Which friends would like this movie?
@@ -21,10 +21,20 @@
             <img src="https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png">
           </ion-avatar>
           <ion-label>{{friend.username}}</ion-label>
-          <ion-checkbox item-right checked="false"></ion-checkbox>
+          <ion-checkbox item-right (ionChange)="updateSelectedFriends(friend)"></ion-checkbox>
           </ion-item>
+         
      </ion-list>
 </ion-scroll>
+<ion-list>
+    <ion-item>
+        <ion-textarea placeholder="Your personal recommendation" [(ngModel)]="recommendationText"></ion-textarea>
+      </ion-item>
+</ion-list>
+<button ion-button icon-start full (click)=recommendMovie()>
+    <ion-icon name="flag"></ion-icon>
+    recommend
+  </button>
   </ion-content>
 
 
