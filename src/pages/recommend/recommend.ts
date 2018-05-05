@@ -16,7 +16,7 @@ import { DbProvider } from '../../providers/db/db';
 })
 export class RecommendPage {
 
-  private movie: any;
+  public movies = [];
   private friends;
   private selectedFriends =  [];
   private recommendationText: string; 
@@ -24,8 +24,7 @@ export class RecommendPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams,
     private toastCtrl: ToastController) {
-  this.movie = this.navParams.get("movie");
-  console.log(this.movie)
+  this.movies.push( this.navParams.get("movie"));
   this.setupFriends();
   }
 
@@ -66,7 +65,7 @@ export class RecommendPage {
     {
       console.log(this.selectedFriends)
       this.selectedFriends.forEach(friend => {
-        this.dbProvider.addRecommendation(this.movie, friend, this.recommendationText);
+        this.dbProvider.addRecommendation(this.movies[0], friend, this.recommendationText);
       });
 
       let toast = this.toastCtrl.create({
@@ -80,6 +79,10 @@ export class RecommendPage {
       this.recommendationText = "";
     }
     
+  }
+
+  closeModal() {
+    this.navCtrl.pop();
   }
 
 

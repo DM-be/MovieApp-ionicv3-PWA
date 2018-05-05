@@ -295,7 +295,6 @@ export class DbProvider {
     try {
     let doc = await this.db.get(this.user)
     movie["type"] = type;
-    console.log(movie)
     doc.movies.push(movie);
     await this.db.put(doc);
     this.movies[type].push(movie);

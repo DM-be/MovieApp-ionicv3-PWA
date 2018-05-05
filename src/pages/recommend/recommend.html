@@ -7,11 +7,27 @@
 
 
 
-
   <ion-content padding="true" >
 
+    <ion-grid>
+      <ion-row>
+        <ion-col >
+          <ion-card *ngFor="let movie of movies">
+              <ion-card-content >
+                <ion-col></ion-col>
+                  <img [src]="movie.poster">  
 
-<ion-scroll style="height:30vh">
+                </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+  </ion-grid>
+    
+
+
+
+
+<ion-scroll style="height:40vh">
     <ion-list >
         <ion-list-header>
           Which friends would like this movie?
@@ -28,13 +44,27 @@
 </ion-scroll>
 <ion-list>
     <ion-item>
-        <ion-textarea placeholder="Your personal recommendation" [(ngModel)]="recommendationText"></ion-textarea>
+        <ion-input placeholder="Your personal recommendation" [(ngModel)]="recommendationText"></ion-input>
       </ion-item>
 </ion-list>
-<button ion-button icon-start full (click)=recommendMovie()>
+<button ion-button icon-start full hideWhen="android,ios" (click)=recommendMovie()>
     <ion-icon name="flag"></ion-icon>
     recommend
   </button>
+  <button ion-button icon-start full hideWhen="android,ios" (click)=closeModal()>
+    <ion-icon name="close"></ion-icon>
+    close
+  </button>
+
+
+<ion-fab bottom right #fab showWhen="android,ios" >
+  <button ion-fab> <ion-icon name="arrow-dropleft"></ion-icon></button>
+  <ion-fab-list side="left">
+    <button ion-fab><ion-icon name="flag"></ion-icon></button>
+    <button ion-fab><ion-icon name="close"></ion-icon></button>
+  </ion-fab-list>
+</ion-fab>
+
   </ion-content>
 
 
