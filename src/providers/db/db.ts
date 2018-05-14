@@ -131,7 +131,7 @@ export class DbProvider {
       recommendations: [],
     })
     let doc = await this.sdb.get("allUsers");
-    doc.users.push({"username": this.user, "isPublic": true, "avatar": "","email": user.email});
+    doc.users.push({"username": this.user, "isPublic": true, "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png","email": user.email});
     this.sdb.put(doc);
     this.loggedIn = true;
   }
@@ -282,7 +282,7 @@ export class DbProvider {
       console.log(err);
     }
   }
-  async getRecommendations() { // remove username into this.user
+  async getRecommendations() { 
     try {
       let doc =  await this.sdb.get(this.user)
       return doc.recommendations;

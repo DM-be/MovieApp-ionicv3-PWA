@@ -7,14 +7,37 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>addFriend</ion-title>
+    <ion-title>Add friends</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding="true">
 
-    <ion-auto-complete [dataProvider]="socialProvider" [options]="{ placeholder : 'type in your friends username here!' }" (itemSelected)="itemSelected($event)" ></ion-auto-complete>
+
+
+    <ion-auto-complete  [dataProvider]="socialProvider" (itemSelected)="itemSelected($event)" #searchbar ></ion-auto-complete>
+
+    <ion-scroll style="height:40vh">
+    <ion-chip *ngFor="let possibleFriend of possibleFriends; let i = index">
+        <ion-avatar>
+          <img src={{possibleFriend.avatar}}>
+        </ion-avatar>
+        <ion-label>{{possibleFriend.username}}</ion-label>
+        <button ion-button clear color="dark" (click)="delete(i)">
+          <ion-icon name="close-circle"></ion-icon>
+        </button>
+      </ion-chip>
+</ion-scroll>
+
+      <button ion-button icon-start full hideWhen="android,ios" (click)=inviteFriends()>
+        <ion-icon name="mail"></ion-icon>
+        send
+      </button>
+      <button ion-button icon-start full hideWhen="android,ios" (click)=close()>
+        <ion-icon name="close"></ion-icon>
+        close
+      </button>
 
 </ion-content>

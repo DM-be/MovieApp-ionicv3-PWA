@@ -78,7 +78,7 @@ export class RecommendPage {
 
       let toast = this.toastCtrl.create({
         message: `${this.movie.title} was recommended to ${friendsString}`,
-        duration: 1500,
+        duration: 3000,
         position: 'top'
       });
       toast.present();

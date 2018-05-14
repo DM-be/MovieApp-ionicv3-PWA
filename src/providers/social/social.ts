@@ -15,6 +15,7 @@ import 'rxjs/add/operator/map'
   and Angular DI.
 */
 @Injectable()
+
 export class SocialProvider implements AutoCompleteService {
 
   private friends = [];
@@ -57,6 +58,7 @@ export class SocialProvider implements AutoCompleteService {
 
    async getResults(keyword:string) {
     let users = await this.dbProvider.getAllUsers()
+    
     return users
       .filter(
         result => {return result.username.toLowerCase().startsWith(keyword.toLowerCase())
