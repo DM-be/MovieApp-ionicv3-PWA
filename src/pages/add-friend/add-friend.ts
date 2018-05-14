@@ -33,7 +33,7 @@ export class AddFriendPage {
     this.possibleFriends.push(possibleFriend)
     this.searchbar.clearValue();
     //this.dbProvider.addFriend(username);
-   // this.dbProvider.inviteFriend(possibleFriend.username);
+    this.dbProvider.inviteFriend(possibleFriend.username);
 
   }
 
@@ -46,6 +46,7 @@ export class AddFriendPage {
 
     let friendsString = "";
     this.possibleFriends.forEach((friend,i)=> {
+    this.dbProvider.inviteFriend(friend.username);
     if(i === this.possibleFriends.length - 1 && this.possibleFriends.length > 1)
         {
           friendsString +=  ` and ${friend.username}`
