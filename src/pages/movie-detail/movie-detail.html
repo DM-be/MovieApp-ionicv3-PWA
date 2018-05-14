@@ -20,7 +20,8 @@
     <ion-card-content>
       <ion-row>
         <ion-col col-3 ><img src="{{movie.poster}}"/> </ion-col>     
-     <ion-col ><ion-card-title>
+     <ion-col>
+       <ion-card-title>
         {{movie.title}}
       </ion-card-title>
       <p>
@@ -29,14 +30,6 @@
     </ion-row>
     <div *ngIf="movie.recommendationText"> </div>
     <p > {{movie.recommendationText}}</p>
-
-    <ion-row justify-content-center >
-      <ion-col col-4><button ion-button color="dark" (click)="recommendMovie()">recommend</button> </ion-col>
-      <ion-col col-4><button ion-button color="dark" (click)="addToWatch()">watch</button> </ion-col>
-      <ion-col col-4><button ion-button color="dark" (click)="addToSeen()">seen</button> </ion-col>
-       
-      </ion-row>
-
     </ion-card-content>
   </ion-card>
 

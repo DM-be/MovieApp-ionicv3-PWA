@@ -16,7 +16,7 @@ import { DbProvider } from '../../providers/db/db';
 })
 export class RecommendPage {
 
-  public movies = [];
+  public movie: any;
   private friends;
   private selectedFriends =  [];
   private recommendationText: string; 
@@ -24,7 +24,7 @@ export class RecommendPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams,
     private toastCtrl: ToastController) {
-  this.movies.push( this.navParams.get("movie"));
+  this.movie =( this.navParams.get("movie"));
   this.setupFriends();
   }
 
@@ -42,11 +42,9 @@ export class RecommendPage {
     if(this.selectedFriends.findIndex(f => f.username === friend.username) === -1)
     {
       this.selectedFriends.push(friend);
-      console.log(this.selectedFriends)
     }
     else {
       this.selectedFriends = this.selectedFriends.filter(f => friend.username !== f.username )
-      console.log(this.selectedFriends)
     }
   }
 
@@ -57,24 +55,33 @@ export class RecommendPage {
 
  async setupFriends() {
     this.friends = await this.dbProvider.getAcceptedFriends();
-    console.log(this.friends)
   }
 
   recommendMovie() {
+    let friendsString = "";
+
     if(this.recommendationText !== "" && this.selectedFriends.length > 0)
     {
-      console.log(this.selectedFriends)
-      this.selectedFriends.forEach(friend => {
-        this.dbProvider.addRecommendation(this.movies[0], friend, this.recommendationText);
+      this.selectedFriends.forEach((friend, i)=> {
+        this.dbProvider.addRecommendation(this.movie, friend, this.recommendationText);
+        if(i === this.selectedFriends.length - 1 && this.selectedFriends.length > 1)
+        {
+          friendsString +=  ` and ${friend.username}`
+        }
+        else {
+          friendsString += ` ${friend.username}`
+        }
+        
       });
 
+    
+
       let toast = this.toastCtrl.create({
-        message: 'recommendation sent!',
+        message: `${this.movie.title} was recommended to ${friendsString}`,
         duration: 1500,
         position: 'top'
       });
       toast.present();
-
       this.selectedFriends = [];
       this.recommendationText = "";
     }
