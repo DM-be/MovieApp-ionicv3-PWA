@@ -65,7 +65,7 @@ export class AddFriendPage {
     this.navCtrl.pop();
   }
 
-  close() {
+  closeModal() {
     this.navCtrl.pop();
   }
 }

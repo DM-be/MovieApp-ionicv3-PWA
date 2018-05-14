@@ -31,13 +31,20 @@
       </ion-chip>
 </ion-scroll>
 
+
+
       <button ion-button icon-start full hideWhen="android,ios" (click)=inviteFriends()>
         <ion-icon name="mail"></ion-icon>
         send
       </button>
-      <button ion-button icon-start full hideWhen="android,ios" (click)=close()>
+      <button ion-button icon-start full hideWhen="android,ios" (click)=closeModal()>
         <ion-icon name="close"></ion-icon>
         close
       </button>
+
+      <div showWhen="android,ios"> 
+        <ion-fab bottom right><button ion-fab (click)=inviteFriends()><ion-icon name="mail"></ion-icon></button> </ion-fab>
+        <ion-fab bottom left><button  ion-fab (click)=closeModal() ><ion-icon name="arrow-back"></ion-icon></button></ion-fab>
+        </div>
 
 </ion-content>
