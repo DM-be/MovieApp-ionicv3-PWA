@@ -20,17 +20,17 @@
           </ion-card-content>
           <ion-row no-padding>
             <ion-col text-center>
-              <button ion-button clear icon-only color="primary" icon-start [disabled]="isInWatched(movie)" (click)=addToWatch($event,movie)>
+              <button ion-button clear icon-only [small]="setSmallIcons()" color="primary" icon-start [disabled]="isInWatched(movie)" (click)=addToWatch($event,movie)>
                 <ion-icon name='eye'></ion-icon>
               </button>
             </ion-col>
             <ion-col text-center>
-              <button ion-button clear icon-only color="primary" icon-start [disabled]="isInSeen(movie)" (click)=addToSeen($event,movie)>
+              <button ion-button clear icon-only [small]="setSmallIcons()" color="primary" icon-start [disabled]="isInSeen(movie)" (click)=addToSeen($event,movie)>
                 <ion-icon name='checkmark'></ion-icon>
               </button>
             </ion-col>
             <ion-col text-center>
-              <button ion-button clear icon-only color="primary" icon-start (click)=openRecommendMovie(movie)>
+              <button ion-button clear icon-only [small]="setSmallIcons()" color="primary" icon-start (click)=openRecommendMovie(movie)>
                 <ion-icon name='flag'></ion-icon>
               </button>
             </ion-col>

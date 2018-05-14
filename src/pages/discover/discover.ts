@@ -62,6 +62,7 @@ export class DiscoverPage {
   seenMovies: any;
   watchedMovies: any;
 
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -88,6 +89,10 @@ export class DiscoverPage {
   //   else
   //     console.log("Storage may be cleared by the UA under storage pressure.");
   // });
+  }
+
+  setSmallIcons() {
+    return this.platform.width() < 500;
   }
 
   presentToast(movieTitle: string, typeOfList: string) {
