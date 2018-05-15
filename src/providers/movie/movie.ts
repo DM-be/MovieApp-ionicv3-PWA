@@ -3,13 +3,13 @@ import {
 } from '@angular/core';
 
 import PouchDB from 'pouchdb';
-import pouchdbfind from 'pouchdb-find';
+
 import moment from 'moment';
 import {
   Http,
   Headers
 } from '@angular/http';
-import blobUtil from 'blob-util';
+
 
 /*
   Generated class for the MovieProvider provider.

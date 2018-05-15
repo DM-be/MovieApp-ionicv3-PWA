@@ -16,7 +16,7 @@ export class ImagePreload implements OnInit {
   finalImage: any; //property bound to our host attribute.
  
   // Set an input so the directive can set a default image.
-  @Input() defaultImage : string = 'assets/imgs/preloader.gif';
+  @Input() defaultImage : string = './assets/imgs/preloader.gif';
  
   //ngOnInit is needed to access the @inputs() variables. these aren't available on constructor()
   ngOnInit() {

@@ -3,6 +3,9 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  ImageLoaderConfig
+} from 'ionic-image-loader';
+import {
   NavController,
   NavParams,
   LoadingController,
@@ -33,9 +36,7 @@ import 'rxjs/add/operator/debounceTime';
 import {
   MovieDetailPage
 } from '../movie-detail/movie-detail';
-import {
-  ImageLoaderConfig
-} from 'ionic-image-loader';
+
 import {
   LoginPage
 } from '../login/login';
@@ -51,7 +52,7 @@ import { RecommendPage } from '../recommend/recommend';
 export class DiscoverPage {
 
   offset = 100;
-  defaultImage = "../assets/imgs/preloader.gif"
+  defaultImage = "./assets/imgs/preloader.gif"
   searchTerm: string = '';
   searchControl: FormControl;
   movieDetailPage = MovieDetailPage;
@@ -69,7 +70,6 @@ export class DiscoverPage {
     public movieProvider: MovieProvider,
     public platform: Platform,
     public loadingCtrl: LoadingController,
-    private imageLoaderConfig: ImageLoaderConfig,
     public modalCtrl: ModalController,
     public events: Events,
     public dbProvider: DbProvider,

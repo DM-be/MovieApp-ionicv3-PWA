@@ -1,8 +1,6 @@
 import { Events } from 'ionic-angular';
 import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
-import pouchdbfind from 'pouchdb-find';
-import blobUtil from 'blob-util';
 import pouchdbadapteridb from 'pouchdb-adapter-idb';
 /*
   Generated class for the DbProvider provider.

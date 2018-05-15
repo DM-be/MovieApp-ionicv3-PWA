@@ -33,20 +33,16 @@
         <ion-input placeholder="Your personal recommendation" [(ngModel)]="recommendationText"></ion-input>
       </ion-item>
 </ion-list>
-<button ion-button icon-start full hideWhen="android,ios" (click)=recommendMovie()>
+<button ion-button icon-start full  (click)=recommendMovie()>
     <ion-icon name="flag"></ion-icon>
     recommend
   </button>
-  <button ion-button icon-start full hideWhen="android,ios" (click)=closeModal()>
+  <button ion-button icon-start full (click)=closeModal()>
     <ion-icon name="close"></ion-icon>
     close
   </button>
 
 
-<div showWhen="android,ios"> 
-<ion-fab bottom right><button ion-fab (click)=recommendMovie()><ion-icon name="flag"></ion-icon></button> </ion-fab>
-<ion-fab bottom left><button  ion-fab (click)=closeModal() ><ion-icon name="arrow-back"></ion-icon></button></ion-fab>
-</div>
 
   </ion-content>
 
