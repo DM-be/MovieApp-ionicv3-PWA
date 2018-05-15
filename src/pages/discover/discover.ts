@@ -79,8 +79,9 @@ export class DiscoverPage {
   ) 
   {
     this.searchControl = new FormControl();
-    this.getMoviesInTheatre();
     this.refreshMovies();
+    this.getMoviesInTheatre();
+    
 
   //   if (navigator.storage && navigator.storage.persist)
   // navigator.storage.persist().then(function(persistent) {
