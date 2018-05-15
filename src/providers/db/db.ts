@@ -273,8 +273,8 @@ export class DbProvider {
     try {
       let doc = await this.sdb.get(friend.username);
       movie["recommendationText"] = recommendationText;
-      movie["recommendedBy"] = friend;
-      doc.recommendations.push(movie)
+      movie["recommendedBy"] = {"username": this.user, "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png" } // im recommending stuff so yes
+      doc.recommendations.push(movie); // TODO: rework into "user" model and pass a user object
       await this.sdb.put(doc);
     } catch (err) {
       console.log(err);

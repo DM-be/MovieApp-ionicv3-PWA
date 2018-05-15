@@ -19,17 +19,33 @@
  <ion-card hideWhen="android,ios">
     <ion-card-content>
       <ion-row>
-        <ion-col col-3 ><img src="{{movie.poster}}"/> </ion-col>     
-     <ion-col>
+    <ion-col col-3 >
+      <img src="{{movie.poster}}"/>
+    </ion-col>     
+    <ion-col col-9>
        <ion-card-title>
         {{movie.title}}
       </ion-card-title>
-      <p>
-      {{movie.overview}}
-      </p> </ion-col>       
+      <p>{{movie.overview}}</p>
+      <div *ngIf="movie.recommendationText">
+        <hr>
+        <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-avatar item-start>
+                  <img src="{{movie.recommendedBy.avatar}}">
+                </ion-avatar>
+                <h2>{{movie.recommendedBy.username}}</h2>
+                <i>{{movie.recommendationText}}</i>
+              </ion-item>
+              <hr>
+            </ion-col>
+            </ion-row>
+           </div>
+    </ion-col>       
     </ion-row>
-    <div *ngIf="movie.recommendationText"> </div>
-    <p > {{movie.recommendationText}}</p>
+
+    
     </ion-card-content>
   </ion-card>
 
