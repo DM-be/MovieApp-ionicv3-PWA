@@ -31,7 +31,7 @@
         <hr>
         <ion-row>
             <ion-col>
-              <ion-item>
+              <ion-item text-wrap>
                 <ion-avatar item-start>
                   <img src="{{movie.recommendedBy.avatar}}">
                 </ion-avatar>
@@ -52,7 +52,6 @@
   <ion-card showWhen="android,ios">
       <ion-card-content>
         <ion-row justify-content-center >
-
           <img src="{{movie.poster}}"/>   
         </ion-row>
           
@@ -62,6 +61,21 @@
         <p>
         {{movie.overview}}
         </p>   
+        <div *ngIf="movie.recommendationText">
+            <hr>
+            <ion-row>
+                <ion-col>
+                  <ion-item text-wrap>
+                    <ion-avatar item-start>
+                      <img src="{{movie.recommendedBy.avatar}}">
+                    </ion-avatar>
+                    <h2>{{movie.recommendedBy.username}}</h2>
+                    <i>{{movie.recommendationText}}</i>
+                  </ion-item>
+                  <hr>
+                </ion-col>
+                </ion-row>
+               </div>
     </ion-row>
       
        
