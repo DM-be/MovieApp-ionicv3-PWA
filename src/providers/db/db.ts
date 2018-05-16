@@ -149,10 +149,14 @@ export class DbProvider {
   async getAllUsers() {
     try {
       let declinedFriends =  await this.getDeclinedFriends();
+      let invitedFriends = await this.getSentInvitesFriends();
+
       let doc = await this.sdb.get("allUsers");
       return doc.users.filter(user => {
-        return ((declinedFriends.findIndex(u => u.username === user.username) === -1) && user.username !== this.user && user.isPublic) 
+        return ((declinedFriends.findIndex(u => u.username === user.username) === -1) && user.username !== this.user && user.isPublic
+        && invitedFriends.findIndex(u => u.username === user.username) === -1);
         // filter out declined friends in the searchbar and the logged in user
+        // filter out friends you already invited
       })
       // todo add profile page to update this.public (default is now true)
     }
@@ -267,6 +271,15 @@ export class DbProvider {
       })
     }
     catch(err) { console.log(err)}
+  }
+
+  async getSentInvitesFriends() {
+    try {
+      let doc =  await this.sdb.get(this.user)
+      return doc.sentInvites;
+    }
+    catch(err) { console.log(err)}
+
   }
 
   async addRecommendation(movie: {"id": string, "title": string, "poster": string, "overview": string}, friend, recommendationText ) {
