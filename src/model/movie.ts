@@ -3,14 +3,19 @@ export class Movie {
     id: number;
     poster: string;
     overview: string;
-    image_url: string = "https://image.tmdb.org/t/p/w200"
     poster_path: string;
 
-    constructor(id: number, title: string, poster_path: string, overview: string )
+    constructor(id: number, title: string, overview: string, poster_path?: string, poster?: string, type?: string)
     {
         this.id = id;
         this.title = title;
-        this.poster = this.image_url + poster_path
+        if(poster_path)
+        {
+            this.poster = "https://image.tmdb.org/t/p/w200" + poster_path;
+        }
+        else {
+            this.poster = poster;
+        }
         this.overview = overview;
         this.poster_path =  poster_path
 

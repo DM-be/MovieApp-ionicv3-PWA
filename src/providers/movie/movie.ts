@@ -77,7 +77,7 @@ export class MovieProvider {
       url, {
         headers: this.headers
       }).map(res => {
-        return res.json().results.map(movie => new Movie(movie.id, movie.title, movie.poster_path, movie.overview))
+        return res.json().results.map(movie => new Movie(movie.id, movie.title, movie.overview, movie.poster_path))
       })
     this.relatedMovies = this.cache.loadFromObservable(url, req)
     return this.relatedMovies;
@@ -120,7 +120,7 @@ export class MovieProvider {
         url, {
           headers: this.headers
         }).map(res => {
-          return res.json().results.map(movie => new Movie(movie.id, movie.title, movie.poster_path, movie.overview))
+          return res.json().results.map(movie => new Movie(movie.id, movie.title, movie.overview, movie.poster_path));
         })
       this.moviesIntheaters = this.cache.loadFromObservable(url, req)
       return this.moviesIntheaters;
