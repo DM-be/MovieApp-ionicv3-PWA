@@ -60,11 +60,12 @@ export class DiscoverPage {
   movieDetailPage = MovieDetailPage;
   recommendPage = RecommendPage;
   loginPage = LoginPage
-  movies: any;
+  movies: Observable<any>
   tabsPage = TabsPage
   seenMovies: any;
   watchedMovies: any;
   films: Observable<any>;
+
 
   constructor(
     public navCtrl: NavController,
@@ -115,6 +116,7 @@ export class DiscoverPage {
   }
   ionViewDidLoad() {
     this.events.subscribe("discover:updated", (searchTerm) => {
+      
       this.setMoviesByKeyWords_async(searchTerm);
     })
     this.refreshMovies();
@@ -164,6 +166,7 @@ export class DiscoverPage {
 
   getMoviesInTheatre() {
     this.movies =  this.movieProvider.getMoviesInTheater();
+
     console.log(this.movies)
   }
 
@@ -189,9 +192,15 @@ export class DiscoverPage {
         cssClass: 'transparent'
       });
       loading.present();
-      const keywords = await this.movieProvider.getKeyWords(keyword);
-      //const movies = await this.movieProvider.getRelatedMovies(keywords)
-      //this.movies = movies;
+      
+      let keywords;
+      this.movieProvider.getKeyWords(keyword).subscribe(kw => {
+        this.movies = this.movieProvider.getRelatedMovies(kw)
+      });
+    
+    //  this.movies = movies;
+
+      // this.movies = this.movieProvider.getKeyWords(keyword).subscribe(data => this.movieProvider.getRelatedMovies(data) )
       this.refreshMovies();  // update to disable buttons
       loading.dismiss();
      
