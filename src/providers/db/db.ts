@@ -234,10 +234,16 @@ export class DbProvider {
       if (index > -1) {
         doc.recievedInvites.splice(index, 1); // remove from recievedInvites when accepting
       }
-      doc.friends.push({"username": username, "accepted": true, "declined": false})
-      // push the friend to the friends array
+      if(doc.friends.findIndex(u => u.username ===username) === -1)
+      {
+        doc.friends.push({"username": username, "accepted": true, "declined": false})
+        // push the friend to the friends array only if its not in it already
+        // todo: find a nicer way to handle multiple friend invites sent (A sent to B, B sent to A, now friend gets added once but still a pop up)
+      }
+     
+      
       this.sdb.put(doc);
-// update recievedinvites (cleared it so we wont prompt again)
+// update recievedinvites 
        
 // add the invitee to the inviters friends array
        let otherdoc = await this.sdb.get(username);

@@ -30,16 +30,19 @@ export class AddFriendPage {
 
   itemSelected(possibleFriend)
   {
-    this.possibleFriends.push(possibleFriend)
+    if(this.possibleFriends.findIndex(u => u.username === possibleFriend.username) === -1)
+    {
+       this.possibleFriends.push(possibleFriend)
+    }
     this.searchbar.clearValue();
     //this.dbProvider.addFriend(username);
-    this.dbProvider.inviteFriend(possibleFriend.username);
+    
 
   }
 
   delete(i) 
   {
-   
+    this.possibleFriends.slice(i, 1);
   }
 
   inviteFriends() {
