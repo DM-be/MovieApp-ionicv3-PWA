@@ -46,6 +46,7 @@ import { RecommendPage } from '../recommend/recommend';
 import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { CacheService } from 'ionic-cache';
+import { Movie } from '../../model/movie';
 
 @Component({
   selector: 'page-discover',
@@ -60,7 +61,7 @@ export class DiscoverPage {
   movieDetailPage = MovieDetailPage;
   recommendPage = RecommendPage;
   loginPage = LoginPage
-  movies: Observable<any>
+  movies: Observable<Movie[]>
   tabsPage = TabsPage
   seenMovies: any;
   watchedMovies: any;
@@ -175,7 +176,7 @@ export class DiscoverPage {
   }
 
 
-  openMovieDetail(movie) {
+  openMovieDetail(movie: Movie) {
     this.navCtrl.push(this.movieDetailPage, {
       movie: movie
     });

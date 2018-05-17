@@ -4,6 +4,8 @@ export class Movie {
     poster: string;
     overview: string;
     poster_path: string;
+    type: string;
+    
 
     constructor(id: number, title: string, overview: string, poster_path?: string, poster?: string, type?: string)
     {

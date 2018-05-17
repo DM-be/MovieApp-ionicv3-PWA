@@ -2,6 +2,7 @@ import { Events } from 'ionic-angular';
 import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
 import pouchdbadapteridb from 'pouchdb-adapter-idb';
+import { Movie } from '../../model/movie';
 /*
   Generated class for the DbProvider provider.
 
@@ -308,10 +309,10 @@ export class DbProvider {
   }
 
   // todo:add overview etc
-  async addMovie(type: string, movie: any) {
+  async addMovie(type: string, movie: Movie) {
     try {
     let doc = await this.db.get(this.user)
-    movie["type"] = type;
+    movie.type = type;
     doc.movies.push(movie);
     await this.db.put(doc);
     this.movies[type].push(movie);
