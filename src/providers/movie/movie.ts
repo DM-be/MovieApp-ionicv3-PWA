@@ -11,6 +11,11 @@ import {
 } from '@angular/http';
 
 
+import { CacheService } from 'ionic-cache';
+import { Observable } from 'rxjs/Observable';
+import { Movie } from '../../model/movie';
+
+
 /*
   Generated class for the MovieProvider provider.
 
@@ -19,6 +24,9 @@ import {
 */
 @Injectable()
 export class MovieProvider {
+
+  keywords: Observable<any>
+  moviesIntheaters: Observable<any>
 
 
 
@@ -29,7 +37,7 @@ export class MovieProvider {
   file_size = "w200"
   image_url = "https://image.tmdb.org/t/p/"
 
-  constructor(public http: Http, ) {
+  constructor(public http: Http,  private cache: CacheService) {
     this.headers.append('Content-Type', 'application/json');
 
   }
@@ -80,33 +88,26 @@ export class MovieProvider {
 
     })
   }
-  getMoviesInTheater() {
+   getMoviesInTheater() {
 
-    return new Promise(resolve => {
+ 
       let now = moment().format('YYYY-MM-DD');
       let aMonthAgo = moment().subtract(1, 'months').format('YYYY-MM-DD');
       let url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&primary_release_date.gte=${aMonthAgo}&primary_release_date.lte=${now}`;
 
-      let moviesIntheaters = [];
-      let response;
 
-      this.http.get(
+      let req = this.http.get(
         url, {
           headers: this.headers
-        }).subscribe(res => {
+        }).map(res => {
+          return res.json().results.map(movie => new Movie(movie.title))
 
-        res.json().results.forEach(movie => {
-          moviesIntheaters.push({
-            "id": movie.id,
-            "title": movie.title,
-            "poster": this.image_url + this.file_size + movie.poster_path,
-            "overview": movie.overview
-          })
-        });
-      }, err => console.log(err));
+        })
 
-      resolve(moviesIntheaters);
-    })
+      this.moviesIntheaters = this.cache.loadFromObservable(url, req)
+
+      return this.moviesIntheaters;
+
   }
 
 }

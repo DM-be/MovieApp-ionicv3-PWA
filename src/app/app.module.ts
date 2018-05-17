@@ -35,7 +35,7 @@ import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
 import { FilterProvider } from '../providers/filter/filter';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RecommendPage } from '../pages/recommend/recommend';
-
+import { CacheModule } from 'ionic-cache';
 
 
 @NgModule({
@@ -68,7 +68,8 @@ import { RecommendPage } from '../pages/recommend/recommend';
     IonicImageLoader.forRoot(),
     IonicImageLoader,
     LazyLoadImageModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CacheModule.forRoot()
     
     
   ],

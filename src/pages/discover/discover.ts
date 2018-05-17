@@ -43,7 +43,9 @@ import {
 import { DbProvider } from '../../providers/db/db';
 import { TabsPage } from '../tabs/tabs';
 import { RecommendPage } from '../recommend/recommend';
-
+import { Http, Headers } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { CacheService } from 'ionic-cache';
 
 @Component({
   selector: 'page-discover',
@@ -62,7 +64,7 @@ export class DiscoverPage {
   tabsPage = TabsPage
   seenMovies: any;
   watchedMovies: any;
-
+  films: Observable<any>;
 
   constructor(
     public navCtrl: NavController,
@@ -75,12 +77,15 @@ export class DiscoverPage {
     public dbProvider: DbProvider,
     public appCtrl: App,
     private toastCtrl: ToastController,
+    private http: Http,
+    private cache: CacheService,
 
   ) 
   {
     this.searchControl = new FormControl();
     this.refreshMovies();
     this.getMoviesInTheatre();
+  
     
 
   //   if (navigator.storage && navigator.storage.persist)
@@ -115,11 +120,13 @@ export class DiscoverPage {
     this.refreshMovies();
   }
   ionViewWillEnter() {
+    //this.loadFilms();
     this.refreshMovies();
   }
   logOut() {
-    this.dbProvider.logOut();
-    this.appCtrl.getRootNav().setRoot(TabsPage);
+   // this.dbProvider.logOut();
+  //  this.appCtrl.getRootNav().setRoot(TabsPage);
+  this.loadFilms()
   }
   isInWatched(movie) {
     if(this.watchedMovies !== undefined) // new users do not have watched movies
@@ -155,8 +162,9 @@ export class DiscoverPage {
 
 
 
-  async getMoviesInTheatre() {
-    this.movies = await this.movieProvider.getMoviesInTheater();
+  getMoviesInTheatre() {
+    this.movies =  this.movieProvider.getMoviesInTheater();
+    console.log(this.movies)
   }
 
    ionViewDidLeave() {
@@ -182,8 +190,8 @@ export class DiscoverPage {
       });
       loading.present();
       const keywords = await this.movieProvider.getKeyWords(keyword);
-      const movies = await this.movieProvider.getRelatedMovies(keywords)
-      this.movies = movies;
+      //const movies = await this.movieProvider.getRelatedMovies(keywords)
+      //this.movies = movies;
       this.refreshMovies();  // update to disable buttons
       loading.dismiss();
      
@@ -194,4 +202,31 @@ export class DiscoverPage {
 
   }
 
-}
+
+  loadFilms() {
+    console.log("loaded films");
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let url = 'https://swapi.co/api/films/';
+    let req = this.http.get(url, {headers: headers })
+      .map(res => {
+        let toast = this.toastCtrl.create({
+          message: 'New data from API loaded',
+          duration: 2000
+        });
+        toast.present();
+ 
+        return res.json().results;
+      });
+ 
+      console.log(req);
+    // Specify custom TTL if you want
+      this.films = this.cache.loadFromObservable(url, req);
+      console.log(this.films);
+ 
+      // Or just load without additional settings
+      // this.films = this.cache.loadFromObservable(url, req);
+    }
+  }
+
+
