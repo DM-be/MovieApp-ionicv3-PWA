@@ -166,7 +166,7 @@ export class DiscoverPage {
 
   getMoviesInTheatre() {
     this.movies =  this.movieProvider.getMoviesInTheater();
-
+    this.movieProvider.getMoviesInTheater().subscribe(movies => console.log(movies));
     console.log(this.movies)
   }
 
@@ -192,8 +192,6 @@ export class DiscoverPage {
         cssClass: 'transparent'
       });
       loading.present();
-      
-      let keywords;
       this.movieProvider.getKeyWords(keyword).subscribe(kw => {
         this.movies = this.movieProvider.getRelatedMovies(kw)
       });
