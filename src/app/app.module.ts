@@ -36,6 +36,7 @@ import { FilterProvider } from '../providers/filter/filter';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RecommendPage } from '../pages/recommend/recommend';
 import { CacheModule } from 'ionic-cache';
+import { CacheImgModule, ImgCacheService } from '../../global';
 
 
 @NgModule({
@@ -69,7 +70,11 @@ import { CacheModule } from 'ionic-cache';
     IonicImageLoader,
     LazyLoadImageModule,
     BrowserAnimationsModule,
-    CacheModule.forRoot()
+    CacheModule.forRoot(),
+    CacheImgModule
+
+    
+    
     
     
   ],
@@ -98,6 +103,7 @@ import { CacheModule } from 'ionic-cache';
     SocialProvider,
     DbProvider,
     FilterProvider, 
+    ImgCacheService
     
 
   ]
