@@ -29,6 +29,8 @@ export class MovieProvider {
   moviesIntheaters: Observable<any>;
   relatedMovies:  Observable<any>;
   moviesByTitle: Observable<any>;
+  similarMovies: Observable<any>;
+
   currentPage: number; // holds the number of the search, also used to control the infinite scroll
   totalPages: number; // gets returned by the json call
   hasNextPage: boolean; // check for the infinite scroller, also the binding for it
@@ -206,5 +208,29 @@ export class MovieProvider {
 
   }
 
-}
+  getSimilarMovie(movieId: number)
+  {
+    let url = `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${this.api_key}&page=${this.currentPage}`;
+
+    let req = this.http.get(
+      url, {
+        headers: this.headers
+      }).map(res => {
+        this.setTotalPages(res.json().total_pages);
+        return res.json().results.map(movie => new Movie(movie.id, movie.title, movie.overview, movie.poster_path))
+      }) 
+      this.incrementCurrentPage();// increment pages AFTER we made the call
+      if(this.getCurrentPage() === this.getTotalPages())
+      {
+        this.setHasNextPage(false);
+      }
+      else {
+        this.setHasNextPage(true);
+      }
+      this.similarMovies = this.cache.loadFromObservable(url, req)
+      return this.similarMovies;
+    }
+
+  }
+
 

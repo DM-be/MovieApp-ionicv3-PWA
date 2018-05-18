@@ -83,12 +83,20 @@ export class DiscoverPage {
     private http: Http,
     private cache: CacheService,
 
+
   ) 
   {
+
+
+
     this.searchControl = new FormControl();
     this.movies = [];
+   
     this.refreshMovies();
-    this.getMoviesInTheatre();
+   // this.getMoviesInTheatre();
+    
+    
+
     
     
 
@@ -118,6 +126,22 @@ export class DiscoverPage {
     this.watchedMovies = this.dbProvider.getMovies("watch")
   }
   ionViewDidLoad() {
+
+    
+
+
+    this.events.subscribe("similarMovies", similarMovies => {
+      this.movies = [];
+
+      console.log("similarmovies worked");
+      console.log(similarMovies)
+      this.movieProvider.resetCurrentPage();
+      similarMovies.forEach(movie => {
+        this.movies.push(movie);
+      });
+      console.log(this.movies)
+    })
+
     this.events.subscribe("discover:updated", (searchTerm) => {
       this.searchTerm = searchTerm;
       

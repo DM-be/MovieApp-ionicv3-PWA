@@ -15,7 +15,6 @@ import { PopoverDiscoverPage } from '../popover-discover/popover-discover';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-logged-in-tabs',
   templateUrl: 'logged-in-tabs.html',
