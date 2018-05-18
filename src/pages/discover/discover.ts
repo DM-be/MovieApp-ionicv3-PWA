@@ -119,15 +119,44 @@ export class DiscoverPage {
   }
   ionViewDidLoad() {
     this.events.subscribe("discover:updated", (searchTerm) => {
+      this.searchTerm = searchTerm;
       
       if(this.movieProvider.getSearchByKeyword())
       {
         this.setMoviesByKeyWords_async(searchTerm);
       }
+      else if(this.movieProvider.getSearchByTitle())
+      {
+        this.setMoviesByTitle(searchTerm);
+      }
       
     })
     this.refreshMovies();
   }
+
+  setMoviesByTitle(searchTerm) {
+    try {
+      let loading = this.loadingCtrl.create({
+        cssClass: 'transparent'
+      });
+      loading.present();
+      this.movies = [];
+      this.movieProvider.getMovieByTitle(searchTerm).subscribe(movies => {
+        movies.forEach(movie => {
+          this.movies.push(movie);
+          this.hasNextPage = this.movieProvider.getHasNextPage();
+          
+        });
+      })
+      this.refreshMovies();  // update to disable buttons
+      loading.dismiss();
+    } catch (err) {
+      console.log("error in setting the movies by title : " + err);
+    }
+
+  }
+
+
   ionViewWillEnter() {
     //this.loadFilms();
     this.refreshMovies();
@@ -232,12 +261,30 @@ export class DiscoverPage {
     this.hasNextPage = this.movieProvider.getHasNextPage();
     if(this.hasNextPage)
     {
-       this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
+
+      if(this.movieProvider.getSearchByKeyword())
+      {
+        this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
       movies.forEach(element => {
         this.movies.push(element);
       });
       event.complete();
     })
+      }
+      else if (this.movieProvider.getSearchByTitle())
+      {
+        this.movieProvider.getMovieByTitle(this.searchTerm).subscribe(movies=>{
+          movies.forEach(movie => {
+            this.movies.push(movie);
+          });
+            event.complete();
+        })
+        
+      }
+
+      
+
+
     }
 
    
