@@ -191,6 +191,10 @@ export class DiscoverPage {
   ionViewWillEnter() {
     //this.loadFilms();
     this.refreshMovies();
+    setTimeout(() => {
+      this.content.scrollToTop(); // https://github.com/ionic-team/ionic/issues/12309
+    }, 500);
+    
   }
   logOut() {
    // this.dbProvider.logOut();
