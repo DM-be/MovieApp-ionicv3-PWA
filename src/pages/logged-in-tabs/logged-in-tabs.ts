@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, Events, Tab } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, Events, Tab, PopoverController } from 'ionic-angular';
 import { DiscoverPage } from '../discover/discover';
 import { SeenMoviesPage } from '../seen-movies/seen-movies';
 import { WatchedMoviesPage } from '../watched-movies/watched-movies';
@@ -7,6 +7,7 @@ import { SocialPage } from '../social/social';
 import { RecommendationsPage } from '../recommendations/recommendations';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/map';
+import { PopoverDiscoverPage } from '../popover-discover/popover-discover';
 /**
  * Generated class for the LoggedInTabsPage page.
  *
@@ -38,7 +39,8 @@ export class LoggedInTabsPage {
   social: any = SocialPage;
   recommendation: any = RecommendationsPage;
   
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public events: Events) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public events: Events, 
+  public popoverCtrl: PopoverController) {
     if (!this.platform.is('mobile')) {
       this.tabsPlacement = 'top';
       this.tabsLayout = 'icon-left';
@@ -73,6 +75,13 @@ export class LoggedInTabsPage {
 
   onInput(event) {
     console.log(event)
+  }
+
+  presentPopover(event) {
+    let popover = this.popoverCtrl.create(PopoverDiscoverPage);
+    popover.present({
+      ev: event
+    });
   }
 
   tabSelected(event) {

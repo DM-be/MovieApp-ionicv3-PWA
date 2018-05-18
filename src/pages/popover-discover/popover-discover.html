@@ -1,0 +1,13 @@
+<ion-list>
+  <ion-list-header>Search options</ion-list-header>
+<button ion-item icon-end (click)=toggleTitle()> 
+  Title
+  <ion-icon [name]="searchByTitle === true ? 'checkmark' : ''"> </ion-icon>
+</button>
+<button ion-item icon-end (click)=toggleKeyword()> 
+  Keyword
+  <ion-icon [name]="searchByKeyword === true ? 'checkmark' : ''"> </ion-icon>
+</button>
+
+
+</ion-list>

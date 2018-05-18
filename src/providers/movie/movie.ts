@@ -32,6 +32,11 @@ export class MovieProvider {
   totalPages: number; // gets returned by the json call
   hasNextPage: boolean; // check for the infinite scroller, also the binding for it
 
+
+  searchByTitle: boolean = true;
+  searchByKeyword: boolean = false;
+
+
   api_key = "4e60ba1292b6c1d4bbf05e0fe3542a92";
   headers = new Headers();
   constructor(public http: Http,  private cache: CacheService) {
@@ -39,6 +44,23 @@ export class MovieProvider {
     this.currentPage = 1;
     this.totalPages = 4;
     this.hasNextPage = false;
+  }
+
+  setSearchByTitle(bool: boolean)
+  {
+    this.searchByTitle = bool;
+  }
+
+  getSearchByTitle(): boolean {
+    return this.searchByTitle;
+  }
+
+  getSearchByKeyword(): boolean {
+    return this.searchByKeyword;
+  }
+
+  setSearchByKeyword(bool: boolean) {
+    this.searchByKeyword = bool;
   }
 
   resetCurrentPage() {

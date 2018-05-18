@@ -37,6 +37,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RecommendPage } from '../pages/recommend/recommend';
 import { CacheModule } from 'ionic-cache';
 import { CacheImgModule, ImgCacheService } from '../../global';
+import { PopoverDiscoverPage } from '../pages/popover-discover/popover-discover';
+
 
 
 @NgModule({
@@ -55,7 +57,8 @@ import { CacheImgModule, ImgCacheService } from '../../global';
     RecommendationsPage,
     WatchedMoviesPage,
     LoggedInTabsPage,
-    RecommendPage
+    RecommendPage,
+    PopoverDiscoverPage
     
   ],
   imports: [
@@ -71,7 +74,8 @@ import { CacheImgModule, ImgCacheService } from '../../global';
     LazyLoadImageModule,
     BrowserAnimationsModule,
     CacheModule.forRoot(),
-    CacheImgModule
+    CacheImgModule,
+    
 
     
     
@@ -93,7 +97,8 @@ import { CacheImgModule, ImgCacheService } from '../../global';
     RecommendationsPage,
     WatchedMoviesPage,
     LoggedInTabsPage,
-    RecommendPage
+    RecommendPage,
+    PopoverDiscoverPage
   ],
   providers: [
     StatusBar,
