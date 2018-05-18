@@ -30,6 +30,7 @@ export class MovieProvider {
   relatedMovies:  Observable<any>;
   moviesByTitle: Observable<any>;
   similarMovies: Observable<any>;
+  IMDBId: Observable<any>;
 
   currentPage: number; // holds the number of the search, also used to control the infinite scroll
   totalPages: number; // gets returned by the json call
@@ -230,7 +231,21 @@ export class MovieProvider {
       this.similarMovies = this.cache.loadFromObservable(url, req)
       return this.similarMovies;
     }
+    getIMDBId(movieId: string)
+    {
+      let url = `https://api.themoviedb.org/3/movie/${movieId}/external_ids?api_key=${this.api_key}`;
 
-  }
+      let req = this.http.get(
+      url, {
+        headers: this.headers
+      }).map(res => {
+        return res.json().imdb_id
+      });
+      this.IMDBId = this.cache.loadFromObservable(url, req)
+      return this.IMDBId;
+    }
+    }
+  
+
 
 

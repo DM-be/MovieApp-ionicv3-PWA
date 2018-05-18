@@ -22,60 +22,18 @@ export class MovieDetailPage {
   username: any;
 
   movie: any;
+  IMDBId: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public movieProvider: MovieProvider, public alertCtrl: AlertController
   , public dbProvider: DbProvider, public events: Events, public appCtrl:App ) {
   this.movie = this.navParams.get("movie")
-  this.username = this.dbProvider.getUser();
-
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad MovieDetailPage');
-    //let movie = this.navParams.get("movie")
- //   console.log(movie)
-   // this.movieProvider.addMovie("seen", movie)
-   // this.movieProvider.getMovies("seen").then(
-  //    data => console.log(data)
-   // )
+    this.movieProvider.getIMDBId(this.movie.id).subscribe(id => {
+      this.IMDBId = id;
+    })
     
   }
-
-  async recommendMovie() {
-    let alert = this.alertCtrl.create();
-
-    let friends = await this.dbProvider.getAcceptedFriends();
-    friends.forEach(friend => {
-      alert.addInput({
-        type: 'checkbox',
-        label: friend.username,
-        value: friend.username,
-    });
-      
-    });
-
-    alert.setTitle('which friends would like this movie?');
-
-    
-    alert.addButton('Cancel');
-    alert.addButton({
-      text: 'RECOMMEND',
-      handler: (data: any) => {
-          console.log('Checkbox data:', data);
-          // handle the recommending to the db
-
-          data.forEach(friend => {
-            this.dbProvider.addRecommendation(this.movie, friend, "bla");
-          });
-          
-
-         // this.testCheckboxOpen = false;
-        //  this.testCheckboxResult = data;
-      }
-    });
-
-    alert.present();
-  }
-
   addToWatch() {
     this.dbProvider.addMovie("watch", this.movie);
   }

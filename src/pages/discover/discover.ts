@@ -67,7 +67,7 @@ export class DiscoverPage {
   watchedMovies: any;
   films: Observable<any>;
   hasNextPage: boolean =  false;
-
+  @ViewChild(Content) content: Content;
 
   constructor(
     public navCtrl: NavController,
@@ -93,7 +93,7 @@ export class DiscoverPage {
     this.movies = [];
    
     this.refreshMovies();
-   // this.getMoviesInTheatre();
+   this.getMoviesInTheatre();
     
     
 
@@ -135,10 +135,12 @@ export class DiscoverPage {
 
       console.log("similarmovies worked");
       console.log(similarMovies)
+      
       this.movieProvider.resetCurrentPage();
       similarMovies.forEach(movie => {
         this.movies.push(movie);
       });
+      this.content.scrollToTop();
       console.log(this.movies)
     })
 
@@ -156,6 +158,10 @@ export class DiscoverPage {
       
     })
     this.refreshMovies();
+  }
+
+  ionViewDidEnter() {
+ //   this.content.scrollToTop();
   }
 
   setMoviesByTitle(searchTerm) {
@@ -263,6 +269,7 @@ export class DiscoverPage {
           movies.forEach(element => {
             this.movies.push(element);
             this.hasNextPage = this.movieProvider.getHasNextPage();// for binding the infinitescroll!
+            
           });
         })
       });

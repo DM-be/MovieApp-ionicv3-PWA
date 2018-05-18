@@ -45,6 +45,7 @@
            <ion-col s3 >
             <button ion-button  (click)="findSimilar()">similar</button>
            </ion-col>
+           <a href="https://www.imdb.com/title/{{IMDBId}}" target="_blank">IMDB</a>
     </ion-col>       
     </ion-row>
 
@@ -55,10 +56,11 @@
   <ion-card showWhen="android,ios">
       <ion-card-content>
         <ion-row justify-content-center >
-          <img src="{{movie.poster}}"/>   
-        </ion-row>
-          
-       <ion-row><ion-card-title>
+          <op-lazy-img [source]="movie.poster"></op-lazy-img>   
+
+        <ion-col col-9>
+ 
+         <ion-card-title>
           {{movie.title}}
         </ion-card-title>
         <p>
@@ -79,6 +81,11 @@
                 </ion-col>
                 </ion-row>
                </div>
+               <ion-col s3 >
+                <button ion-button  (click)="findSimilar()">similar</button>
+               </ion-col>
+               <a href="https://www.imdb.com/title/{{IMDBId}}" target="_blank">IMDB</a>
+        </ion-col> 
     </ion-row>
       
        
