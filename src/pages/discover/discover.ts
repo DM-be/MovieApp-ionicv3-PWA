@@ -53,7 +53,7 @@ import { Movie } from '../../model/movie';
   templateUrl: 'discover.html',
 })
 export class DiscoverPage {
-
+  keyw;
   offset = 100;
   defaultImage = "./assets/imgs/preloader.gif"
   searchTerm: string = '';
@@ -61,7 +61,7 @@ export class DiscoverPage {
   movieDetailPage = MovieDetailPage;
   recommendPage = RecommendPage;
   loginPage = LoginPage
-  movies: Observable<Movie[]>
+  movies: Movie[];
   tabsPage = TabsPage
   seenMovies: any;
   watchedMovies: any;
@@ -85,9 +85,10 @@ export class DiscoverPage {
   ) 
   {
     this.searchControl = new FormControl();
+    this.movies = [];
     this.refreshMovies();
     this.getMoviesInTheatre();
-  
+    
     
 
   //   if (navigator.storage && navigator.storage.persist)
@@ -129,7 +130,7 @@ export class DiscoverPage {
   logOut() {
    // this.dbProvider.logOut();
   //  this.appCtrl.getRootNav().setRoot(TabsPage);
-  this.loadFilms()
+
   }
   isInWatched(movie) {
     if(this.watchedMovies !== undefined) // new users do not have watched movies
@@ -166,7 +167,9 @@ export class DiscoverPage {
 
 
   getMoviesInTheatre() {
-    this.movies =  this.movieProvider.getMoviesInTheater();
+    this.movieProvider.getMoviesInTheater().subscribe(movies => movies.forEach(movie => {
+      this.movies.push(movie);
+    }))
     this.movieProvider.getMoviesInTheater().subscribe(movies => console.log(movies));
     console.log(this.movies)
   }
@@ -193,8 +196,14 @@ export class DiscoverPage {
         cssClass: 'transparent'
       });
       loading.present();
+      this.movies = [];
       this.movieProvider.getKeyWords(keyword).subscribe(kw => {
-        this.movies = this.movieProvider.getRelatedMovies(kw)
+        this.keyw = kw;
+        this.movieProvider.getRelatedMovies(kw).subscribe(movies => {
+          movies.forEach(element => {
+            this.movies.push(element);
+          });
+        })
       });
     
     //  this.movies = movies;
@@ -210,31 +219,18 @@ export class DiscoverPage {
 
   }
 
-
-  loadFilms() {
-    console.log("loaded films");
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    let url = 'https://swapi.co/api/films/';
-    let req = this.http.get(url, {headers: headers })
-      .map(res => {
-        let toast = this.toastCtrl.create({
-          message: 'New data from API loaded',
-          duration: 2000
-        });
-        toast.present();
- 
-        return res.json().results;
+  doInfinite(event) {
+    // check the boolean to know what search to do
+    this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
+      movies.forEach(element => {
+        this.movies.push(element);
       });
- 
-      console.log(req);
-    // Specify custom TTL if you want
-      this.films = this.cache.loadFromObservable(url, req);
-      console.log(this.films);
- 
-      // Or just load without additional settings
-      // this.films = this.cache.loadFromObservable(url, req);
-    }
+    })
+    
+    
+
+  }
+
   }
 
 

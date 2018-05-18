@@ -28,6 +28,8 @@ export class MovieProvider {
   keywords: Observable<any>;
   moviesIntheaters: Observable<any>;
   relatedMovies:  Observable<any>
+  page: number;
+
 
 
 
@@ -40,6 +42,7 @@ export class MovieProvider {
 
   constructor(public http: Http,  private cache: CacheService) {
     this.headers.append('Content-Type', 'application/json');
+    this.page =1;
 
   }
 
@@ -48,6 +51,9 @@ export class MovieProvider {
 
   getKeyWords(keyword) {
     // return new Promise(resolve => {
+
+      this.page = 1; // searching by a new keyword always resets the page number
+
       let keyWordURL = `https://api.themoviedb.org/3/search/keyword?api_key=${this.api_key}&query=${keyword}`
 
       let req = this.http.get(keyWordURL, {
@@ -72,7 +78,8 @@ export class MovieProvider {
 
   getRelatedMovies(keywords) {
 
-    let url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&with_keywords=${keywords}`;
+    let url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&with_keywords=${keywords}&page=${this.page}`;
+    this.page++; // increment the page with every search (get keywords resets it)
     let req = this.http.get(
       url, {
         headers: this.headers
