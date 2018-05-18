@@ -135,12 +135,10 @@ export class DiscoverPage {
 
       console.log("similarmovies worked");
       console.log(similarMovies)
-      
-      this.movieProvider.resetCurrentPage();
+
       similarMovies.forEach(movie => {
         this.movies.push(movie);
       });
-      this.content.scrollToTop();
       console.log(this.movies)
     })
 
@@ -193,7 +191,7 @@ export class DiscoverPage {
     this.refreshMovies();
     setTimeout(() => {
       this.content.scrollToTop(); // https://github.com/ionic-team/ionic/issues/12309
-    }, 500);
+    }, 800);
     
   }
   logOut() {
@@ -293,7 +291,7 @@ export class DiscoverPage {
   }
 
   doInfinite(event) {
-    // check the boolean to know what search to do
+    // rewrite this! now doesnt show pages of similar movies...
     this.hasNextPage = this.movieProvider.getHasNextPage();
     if(this.hasNextPage)
     {
