@@ -141,6 +141,7 @@ export class DiscoverPage {
       });
       loading.present();
       this.movies = [];
+      this.movieProvider.resetCurrentPage();
       this.movieProvider.getMovieByTitle(searchTerm).subscribe(movies => {
         movies.forEach(movie => {
           this.movies.push(movie);

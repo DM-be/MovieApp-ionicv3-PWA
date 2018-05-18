@@ -99,9 +99,8 @@ export class MovieProvider {
 
   getMovieByTitle(searchString: string)
   {
-    let query = searchString // todo: split multiple and seperate with +;
+    let query = searchString.split(" ").join('%20')// todo: split multiple and seperate with +;
     let url = `https://api.themoviedb.org/3/search/movie?api_key=${this.api_key}&query=${query}&page=${this.currentPage}`
-
     let req = this.http.get(
       url, {
         headers: this.headers
