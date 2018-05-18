@@ -10,12 +10,12 @@ import { Component, Input } from '@angular/core';
     <img op-lazy-img [source]="source" (loaded)="placeholderActive = false"/>
   </div>
   `,
-  styles: ['op-lazy-img { display: block;}']
 })
 export class LazyImgComponent {
 
   @Input()
   public source: string;
+
 
   public placeholderActive: boolean = true;
 

@@ -17,13 +17,73 @@
 
 @import "../../node_modules/ionic2-auto-complete/auto-complete";
 
+
+op-lazy-img {
+  div {
+    background-color:rgb(236, 240, 241);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: inherit;
+    height: inherit;
+    min-height: inherit;
+    min-width: inherit;
+    position: relative;
+    transition: 2s background-color ease;
+    width: 100%;
+    
+  }
+
+  .placeholder {
+    align-items: center;
+    background-image: url('../assets/imgs/preloader.gif');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    justify-content: center;
+    display:block;
+    position: relative;
+    @media (min-width: map-get($grid-breakpoints, xs)) {
+      width: 128px;
+      height:192px;
+    }
+    @media (min-width: map-get($grid-breakpoints, sm)) {
+      width: 128px;
+      height:192px;
+    }
+    @media (min-width: map-get($grid-breakpoints, md)) {
+      width: 200px;
+      height:300px;
+    }
+    @media (min-width: map-get($grid-breakpoints, lg)) {
+      width: 200px;
+      height:300px;
+    }
+  }
+
+  img {
+    display: block;
+    height: inherit;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+  }
+}
+
+[op-lazy-img] {
+  opacity: 0;
+  transition: opacity 2s;
+
+  &.loaded {
+    opacity: 1;
+  }
+}
+
+
 ion-loading.transparent {
   .loading-wrapper {
     background: transparent;
     box-shadow: none;
 
     .spinner-crescent circle {
-      stroke-width: 8px;
+      stroke-width: 7px;
     }
   }
 }
