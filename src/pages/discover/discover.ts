@@ -66,6 +66,7 @@ export class DiscoverPage {
   seenMovies: any;
   watchedMovies: any;
   films: Observable<any>;
+  hasNextPage: boolean =  false;
 
 
   constructor(
@@ -198,10 +199,12 @@ export class DiscoverPage {
       loading.present();
       this.movies = [];
       this.movieProvider.getKeyWords(keyword).subscribe(kw => {
+        console.log(kw);
         this.keyw = kw;
-        this.movieProvider.getRelatedMovies(kw).subscribe(movies => {
+        this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
           movies.forEach(element => {
             this.movies.push(element);
+            this.hasNextPage = this.movieProvider.getHasNextPage();// for binding the infinitescroll!
           });
         })
       });
@@ -210,6 +213,7 @@ export class DiscoverPage {
 
       // this.movies = this.movieProvider.getKeyWords(keyword).subscribe(data => this.movieProvider.getRelatedMovies(data) )
       this.refreshMovies();  // update to disable buttons
+       
       loading.dismiss();
      
     } catch (err) {
@@ -221,11 +225,18 @@ export class DiscoverPage {
 
   doInfinite(event) {
     // check the boolean to know what search to do
-    this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
+    this.hasNextPage = this.movieProvider.getHasNextPage();
+    if(this.hasNextPage)
+    {
+       this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
       movies.forEach(element => {
         this.movies.push(element);
       });
+      event.complete();
     })
+    }
+
+   
     
     
 

@@ -41,8 +41,9 @@
   </ion-grid>
 
 
-  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+  <div *ngIf="hasNextPage">
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" >
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
-
+</div>
 </ion-content>
