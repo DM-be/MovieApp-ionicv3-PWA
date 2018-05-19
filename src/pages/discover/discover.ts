@@ -129,17 +129,15 @@ export class DiscoverPage {
 
     
 
-
-    this.events.subscribe("similarMovies", similarMovies => {
+    
+    this.events.subscribe("similarMovies", movieId => {
       this.movies = [];
-
-      console.log("similarmovies worked");
-      console.log(similarMovies)
-
-      similarMovies.forEach(movie => {
-        this.movies.push(movie);
-      });
-      console.log(this.movies)
+      this.movieProvider.getSimilarMovie(movieId).subscribe(similarMovies => {
+        similarMovies.forEach(element => {
+          this.movies.push(element);
+        });
+        
+      })
     })
 
     this.events.subscribe("discover:updated", (searchTerm) => {
@@ -189,9 +187,9 @@ export class DiscoverPage {
   ionViewWillEnter() {
     //this.loadFilms();
     this.refreshMovies();
-    setTimeout(() => {
-      this.content.scrollToTop(); // https://github.com/ionic-team/ionic/issues/12309
-    }, 800);
+  //   setTimeout(() => {
+  //  //   this.content.scrollToTop(); // https://github.com/ionic-team/ionic/issues/12309
+  //   }, 800);
     
   }
   logOut() {

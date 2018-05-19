@@ -44,10 +44,10 @@ export class MovieDetailPage {
 
   findSimilar() {
     this.movieProvider.resetCurrentPage();
-    this.movieProvider.getSimilarMovie(this.movie.id).subscribe(similarMovies => {
-      this.events.publish("similarMovies", similarMovies);
-      this.navCtrl.parent.select(0);
-    })
+    this.events.publish("similarMovies", this.movie.id);
+    this.navCtrl.parent.select(0);
+
+    
     
   }
 
