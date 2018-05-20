@@ -114,9 +114,7 @@ export class MovieProvider {
   getHasNextPage(): boolean {
     return this.hasNextPage;
   }
-
-  // api functions
-
+  
   resetSearch() {
     this.resetCurrentPage();
     this.setHasNextPage(false);
@@ -166,9 +164,10 @@ export class MovieProvider {
         headers: this.headers
       }).map(res => {
         this.setTotalPages(res.json().total_pages);
-        this.incrementCurrentPage();// increment pages AFTER we made the call
+        // increment pages AFTER we made the call
         return res.json().results.map(movie => new Movie(movie.id, movie.title, movie.overview, movie.poster_path))
       }) 
+      this.incrementCurrentPage();
       if(this.getCurrentPage() === this.getTotalPages())
       {
         this.setHasNextPage(false);
