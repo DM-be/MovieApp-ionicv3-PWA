@@ -32,7 +32,7 @@ export class MovieProvider {
   similarMovies: Observable<any>;
   IMDBId: Observable<any>;
 
-  currentPage: number; // holds the number of the search, also used to control the infinite scroll
+  currentPage: number =  1; // holds the number of the search, also used to control the infinite scroll
   totalPages: number; // gets returned by the json call
   hasNextPage: boolean; // check for the infinite scroller, also the binding for it
 
@@ -49,11 +49,8 @@ export class MovieProvider {
   headers = new Headers();
   constructor(public http: Http,  private cache: CacheService) {
     this.headers.append('Content-Type', 'application/json');
-    this.currentPage = 1;
-    this.totalPages = 1;
-    this.hasNextPage = false;
-    this.searchingBy = "title"; // default search by title
-    this.query = '';
+    this.setHasNextPage(false);
+    this.setSearchingBy('title');
   }
 
   setQuery(query: string) {
@@ -124,53 +121,54 @@ export class MovieProvider {
     this.resetCurrentPage();
   }
 
-  getUrl(): string {
+  getUrl(movieId?: boolean, firstSearch?: boolean): string {
     let url = '';
-    switch(this.getSearchingBy())
+    if(movieId)
+    {
+      url = `https://api.themoviedb.org/3/movie/${this.query}/similar?api_key=${this.api_key}&page=${this.currentPage}`;
+      return url;
+    }
+    else if(firstSearch)
+    {
+      let now = moment().format('YYYY-MM-DD');
+      let aMonthAgo = moment().subtract(1, 'months').format('YYYY-MM-DD');
+      url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&primary_release_date.gte=${aMonthAgo}&primary_release_date.lte=${now}&page=${this.currentPage}`;
+      return url;
+    }
+    else{
+      switch(this.getSearchingBy())
     {
       case 'title': 
       url = `https://api.themoviedb.org/3/search/movie?api_key=${this.api_key}&query=${this.query}&page=${this.currentPage}`;
       return url;
-      case 'getKeyword':
-      url = `https://api.themoviedb.org/3/search/keyword?api_key=${this.api_key}&query=${this.query}`;
-      return url;
       case 'findByKeyword':
       url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&with_keywords=${this.query}&page=${this.currentPage}`;
       return url;
-      case 'similar':
-      url = `https://api.themoviedb.org/3/movie/${this.movieId}/similar?api_key=${this.api_key}&page=${this.currentPage}`;
-      default: 
-      let now = moment().format('YYYY-MM-DD');
-      let aMonthAgo = moment().subtract(1, 'months').format('YYYY-MM-DD');
-      url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&primary_release_date.gte=${aMonthAgo}&primary_release_date.lte=${now}`;
-      return url;
+      
     }
+    }
+    
+
       
   }
 
-
-
-  getMovies(reset?: boolean) {
+  getMovies(reset?: boolean, movieId?: boolean, firstSearch?: boolean) {
     if(reset) {
       this.resetSearch(); 
     }
-    let url = this.getUrl();
-    if(this.getSearchingBy() === 'getKeyword')
-    {
-      return this.getKeyWords();
-    }
-    return this.makeApiCall();
+    let url = this.getUrl(movieId, firstSearch);
+    return this.makeApiCall(url);
   }
 
-  makeApiCall(): Observable<any> {
+  makeApiCall(url: string): Observable<Movie []> {
     let req = this.http.get(
-      this.getUrl(), {
+      url, {
         headers: this.headers
       }).map(res => {
         this.setTotalPages(res.json().total_pages);
+        this.incrementCurrentPage();// increment pages AFTER we made the call
         return res.json().results.map(movie => new Movie(movie.id, movie.title, movie.overview, movie.poster_path))
       }) 
-      this.incrementCurrentPage();// increment pages AFTER we made the call
       if(this.getCurrentPage() === this.getTotalPages())
       {
         this.setHasNextPage(false);
@@ -178,7 +176,7 @@ export class MovieProvider {
       else {
         this.setHasNextPage(true);
       }
-      return this.cache.loadFromObservable(this.getUrl(), req)
+      return this.cache.loadFromObservable(url, req)
   }
 
 
@@ -210,14 +208,11 @@ export class MovieProvider {
  
 
   getKeyWords() {
-      this.resetCurrentPage() // searching by a new keyword always resets the page number
       let keyWordURL = `https://api.themoviedb.org/3/search/keyword?api_key=${this.api_key}&query=${this.query}`
       let req = this.http.get(keyWordURL, {
         headers: this.headers
       } ).map(res => {return res.json().results.map(kw => kw.id).slice(0,1).join('|')});
-      this.keywords = this.cache.loadFromObservable(keyWordURL, req);
-      return this.keywords;
-        // only one keyword is returned
+      return this.cache.loadFromObservable(keyWordURL, req);
   }
 
 

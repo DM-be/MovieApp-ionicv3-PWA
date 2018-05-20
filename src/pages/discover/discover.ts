@@ -67,6 +67,9 @@ export class DiscoverPage {
   watchedMovies: any;
   films: Observable<any>;
   hasNextPage: boolean =  false;
+  firstSearch: boolean = true;
+  findingSimilarMovies: boolean = false;
+
   @ViewChild(Content) content: Content;
 
   constructor(
@@ -91,9 +94,14 @@ export class DiscoverPage {
 
     this.searchControl = new FormControl();
     this.movies = [];
-   
+    this.movieProvider.getMovies(true, false, true).subscribe(movies => {
+      movies.forEach(movie => {
+        this.movies.push(movie);
+      });
+    })
     this.refreshMovies();
-    this.getMoviesInTheatre();
+
+
     
     
     
@@ -128,13 +136,12 @@ export class DiscoverPage {
   }
   ionViewDidLoad() {
 
-    
-
-    
     this.events.subscribe("similarMovies", movieId => {
       this.movies = [];
-      this.movieProvider.getSimilarMovie(movieId).subscribe(similarMovies => {
+      this.movieProvider.setQuery(movieId);
+      this.movieProvider.getMovies(true, true).subscribe(similarMovies => {
         similarMovies.forEach(element => {
+          this.findingSimilarMovies = true;
           this.movies.push(element);
         });
         
@@ -143,8 +150,11 @@ export class DiscoverPage {
 
     this.events.subscribe("discover:updated", (searchTerm) => {
       this.searchTerm = searchTerm;
-      
-      if(this.movieProvider.getSearchingBy() === 'getKeyword' || this.movieProvider.getSearchingBy() === 'findByKeyword')
+      if(this.firstSearch)
+      {
+        this.firstSearch = false;
+      }
+      if(this.movieProvider.getSearchingBy() === 'getKeyword' || this.movieProvider.getSearchingBy() === 'findByKeyword' )
       {
         this.setMoviesByKeyWords_async(searchTerm);
       }
@@ -168,7 +178,8 @@ export class DiscoverPage {
       });
       loading.present();
       this.movies = [];
-      
+      this.findingSimilarMovies = false;
+      searchTerm.split(" ").join('%20')
       this.movieProvider.setQuery(searchTerm);
       this.movieProvider.getMovies(true).subscribe(movies => {
         movies.forEach(movie => {
@@ -271,11 +282,12 @@ export class DiscoverPage {
       });
       loading.present();
       this.movies = [];
+      this.findingSimilarMovies = false;
       this.movieProvider.setQuery(keyword);
-      this.movieProvider.getMovies(true).subscribe(keyword => {
-        this.movieProvider.setQuery(keyword);
+      this.movieProvider.getKeyWords().subscribe(keywordAsANumber => {
+        this.movieProvider.setQuery(keywordAsANumber);
         this.movieProvider.setSearchingBy('findByKeyword');
-        this.movieProvider.getMovies().subscribe(movies => {
+         this.movieProvider.getMovies(true).subscribe(movies => {
           movies.forEach(movie => {
             this.movies.push(movie);
           });
@@ -333,7 +345,8 @@ export class DiscoverPage {
         
     //   }
 
-      this.movieProvider.getMovies().subscribe(movies => {
+    
+      this.movieProvider.getMovies(false, this.findingSimilarMovies, this.firstSearch).subscribe(movies => {
         movies.forEach(movie => {
           this.movies.push(movie);
         });

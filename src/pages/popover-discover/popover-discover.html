@@ -6,7 +6,7 @@
 </button>
 <button ion-item icon-end (click)=toggleKeyword()> 
   Keyword
-  <ion-icon [name]="searchingBy === 'getKeyword' ? 'checkmark' : ''"> </ion-icon>
+  <ion-icon [name]="searchingBy === 'getKeyword' || searchingBy === 'findByKeyword' ? 'checkmark' : ''"> </ion-icon>
 </button>
 
 
