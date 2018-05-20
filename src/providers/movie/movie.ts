@@ -119,6 +119,7 @@ export class MovieProvider {
 
   resetSearch() {
     this.resetCurrentPage();
+    this.setHasNextPage(false);
   }
 
   getUrl(movieId?: boolean, firstSearch?: boolean): string {
@@ -144,7 +145,6 @@ export class MovieProvider {
       case 'findByKeyword':
       url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&with_keywords=${this.query}&page=${this.currentPage}`;
       return url;
-      
     }
     }
     
@@ -152,7 +152,7 @@ export class MovieProvider {
       
   }
 
-  getMovies(reset?: boolean, movieId?: boolean, firstSearch?: boolean) {
+  getMovies(reset?: boolean, movieId?: boolean, firstSearch?: boolean): Observable<Movie []> {
     if(reset) {
       this.resetSearch(); 
     }

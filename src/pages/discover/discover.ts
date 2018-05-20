@@ -184,48 +184,32 @@ export class DiscoverPage {
       this.movieProvider.getMovies(true).subscribe(movies => {
         movies.forEach(movie => {
             this.movies.push(movie);
-            this.hasNextPage = this.movieProvider.getHasNextPage();
         });
       })
-
-      // this.movieProvider.getMovieByTitle(searchTerm).subscribe(movies => {
-      //   movies.forEach(movie => {
-      //     this.movies.push(movie);
-      //     this.hasNextPage = this.movieProvider.getHasNextPage();
-          
-      //   });
-      // })
       this.refreshMovies();  // update to disable buttons
       loading.dismiss();
     } catch (err) {
       console.log("error in setting the movies by title : " + err);
     }
-
   }
 
 
   ionViewWillEnter() {
-    //this.loadFilms();
     this.refreshMovies();
-  //   setTimeout(() => {
-  //  //   this.content.scrollToTop(); // https://github.com/ionic-team/ionic/issues/12309
-  //   }, 800);
-    
   }
   logOut() {
    // this.dbProvider.logOut();
   //  this.appCtrl.getRootNav().setRoot(TabsPage);
 
   }
-  isInWatched(movie) {
+  isInWatched(movie: Movie): boolean {
     if(this.watchedMovies !== undefined) // new users do not have watched movies
     {
        return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
     }
   }
 
-  isInSeen(movie)
-  
+  isInSeen(movie: Movie): boolean
   {
     if(this.seenMovies !== undefined)
     {
@@ -249,27 +233,11 @@ export class DiscoverPage {
     this.presentToast(movie.title, "seen");
   }
 
-
-
-  getMoviesInTheatre() {
-    this.movieProvider.getMoviesInTheater().subscribe(movies => movies.forEach(movie => {
-      this.movies.push(movie);
-    }))
-    this.movieProvider.getMoviesInTheater().subscribe(movies => console.log(movies));
-    console.log(this.movies)
-  }
-
-   ionViewDidLeave() {
-  //  this.refreshMovies();
-  }
-
-
   openMovieDetail(movie: Movie) {
     this.navCtrl.push(this.movieDetailPage, {
       movie: movie
     });
   }
-
   openRecommendMovie(movie) {
    let recommendModal = this.modalCtrl.create(RecommendPage, {"movie": movie});
    recommendModal.present();
@@ -293,68 +261,20 @@ export class DiscoverPage {
           });
         })
       })
-      // this.movieProvider.getKeyWords().subscribe(kw => {
-      //   console.log(kw);
-      //   this.keyw = kw;
-      //   this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
-      //     movies.forEach(element => {
-      //       this.movies.push(element);
-      //       this.hasNextPage = this.movieProvider.getHasNextPage();// for binding the infinitescroll!
-            
-      //     });
-      //   })
-      // });
-    
-    //  this.movies = movies;
-
-      // this.movies = this.movieProvider.getKeyWords(keyword).subscribe(data => this.movieProvider.getRelatedMovies(data) )
-      this.refreshMovies();  // update to disable buttons
-       
-      loading.dismiss();
-     
+      this.refreshMovies();  // update to disable buttons  
+      loading.dismiss();  
     } catch (err) {
       console.log("error in setting the movies by keyword : " + err);
     }
-
-
   }
 
   doInfinite(event) {
-    // rewrite this! now doesnt show pages of similar movies...
-    // this.hasNextPage = this.movieProvider.getHasNextPage();
-    // if(this.hasNextPage)
-    // {
-
-    //   if(this.movieProvider.getSearchByKeyword())
-    //   {
-    //     this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
-    //   movies.forEach(element => {
-    //     this.movies.push(element);
-    //   });
-    //   event.complete();
-    // })
-    //   }
-    //   else if (this.movieProvider.getSearchByTitle())
-    //   {
-    //     this.movieProvider.getMovieByTitle(this.searchTerm).subscribe(movies=>{
-    //       movies.forEach(movie => {
-    //         this.movies.push(movie);
-    //       });
-    //         event.complete();
-    //     })
-        
-    //   }
-
-    
-      this.movieProvider.getMovies(false, this.findingSimilarMovies, this.firstSearch).subscribe(movies => {
-        movies.forEach(movie => {
-          this.movies.push(movie);
-        });
-        event.complete()
+    this.movieProvider.getMovies(false, this.findingSimilarMovies, this.firstSearch).subscribe(movies => {
+      movies.forEach(movie => {
+        this.movies.push(movie);
+      });
+      event.complete()
       })
-
-      
-
 
     }
 
