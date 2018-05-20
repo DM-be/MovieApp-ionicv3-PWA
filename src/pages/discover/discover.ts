@@ -93,7 +93,8 @@ export class DiscoverPage {
     this.movies = [];
    
     this.refreshMovies();
-   this.getMoviesInTheatre();
+    this.getMoviesInTheatre();
+    
     
     
 
@@ -143,11 +144,11 @@ export class DiscoverPage {
     this.events.subscribe("discover:updated", (searchTerm) => {
       this.searchTerm = searchTerm;
       
-      if(this.movieProvider.getSearchByKeyword())
+      if(this.movieProvider.getSearchingBy() === 'getKeyword' || this.movieProvider.getSearchingBy() === 'findByKeyword')
       {
         this.setMoviesByKeyWords_async(searchTerm);
       }
-      else if(this.movieProvider.getSearchByTitle())
+      else if(this.movieProvider.getSearchingBy() === 'title')
       {
         this.setMoviesByTitle(searchTerm);
       }
@@ -167,14 +168,22 @@ export class DiscoverPage {
       });
       loading.present();
       this.movies = [];
-      this.movieProvider.resetCurrentPage();
-      this.movieProvider.getMovieByTitle(searchTerm).subscribe(movies => {
+      
+      this.movieProvider.setQuery(searchTerm);
+      this.movieProvider.getMovies(true).subscribe(movies => {
         movies.forEach(movie => {
-          this.movies.push(movie);
-          this.hasNextPage = this.movieProvider.getHasNextPage();
-          
+            this.movies.push(movie);
+            this.hasNextPage = this.movieProvider.getHasNextPage();
         });
       })
+
+      // this.movieProvider.getMovieByTitle(searchTerm).subscribe(movies => {
+      //   movies.forEach(movie => {
+      //     this.movies.push(movie);
+      //     this.hasNextPage = this.movieProvider.getHasNextPage();
+          
+      //   });
+      // })
       this.refreshMovies();  // update to disable buttons
       loading.dismiss();
     } catch (err) {
@@ -262,17 +271,27 @@ export class DiscoverPage {
       });
       loading.present();
       this.movies = [];
-      this.movieProvider.getKeyWords(keyword).subscribe(kw => {
-        console.log(kw);
-        this.keyw = kw;
-        this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
-          movies.forEach(element => {
-            this.movies.push(element);
-            this.hasNextPage = this.movieProvider.getHasNextPage();// for binding the infinitescroll!
-            
+      this.movieProvider.setQuery(keyword);
+      this.movieProvider.getMovies(true).subscribe(keyword => {
+        this.movieProvider.setQuery(keyword);
+        this.movieProvider.setSearchingBy('findByKeyword');
+        this.movieProvider.getMovies().subscribe(movies => {
+          movies.forEach(movie => {
+            this.movies.push(movie);
           });
         })
-      });
+      })
+      // this.movieProvider.getKeyWords().subscribe(kw => {
+      //   console.log(kw);
+      //   this.keyw = kw;
+      //   this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
+      //     movies.forEach(element => {
+      //       this.movies.push(element);
+      //       this.hasNextPage = this.movieProvider.getHasNextPage();// for binding the infinitescroll!
+            
+      //     });
+      //   })
+      // });
     
     //  this.movies = movies;
 
@@ -290,29 +309,36 @@ export class DiscoverPage {
 
   doInfinite(event) {
     // rewrite this! now doesnt show pages of similar movies...
-    this.hasNextPage = this.movieProvider.getHasNextPage();
-    if(this.hasNextPage)
-    {
+    // this.hasNextPage = this.movieProvider.getHasNextPage();
+    // if(this.hasNextPage)
+    // {
 
-      if(this.movieProvider.getSearchByKeyword())
-      {
-        this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
-      movies.forEach(element => {
-        this.movies.push(element);
-      });
-      event.complete();
-    })
-      }
-      else if (this.movieProvider.getSearchByTitle())
-      {
-        this.movieProvider.getMovieByTitle(this.searchTerm).subscribe(movies=>{
-          movies.forEach(movie => {
-            this.movies.push(movie);
-          });
-            event.complete();
-        })
+    //   if(this.movieProvider.getSearchByKeyword())
+    //   {
+    //     this.movieProvider.getRelatedMovies(this.keyw).subscribe(movies => {
+    //   movies.forEach(element => {
+    //     this.movies.push(element);
+    //   });
+    //   event.complete();
+    // })
+    //   }
+    //   else if (this.movieProvider.getSearchByTitle())
+    //   {
+    //     this.movieProvider.getMovieByTitle(this.searchTerm).subscribe(movies=>{
+    //       movies.forEach(movie => {
+    //         this.movies.push(movie);
+    //       });
+    //         event.complete();
+    //     })
         
-      }
+    //   }
+
+      this.movieProvider.getMovies().subscribe(movies => {
+        movies.forEach(movie => {
+          this.movies.push(movie);
+        });
+        event.complete()
+      })
 
       
 
@@ -323,7 +349,7 @@ export class DiscoverPage {
     
     
 
-  }
+  
 
   }
 

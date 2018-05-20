@@ -43,11 +43,8 @@ export class MovieDetailPage {
   }
 
   findSimilar() {
-    this.movieProvider.resetCurrentPage();
     this.events.publish("similarMovies", this.movie.id);
     this.navCtrl.parent.select(0);
-
-    
     
   }
 
