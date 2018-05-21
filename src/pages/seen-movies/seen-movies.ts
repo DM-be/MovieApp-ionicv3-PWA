@@ -86,7 +86,7 @@ export class SeenMoviesPage {
   }
   isInWatched(movie: Movie): boolean {
     if (this.watchedMovies !== undefined) {
-      return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
+      return (this.watchedMovies.findIndex(i => i.id === movie.id) > -1)
     }
   }
 

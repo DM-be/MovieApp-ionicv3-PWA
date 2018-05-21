@@ -248,11 +248,11 @@ export class DbProvider {
       }
     }
   }
-  findMovie(movies, movieTitle)
+  findMovie(movies, movieId)
   {
     for (let index = 0; index < movies.length; index++) {
       const movieObject = movies[index];
-      if (movieObject.title === movieTitle) {
+      if (movieObject.id === movieId) {
         return index;
       }
     }
@@ -400,12 +400,12 @@ export class DbProvider {
     try {
 
       let doc = await this.db.get(this.user)
-      let i = this.findMovie(doc.movies, movie.title);
+      let i = this.findMovie(doc.movies, movie.id);
       if(i > -1)
       {
         doc.movies.splice(i, 1);
       }
-      let j = this.findMovie(this.movies[type], movie.title);
+      let j = this.findMovie(this.movies[type], movie.id);
       if(j > -1)
       {
         this.movies[type].splice(j, 1);

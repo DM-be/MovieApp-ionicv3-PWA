@@ -83,7 +83,8 @@ export class SignupPage {
       }, error => {
           loader.dismiss();
           let errorObject = error.json().validationErrors
-          Object.keys(errorObject).forEach(error => {
+          Object.values(errorObject).forEach((error: string) => {
+            
              this.alertCtrl.create({
             title: 'Bad request',
             message: error,

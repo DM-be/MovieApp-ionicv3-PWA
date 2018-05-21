@@ -167,12 +167,12 @@ export class DiscoverPage {
 
   isInWatched(movie: Movie): boolean {
     if (this.watchedMovies !== undefined) {
-      return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
+      return (this.watchedMovies.findIndex(i => i.id === movie.id) > -1)
     }
   }
   isInSeen(movie: Movie): boolean {
     if (this.seenMovies !== undefined) {
-      return (this.seenMovies.findIndex(i => i.title === movie.title) > -1)
+      return (this.seenMovies.findIndex(i => i.id === movie.id) > -1)
     }
   }
 
@@ -192,7 +192,7 @@ export class DiscoverPage {
     this.presentToast(movie.title, "watch");
   }
 
-  addToSeen(event, movie): void {
+  addToSeen(event, movie: Movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("seen", movie);
