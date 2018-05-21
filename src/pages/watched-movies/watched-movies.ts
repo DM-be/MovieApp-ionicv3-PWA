@@ -17,6 +17,7 @@ import {
 } from '../movie-detail/movie-detail';
 import { Movie } from '../../model/movie';
 import { RecommendPage } from '../recommend/recommend';
+import { FilterProvider } from '../../providers/filter/filter';
 
 /**
  * Generated class for the WatchedMoviesPage page.
@@ -38,10 +39,19 @@ export class WatchedMoviesPage {
   private seenMovies: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public toastCtrl: ToastController,
-  public modalCtrl: ModalController) {}
+  public modalCtrl: ModalController, public filterProvider: FilterProvider, public events: Events) {}
   ionViewWillEnter() {
     this.movies = this.dbProvider.getMovies("watch");
     this.seenMovies = this.dbProvider.getMovies("seen");
+  }
+
+  ionViewDidLoad() {
+    this.events.subscribe("watch:updated", (searchTerm) => {
+      this.movies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
+    })
+    this.events.subscribe("watch:empty", () => {
+      this.movies = this.dbProvider.getMovies("watch");
+    })
   }
 
   openMovieDetail(i) {

@@ -15,6 +15,7 @@ import {
 import {
   AddFriendPage
 } from '../add-friend/add-friend';
+import { FilterProvider } from '../../providers/filter/filter';
 
 /**
  * Generated class for the SocialPage page.
@@ -38,7 +39,8 @@ export class SocialPage {
     public socialProvider: SocialProvider,
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
-    public events: Events) {
+    public events: Events,
+    public filterProvider: FilterProvider) {
     this.events.subscribe("data:changed", () => {
       this.setup();
       this.checkForFriendInvites();
@@ -47,6 +49,15 @@ export class SocialPage {
   ionViewDidEnter() {
     this.setup();
     this.checkForFriendInvites();
+  }
+
+  ionViewDidLoad() {
+    this.events.subscribe("social:updated", (searchTerm) => {
+      this.friends = this.filterProvider.filterBySearchTerm(this.friends, searchTerm);
+    })
+    this.events.subscribe("social:empty", async () => {
+      this.friends = await this.socialProvider.getAcceptedFriends();
+    })
   }
   async setup() {
     this.friends = await this.socialProvider.getAcceptedFriends();

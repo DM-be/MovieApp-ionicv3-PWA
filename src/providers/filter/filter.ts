@@ -14,4 +14,18 @@ export class FilterProvider {
     console.log('Hello FilterProvider Provider');
   }
 
+  filterBySearchTerm(arr, searchTerm)
+  {
+    return arr.filter(function(o) {
+      return Object.keys(o).some(function(k) {
+    
+        if(o[k] != null)
+        {
+          return o[k].toString().toLowerCase().indexOf(searchTerm) != -1;
+        }
+        
+      })
+    })
+  }
+
 }

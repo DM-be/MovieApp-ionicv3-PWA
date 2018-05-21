@@ -80,9 +80,44 @@ export class LoggedInTabsPage {
     this.searchControl.valueChanges.debounceTime(1000).subscribe(search => {
       if (this.selectedTabPage == "DiscoverPage" && search !== "") {
         this.events.publish("discover:updated", search)
-      } else {
-
+      } else if (this.selectedTabPage == "SeenMoviesPage") {
+        if(search == "")
+        {
+          this.events.publish("seen:empty");
+        }
+        else{
+          this.events.publish("seen:updated", search);
+        }
       }
+      else if (this.selectedTabPage == "WatchedMoviesPage") {
+        if(search == "")
+        {
+          this.events.publish("watch:empty");
+        }
+        else{
+          this.events.publish("watch:updated", search);
+        }
+      }
+      else if (this.selectedTabPage == "RecommendationsPage") {
+        if(search == "")
+        {
+          this.events.publish("recommendations:empty");
+        }
+        else{
+          this.events.publish("recommendations:updated", search);
+        }
+      }
+      else if (this.selectedTabPage == "SocialPage") {
+        if(search == "")
+        {
+          this.events.publish("social:empty");
+        }
+        else{
+          this.events.publish("social:updated", search);
+        }
+      }
+      
+
     });
 
   }

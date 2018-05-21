@@ -6,7 +6,8 @@ import {
   NavController,
   NavParams,
   ToastController,
-  ModalController
+  ModalController,
+  Events
 } from 'ionic-angular';
 import {
   MovieProvider
@@ -32,6 +33,7 @@ import {
 } from '../movie-detail/movie-detail';
 import { Movie } from '../../model/movie';
 import { RecommendPage } from '../recommend/recommend';
+import { FilterProvider } from '../../providers/filter/filter';
 
 /**
  * Generated class for the SeenMoviesPage page.
@@ -57,8 +59,19 @@ export class SeenMoviesPage {
     public platform: Platform,
     public dbProvider: DbProvider,
     public toastCtrl: ToastController,
-    public  modalCtrl: ModalController
+    public  modalCtrl: ModalController,
+    public events: Events,
+    public filterProvider: FilterProvider
   ) {}
+
+  ionViewDidLoad() {
+    this.events.subscribe("seen:updated", (searchTerm) => {
+      this.movies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
+    })
+    this.events.subscribe("seen:empty", () => {
+      this.movies = this.dbProvider.getMovies("seen");
+    })
+  }
 
   ionViewWillEnter() {
     this.movies = this.dbProvider.getMovies("seen");

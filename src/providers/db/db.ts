@@ -299,7 +299,7 @@ export class DbProvider {
       cloneOfRecommendMovie["recommendedBy"] = {
         "username": this.user,
         "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png"
-      }
+      } // im recommending stuff so yes
       doc.recommendations.push(cloneOfRecommendMovie); // TODO: rework into "user" model and pass a user object
       await this.sdb.put(doc);
     } catch (err) {

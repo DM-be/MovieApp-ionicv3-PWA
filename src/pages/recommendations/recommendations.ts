@@ -4,6 +4,7 @@ import { DbProvider } from '../../providers/db/db';
 import { MovieDetailPage } from '../movie-detail/movie-detail';
 import { Movie } from '../../model/movie';
 import { RecommendPage } from '../recommend/recommend';
+import { FilterProvider } from '../../providers/filter/filter';
 
 /**
  * Generated class for the RecommendationsPage page.
@@ -25,7 +26,7 @@ export class RecommendationsPage {
   private seenMovies: Movie [];
   private watchedMovies: Movie [];
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider,
-  public toastCtrl: ToastController, public modalCtrl: ModalController, public platform: Platform) {
+  public toastCtrl: ToastController, public modalCtrl: ModalController, public platform: Platform, public events: Events, public filterProvider: FilterProvider) {
     this.setup();
   }
 
@@ -39,11 +40,19 @@ export class RecommendationsPage {
     return this.platform.width() < 500;
   }
 
+  ionViewDidLoad() {
+    this.events.subscribe("recommendations:updated", (searchTerm) => {
+      this.recommendations = this.filterProvider.filterBySearchTerm(this.recommendations, searchTerm);
+    })
+    this.events.subscribe("recommendations:empty", async () => {
+      this.recommendations = await this.dbProvider.getRecommendations();
+    })
+  }
+
   ionViewWillEnter() {
     this.watchedMovies = this.dbProvider.getMovies("watch");
     this.seenMovies = this.dbProvider.getMovies("seen");
     this.setup();
-    
   }
 
   openMovieDetail(i) {
