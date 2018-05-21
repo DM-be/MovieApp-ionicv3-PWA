@@ -34,6 +34,7 @@ export class DbProvider {
   private password = "";
   private sharedOptions: any;
   private basicOptions;
+  private acceptedFriends = [];
 
   constructor(public events: Events) {
 
@@ -96,7 +97,8 @@ export class DbProvider {
     })
     this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', async info => {
       this.sdb.sync(this.sharedRemote, this.sharedOptions);
-      this.movies["recommendations"] = await this.getRecommendations();
+      this.movies["recommendations"] = await this.getRecommendations() || []; // prevent undefined when a user is registered
+      this.acceptedFriends = await this.getAcceptedFriends();
       this.events.publish("sharedsync:completed");
 
     });
@@ -106,7 +108,6 @@ export class DbProvider {
         _id: this.user,
         movies: []
       })
-    
     }
     this.listenToChanges();
   }
@@ -117,14 +118,24 @@ export class DbProvider {
       live: true,
       include_docs: true
     }).on('change', change => {
+  
       if(change.id === this.user)
       {
-        console.log(change);
-        if(this.getMovies("recommendations").length < change.doc.recommendations.length)
+        // todo: implement friend invite accepted toast
+        
+        // var filteredFriends = change.doc.friends.filter(friend => friend.accepted)
+        if(this.movies["recommendations"].length < change.doc.recommendations.length)
         {
           let movie = change.doc.recommendations[change.doc.recommendations.length -1];
           this.events.publish("movie:recievedRecommendation", movie);
+          this.movies["recommendations"].push(movie); // push it locally, save a call
         }
+        // if (this.acceptedFriends.length < filteredFriends )
+        // {
+        //   let newFriend = this.findNewFriend(this.acceptedFriends, filteredFriends); 
+        //   console.log(newFriend);
+        //   this.events.publish("friend:accepted", newFriend);
+        // }
       }
       // change.id contains the doc id, change.doc contains the doc
      if (change.deleted) {
@@ -135,6 +146,11 @@ export class DbProvider {
     }).on('error',  err => {
       console.log(err);
     });
+  }
+
+  findNewFriend(arr1, arr2)
+  {
+    return arr1.filter(x => !arr2.includes(x));
   }
 
   async initializeMovies() {
@@ -188,7 +204,17 @@ export class DbProvider {
       })
       // todo add profile page to update this.public (default is now true)
     } catch (err) {
-      console.log(err)
+      console.log(err);
+    }
+  }
+
+  async getAllFriends() {
+    try {
+      let doc = await this.sdb.get(this.user);
+    return doc.friends
+    }
+    catch (err) {
+      console.log(err);
     }
   }
 
@@ -218,6 +244,15 @@ export class DbProvider {
     for (let index = 0; index < friends.length; index++) {
       const friendObject = friends[index];
       if (friendObject.username === username) {
+        return index;
+      }
+    }
+  }
+  findMovie(movies, movieTitle)
+  {
+    for (let index = 0; index < movies.length; index++) {
+      const movieObject = movies[index];
+      if (movieObject.title === movieTitle) {
         return index;
       }
     }
@@ -259,6 +294,8 @@ export class DbProvider {
       console.log(err);
     }
   }
+
+  
 
   async acceptFriendInvite(username) {
     try {
@@ -356,6 +393,29 @@ export class DbProvider {
     } catch (err) {
       console.log(err)
     }
+  }
+
+  async removeMovie(type: string, movie: Movie)
+  {
+    try {
+
+      let doc = await this.db.get(this.user)
+      let i = this.findMovie(doc.movies, movie.title);
+      if(i > -1)
+      {
+        doc.movies.splice(i, 1);
+      }
+      let j = this.findMovie(this.movies[type], movie.title);
+      if(j > -1)
+      {
+        this.movies[type].splice(j, 1);
+      }
+      await this.db.put(doc);
+      
+    } catch (err) {
+      console.log(err)
+    }
+
   }
 
   async getMoviesByType(type: string) {

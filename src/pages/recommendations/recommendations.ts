@@ -45,7 +45,7 @@ export class RecommendationsPage {
     this.events.subscribe("movie:recievedRecommendation", async movie => {
       let toast = this.toastCtrl.create({
         message: `${movie.title} was recommended to you by ${movie.recommendedBy.username}`,
-        duration: 1500,
+        duration: 2000,
         position: 'bottom'
       });
       toast.present();

@@ -91,5 +91,12 @@ export class WatchedMoviesPage {
     recommendModal.present();
   }
 
+  removeMovie(movie)
+  {
+    this.dbProvider.removeMovie("watch", movie);
+    this.movies = this.dbProvider.getMovies("watch");
+  }
+
+
   
 }

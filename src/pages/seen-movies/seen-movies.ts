@@ -105,6 +105,13 @@ export class SeenMoviesPage {
     this.dbProvider.addMovie("watch", movie);
     this.presentToast(movie.title, "watch");
   }
+
+  removeMovie(movie)
+  {
+    this.dbProvider.removeMovie("seen", movie);
+    this.movies = this.dbProvider.getMovies("seen");
+  }
+
   openRecommendMovie(movie): void {
     let recommendModal = this.modalCtrl.create(RecommendPage, {
       "movieToRecommend": movie
