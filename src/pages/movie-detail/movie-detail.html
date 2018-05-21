@@ -62,6 +62,11 @@
             <p>
               {{movie.overview}}
             </p>
+            <ion-col s3>
+                <button ion-button (click)="findSimilar()">similar</button>
+              </ion-col>
+              <a href="https://www.imdb.com/title/{{IMDBId}}" target="_blank">IMDB</a>
+            </ion-col>
             <div *ngIf="movie.recommendationText">
               <hr>
               <ion-row>
@@ -77,11 +82,7 @@
                 </ion-col>
               </ion-row>
             </div>
-            <ion-col s3>
-              <button ion-button (click)="findSimilar()">similar</button>
-            </ion-col>
-            <a href="https://www.imdb.com/title/{{IMDBId}}" target="_blank">IMDB</a>
-          </ion-col>
+            
         </ion-row>
       </ion-card-content>
     </ion-card>

@@ -64,6 +64,8 @@ export class DbProvider {
 
     // this.sharedRemote = "http://localhost:5984/shared";
     PouchDB.plugin(pouchdbadapteridb);
+
+
   }
 
   getMovies(type: string): Movie [] {
@@ -74,7 +76,8 @@ export class DbProvider {
     if (this.movies === undefined) {
       this.movies = {
         "watch": [],
-        "seen": []
+        "seen": [],
+        "recommendations": []
       }
     } 
 
@@ -91,9 +94,11 @@ export class DbProvider {
       this.initializeMovies(); 
       this.events.publish("localsync:completed");
     })
-    this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', info => {
+    this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', async info => {
       this.sdb.sync(this.sharedRemote, this.sharedOptions);
+      this.movies["recommendations"] = await this.getRecommendations();
       this.events.publish("sharedsync:completed");
+
     });
     this.loggedIn = true;
     if (signingUp) {
@@ -101,10 +106,36 @@ export class DbProvider {
         _id: this.user,
         movies: []
       })
-
+    
     }
+    this.listenToChanges();
   }
 
+  listenToChanges() {
+    this.sdb.changes({
+      since: 'now',
+      live: true,
+      include_docs: true
+    }).on('change', change => {
+      if(change.id === this.user)
+      {
+        console.log(change);
+        if(this.getMovies("recommendations").length < change.doc.recommendations.length)
+        {
+          let movie = change.doc.recommendations[change.doc.recommendations.length -1];
+          this.events.publish("movie:recievedRecommendation", movie);
+        }
+      }
+      // change.id contains the doc id, change.doc contains the doc
+     if (change.deleted) {
+        // document was deleted
+      } else {
+        // document was added/modified
+      }
+    }).on('error',  err => {
+      console.log(err);
+    });
+  }
 
   async initializeMovies() {
     await this.getMoviesByType("watch");

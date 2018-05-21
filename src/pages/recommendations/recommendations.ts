@@ -27,12 +27,6 @@ export class RecommendationsPage {
   private watchedMovies: Movie [];
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider,
   public toastCtrl: ToastController, public modalCtrl: ModalController, public platform: Platform, public events: Events, public filterProvider: FilterProvider) {
-    this.setup();
-  }
-
-  async setup() {
-    let user = this.dbProvider.getUser();
-    this.recommendations = await this.dbProvider.getRecommendations();
     
   }
 
@@ -42,18 +36,27 @@ export class RecommendationsPage {
 
   ionViewDidLoad() {
     this.events.subscribe("recommendations:updated", async (searchTerm) => {
-      this.recommendations = await this.dbProvider.getRecommendations();
+      this.recommendations = this.dbProvider.getMovies("recommendations");
       this.recommendations = this.filterProvider.filterBySearchTerm(this.recommendations, searchTerm);
     })
     this.events.subscribe("recommendations:empty", async () => {
+      this.recommendations = this.dbProvider.getMovies("recommendations");
+    })
+    this.events.subscribe("movie:recievedRecommendation", async movie => {
+      let toast = this.toastCtrl.create({
+        message: `${movie.title} was recommended to you by ${movie.recommendedBy.username}`,
+        duration: 1500,
+        position: 'bottom'
+      });
+      toast.present();
       this.recommendations = await this.dbProvider.getRecommendations();
     })
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.watchedMovies = this.dbProvider.getMovies("watch");
     this.seenMovies = this.dbProvider.getMovies("seen");
-    this.setup();
+    this.recommendations = this.dbProvider.getMovies("recommendations");
   }
 
   openMovieDetail(i) {
