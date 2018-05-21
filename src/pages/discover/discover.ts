@@ -20,9 +20,7 @@ import {
 import {
   Platform
 } from 'ionic-angular/platform/platform';
-import {
-  HomePage
-} from '../home/home';
+
 import {
   Content
 } from 'ionic-angular';

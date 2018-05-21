@@ -6,19 +6,20 @@
 -->
 
 <ion-content>
-    <ion-grid fixed>
-        <ion-row>
-            <button ion-button full hideWhen="android,ios" (click)="addFriendAction()">add a friend</button>
-
-            <ion-fab bottom right #fab showWhen="android,ios" (click)="addFriendAction()">
-                <button ion-fab><ion-icon name="add"></ion-icon></button>
-            </ion-fab>
- <ion-item *ngFor="let friend of friends; let i =index">{{friend.username}}
+  <ion-grid fixed>
+    <ion-row>
+      <button ion-button full hideWhen="android,ios" (click)="addFriendAction()">add a friend</button>
+      <ion-fab bottom right #fab showWhen="android,ios" (click)="addFriendAction()">
+        <button ion-fab>
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </ion-fab>
+      <ion-item *ngFor="let friend of friends; let i =index">{{friend.username}}
         <ion-avatar item-start>
-            <img src="https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png">
-          </ion-avatar>
+          <img src="https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png">
+        </ion-avatar>
       </ion-item>
     </ion-row>
-    </ion-grid>
+  </ion-grid>
 
 </ion-content>

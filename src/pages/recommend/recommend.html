@@ -14,26 +14,25 @@
 </ion-header>
 
 
-  <ion-content padding="true" >
+<ion-content padding="true">
 
-<ion-scroll style="height:40vh">
-    <ion-list >
-        <ion-item *ngFor="let friend of friends">
-          <ion-avatar item-left>
-            <img src="https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png">
-          </ion-avatar>
-          <ion-label>{{friend.username}}</ion-label>
-          <ion-checkbox item-right (click)="updateSelectedFriends(friend)"  [checked]="inSelectedFriends(friend)"></ion-checkbox>
-          </ion-item>
-         
-     </ion-list>
-</ion-scroll>
-<ion-list>
-    <ion-item>
-        <ion-input placeholder="Your personal recommendation" [(ngModel)]="recommendationText"></ion-input>
+  <ion-scroll style="height:40vh">
+    <ion-list>
+      <ion-item *ngFor="let friend of friends">
+        <ion-avatar item-left>
+          <img src="https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png">
+        </ion-avatar>
+        <ion-label>{{friend.username}}</ion-label>
+        <ion-checkbox item-right (click)="updateSelectedFriends(friend)" [checked]="inSelectedFriends(friend)"></ion-checkbox>
       </ion-item>
-</ion-list>
-<button ion-button icon-start full  (click)=recommendMovie()>
+    </ion-list>
+  </ion-scroll>
+  <ion-list>
+    <ion-item>
+      <ion-input placeholder="Your personal recommendation" [(ngModel)]="recommendationText"></ion-input>
+    </ion-item>
+  </ion-list>
+  <button ion-button icon-start full (click)=recommendMovie()>
     <ion-icon name="flag"></ion-icon>
     recommend
   </button>
@@ -41,10 +40,4 @@
     <ion-icon name="close"></ion-icon>
     close
   </button>
-
-
-
-  </ion-content>
-
-
-
+</ion-content>

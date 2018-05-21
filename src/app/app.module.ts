@@ -12,7 +12,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { HttpModule } from '@angular/http';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
 
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
@@ -24,7 +23,6 @@ import { SuperTabsModule } from 'ionic2-super-tabs';
 import { Content } from 'ionic-angular/components/content/content';
 import { DiscoverPage } from '../pages/discover/discover';
 import { MovieDetailPage } from '../pages/movie-detail/movie-detail';
-import { ImagePreload } from '../directives/imgpreload/imgpreload';
 import { SocialPage } from '../pages/social/social';
 import { SocialProvider } from '../providers/social/social';
 import { DbProvider } from '../providers/db/db';
@@ -44,14 +42,12 @@ import { PopoverDiscoverPage } from '../pages/popover-discover/popover-discover'
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
     LoginPage,
     SignupPage,
     SeenMoviesPage,
     TabsPage,
     DiscoverPage,
     MovieDetailPage,
-    ImagePreload,
     SocialPage,
     AddFriendPage,
     RecommendationsPage,
@@ -85,7 +81,6 @@ import { PopoverDiscoverPage } from '../pages/popover-discover/popover-discover'
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
     LoginPage,
     SignupPage,
     SeenMoviesPage,

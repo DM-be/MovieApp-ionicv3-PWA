@@ -1,10 +1,17 @@
+import {
+  Injectable
+} from '@angular/core';
+import {
+  DbProvider
+} from '../db/db';
+import {
+  AutoCompleteService
+} from 'ionic2-auto-complete';
 
-import { Injectable } from '@angular/core';
-import { DbProvider } from '../db/db';
-import {AutoCompleteService} from 'ionic2-auto-complete';
 
-
-import { Http } from '@angular/http';
+import {
+  Http
+} from '@angular/http';
 
 import 'rxjs/add/operator/map'
 
@@ -28,16 +35,6 @@ export class SocialProvider implements AutoCompleteService {
     this.getAcceptedFriends();
   }
 
-  getAllUsers() {
-    return [{"username": "dennistest", "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png"},{"username": "rianne", "avatar": "bla"} ]
-  }
-
-  getAllUsers2() {
-   // return this.dbProvider.getAllUsers();
-  }
-
-  
-
   async getAcceptedFriends() {
     let acceptedFriends = await this.dbProvider.getAcceptedFriends();
     return acceptedFriends;
@@ -49,23 +46,21 @@ export class SocialProvider implements AutoCompleteService {
   }
 
   async acceptInvite(username) {
-   await this.dbProvider.acceptFriendInvite(username);
+    await this.dbProvider.acceptFriendInvite(username);
   }
 
   async declineInvite(username) {
-   await this.dbProvider.declineFriendInvite(username);
+    await this.dbProvider.declineFriendInvite(username);
   }
 
-   async getResults(keyword:string) {
+  async getResults(keyword: string) {
     let users = await this.dbProvider.getAllUsers()
-    
     return users
       .filter(
-        result => {return result.username.toLowerCase().startsWith(keyword.toLowerCase())
-  })
-
-
-}
+        result => {
+          return result.username.toLowerCase().startsWith(keyword.toLowerCase())
+        })
+  }
 
 
 

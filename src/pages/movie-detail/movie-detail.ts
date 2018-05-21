@@ -4,6 +4,7 @@ import { MovieProvider } from '../../providers/movie/movie';
 import { DbProvider } from '../../providers/db/db';
 import { DiscoverPage } from '../discover/discover';
 import { LoggedInTabsPage } from '../logged-in-tabs/logged-in-tabs';
+import { Movie } from '../../model/movie';
 
 /**
  * Generated class for the MovieDetailPage page.
@@ -19,10 +20,10 @@ import { LoggedInTabsPage } from '../logged-in-tabs/logged-in-tabs';
 })
 export class MovieDetailPage {
 
-  username: any;
+  private username: any;
 
-  movie: any;
-  IMDBId: any;
+  private movie: Movie;
+  private IMDBId: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public movieProvider: MovieProvider, public alertCtrl: AlertController
   , public dbProvider: DbProvider, public events: Events, public appCtrl:App ) {
   this.movie = this.navParams.get("movie")
@@ -45,7 +46,6 @@ export class MovieDetailPage {
   findSimilar() {
     this.events.publish("similarMovies", this.movie.id);
     this.navCtrl.parent.select(0);
-    
   }
 
 }

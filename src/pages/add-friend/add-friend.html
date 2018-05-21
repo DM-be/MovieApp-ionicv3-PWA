@@ -14,33 +14,24 @@
 
 
 <ion-content padding="true">
-
-
-
-    <ion-auto-complete  [dataProvider]="socialProvider" (itemSelected)="itemSelected($event)" #searchbar ></ion-auto-complete>
-
-    <ion-scroll style="height:40vh">
+  <ion-auto-complete [dataProvider]="socialProvider" (itemSelected)="itemSelected($event)" #searchbar></ion-auto-complete>
+  <ion-scroll style="height:40vh">
     <ion-chip *ngFor="let possibleFriend of possibleFriends; let i = index">
-        <ion-avatar>
-          <img src={{possibleFriend.avatar}}>
-        </ion-avatar>
-        <ion-label>{{possibleFriend.username}}</ion-label>
-        <button ion-button clear color="dark" (click)="delete(i)">
-          <ion-icon name="close-circle"></ion-icon>
-        </button>
-      </ion-chip>
-</ion-scroll>
-
-
-
-      <button ion-button icon-start full  (click)=inviteFriends()>
-        <ion-icon name="mail"></ion-icon>
-        send
+      <ion-avatar>
+        <img src={{possibleFriend.avatar}}>
+      </ion-avatar>
+      <ion-label>{{possibleFriend.username}}</ion-label>
+      <button ion-button clear color="dark" (click)="delete(i)">
+        <ion-icon name="close-circle"></ion-icon>
       </button>
-      <button ion-button icon-start full (click)=closeModal()>
-        <ion-icon name="close"></ion-icon>
-        close
-      </button>
-
-
+    </ion-chip>
+  </ion-scroll>
+  <button ion-button icon-start full (click)=inviteFriends()>
+    <ion-icon name="mail"></ion-icon>
+    send
+  </button>
+  <button ion-button icon-start full (click)=closeModal()>
+    <ion-icon name="close"></ion-icon>
+    close
+  </button>
 </ion-content>

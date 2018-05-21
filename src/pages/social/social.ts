@@ -1,7 +1,20 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, AlertController, Events } from 'ionic-angular';
-import { SocialProvider } from '../../providers/social/social';
-import { AddFriendPage } from '../add-friend/add-friend';
+import {
+  Component
+} from '@angular/core';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ModalController,
+  AlertController,
+  Events
+} from 'ionic-angular';
+import {
+  SocialProvider
+} from '../../providers/social/social';
+import {
+  AddFriendPage
+} from '../add-friend/add-friend';
 
 /**
  * Generated class for the SocialPage page.
@@ -17,11 +30,8 @@ import { AddFriendPage } from '../add-friend/add-friend';
 })
 export class SocialPage {
 
-  friends: any;
+  private friends: any;
   private allUsers: any;
-
-
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -29,23 +39,20 @@ export class SocialPage {
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
     public events: Events) {
-
-      this.events.subscribe("data:changed", () => {
-        this.setup();
-        this.checkForFriendInvites();
-      })
+    this.events.subscribe("data:changed", () => {
+      this.setup();
+      this.checkForFriendInvites();
+    })
   }
-
   ionViewDidEnter() {
     this.setup();
     this.checkForFriendInvites();
   }
-
-  async setup(){
+  async setup() {
     this.friends = await this.socialProvider.getAcceptedFriends();
   }
 
-  addFriendAction(){
+  addFriendAction() {
     let modal = this.modalCtrl.create(AddFriendPage);
     modal.onDidDismiss(data => {
       this.setup();
@@ -53,25 +60,20 @@ export class SocialPage {
     modal.present();
   }
 
-  async checkForFriendInvites(){
-   // console.log("open invites")
+  async checkForFriendInvites() {
     let openFriends = await this.socialProvider.getOpenInvitedFriends();
-    if(openFriends.length > 0)
-    {
+    if (openFriends.length > 0) {
       openFriends.forEach(friend => {
-      this.createPrompt(friend);
-    });
+        this.createPrompt(friend);
+      });
     }
-   
   }
-
   createPrompt(friend) {
     let prompt = this.alertCtrl.create({
       title: 'Friend invite',
       message: friend.username + " invited you as a friend, will you accept or decline?",
-      buttons: [
-        {
-          text: 'decline',
+      buttons: [{
+          text: 'Decline',
           handler: data => {
             console.log("who is this guy???")
             this.socialProvider.declineInvite(friend.username);
@@ -88,7 +90,4 @@ export class SocialPage {
     });
     prompt.present();
   }
-  }
-
-
-
+}

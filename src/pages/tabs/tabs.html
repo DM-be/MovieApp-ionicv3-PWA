@@ -8,12 +8,9 @@
 
 <ion-content scroll="false">
 
+  <ion-tabs [tabsPlacement]="tabsPlacement" [tabsLayout]="tabsLayout" id="notLoggedIntabs">
+    <ion-tab [root]="login" tabTitle="Log in" tabIcon="log-in"></ion-tab>
+    <ion-tab [root]="signup" tabTitle="Sign up" tabIcon="clipboard"></ion-tab>
+  </ion-tabs>
 
-<ion-tabs [tabsPlacement]="tabsPlacement" [tabsLayout]="tabsLayout" id="notLoggedIntabs">
-<ion-tab [root]="login" tabTitle="Log in" tabIcon="log-in"  ></ion-tab>
-<ion-tab [root]="signup" tabTitle="Sign up" tabIcon="clipboard" ></ion-tab>
-</ion-tabs>
-
-
-
-    </ion-content>
+</ion-content>

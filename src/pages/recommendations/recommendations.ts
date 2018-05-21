@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { DbProvider } from '../../providers/db/db';
 import { MovieDetailPage } from '../movie-detail/movie-detail';
+import { Movie } from '../../model/movie';
 
 /**
  * Generated class for the RecommendationsPage page.
@@ -17,17 +18,13 @@ import { MovieDetailPage } from '../movie-detail/movie-detail';
 })
 export class RecommendationsPage {
 
-  recommendations = [];
-  movieDetailPage = MovieDetailPage;
+  private recommendations: Movie [];
+  private movieDetailPage = MovieDetailPage;
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public events: Events) {
     this.setup();
     this.events.subscribe("data:changed", () => {
       this.setup();
-    })
-    
-  }
-
-  ionViewDidLoad() {
+    }) 
   }
 
   async setup() {
@@ -40,6 +37,5 @@ export class RecommendationsPage {
       this.navCtrl.push(this.movieDetailPage, {movie: movie}
       );
   }
-
 
 }

@@ -142,7 +142,7 @@ export class MovieProvider {
     return this.cache.loadFromObservable(keyWordURL, req);
   }
 
-  getIMDBId(movieId: string) {
+  getIMDBId(movieId: number) {
     let url = `https://api.themoviedb.org/3/movie/${movieId}/external_ids?api_key=${this.api_key}`;
     let req = this.http.get(
       url, {

@@ -6,12 +6,12 @@
 -->
 <ion-content #container>
 
-<p ng-if="!movies">Looks like you havent seen much movies!</p>
+  <p ng-if="!movies">Looks like you havent seen much movies!</p>
 
   <ion-grid fixed>
     <ion-row>
 
-      <ion-col  col-6 col-sm-6 col-md-4 col-lg-3 *ngFor="let movie of movies; let i = index">
+      <ion-col col-6 col-sm-6 col-md-4 col-lg-3 *ngFor="let movie of movies; let i = index">
         <ion-card (click)="openMovieDetail(i)">
           <ion-card-content>
             <img src="{{movie.poster}}">
