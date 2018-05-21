@@ -29,8 +29,6 @@ export class SocialProvider implements AutoCompleteService {
   private allUsers;
   labelAttribute = "username";
 
-
-
   constructor(public dbProvider: DbProvider, public http: Http) {
     this.getAcceptedFriends();
   }

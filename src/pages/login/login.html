@@ -1,25 +1,49 @@
-<ion-content fixed>
+<ion-content padding>
   <ion-grid fixed>
-    <div padding [@flyInBottomFast]="cloudState" id="cloud-layer">
-      <ion-row>
-        <ion-col>
-          <ion-list inset [@bounceInBottom]="formState">
+    
+        <ion-row>
+            <ion-col text-center margin-top margin-bottom >
+              <img src="assets/imgs/logo2.png" />
+            </ion-col>
+          </ion-row>
+      <ion-row >
+        <ion-col showWhen="android,ios" style="margin: auto;" col-12>
+          <ion-list>
             <ion-item>
-              <ion-label>Username</ion-label>
-              <ion-input type="text" [(ngModel)]="username"></ion-input>
+                <ion-label>
+                    <ion-icon name="person"></ion-icon>
+                  </ion-label>
+              <ion-input type="text" [(ngModel)]="username" placeholder="Username"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Password</ion-label>
-              <ion-input type="password" [(ngModel)]="password"></ion-input>
+                <ion-label>
+                    <ion-icon name="lock"></ion-icon>
+                  </ion-label>
+              <ion-input type="password" [(ngModel)]="password" placeholder="Password"></ion-input>
             </ion-item>
           </ion-list>
+          <button ion-button class="login-button" (click)="login()">Login</button>
         </ion-col>
+        <ion-col hideWhen="android,ios" style="margin: auto;" col-7>
+            <ion-list>
+              <ion-item>
+                  <ion-label>
+                      <ion-icon name="person"></ion-icon>
+                    </ion-label>
+                <ion-input type="text" [(ngModel)]="username" placeholder="Username"></ion-input>
+              </ion-item>
+              <ion-item>
+                  <ion-label>
+                      <ion-icon name="lock"></ion-icon>
+                    </ion-label>
+                <ion-input type="password" [(ngModel)]="password" placeholder="Password"></ion-input>
+              </ion-item>
+            </ion-list>
+            <button ion-button class="login-button" (click)="login()">Login</button>
+          </ion-col>
+
+
       </ion-row>
-      <ion-row>
-        <ion-col>
-          <button ion-button class="login-button" [@fadeIn]="loginState" (click)="login()">Login</button>
-        </ion-col>
-      </ion-row>
-    </div>
+    
   </ion-grid>
 </ion-content>

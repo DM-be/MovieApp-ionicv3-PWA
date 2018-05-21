@@ -47,6 +47,7 @@ export class WatchedMoviesPage {
 
   ionViewDidLoad() {
     this.events.subscribe("watch:updated", (searchTerm) => {
+      this.movies = this.dbProvider.getMovies("watch");
       this.movies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
     })
     this.events.subscribe("watch:empty", () => {

@@ -41,7 +41,8 @@ export class RecommendationsPage {
   }
 
   ionViewDidLoad() {
-    this.events.subscribe("recommendations:updated", (searchTerm) => {
+    this.events.subscribe("recommendations:updated", async (searchTerm) => {
+      this.recommendations = await this.dbProvider.getRecommendations();
       this.recommendations = this.filterProvider.filterBySearchTerm(this.recommendations, searchTerm);
     })
     this.events.subscribe("recommendations:empty", async () => {
