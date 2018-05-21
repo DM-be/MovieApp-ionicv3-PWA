@@ -32,7 +32,7 @@ import {
 export class AddFriendPage {
 
   @ViewChild('searchbar') searchbar: AutoCompleteComponent;
-  private possibleFriends: any;
+  public possibleFriends: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public socialProvider: SocialProvider, private completerService: CompleterService,
     public dbProvider: DbProvider, public toastCtrl: ToastController) {
     this.possibleFriends = [];
@@ -49,12 +49,17 @@ export class AddFriendPage {
     this.possibleFriends.slice(i, 1);
   }
 
+  async invite(friend) {
+    await this.dbProvider.inviteFriend(friend.username);
+  }
+
   inviteFriends() {
     let friendsString = "";
+    console.log(this.possibleFriends)
     this.possibleFriends.forEach((friend, i) => {
-      async () => {
-        await this.dbProvider.inviteFriend(friend.username);
-      } // yield is reserved in foreach
+      
+      this.invite(friend);
+      // yield is reserved in foreach
       if (i === this.possibleFriends.length - 1 && this.possibleFriends.length > 1) {
         friendsString += ` and ${friend.username}`
       } else {
