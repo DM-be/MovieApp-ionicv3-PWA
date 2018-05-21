@@ -77,7 +77,7 @@ export class LoggedInTabsPage {
 
   ionViewDidLoad() {
 
-    this.searchControl.valueChanges.debounceTime(1000).subscribe(search => {
+    this.searchControl.valueChanges.debounceTime(1200).subscribe(search => {
       if (this.selectedTabPage == "DiscoverPage" && search !== "") {
         this.events.publish("discover:updated", search)
       } else if (this.selectedTabPage == "SeenMoviesPage") {
@@ -147,7 +147,7 @@ export class LoggedInTabsPage {
         this.searchBarPlaceholder = "Filter your watched movies";
         break;
       case "SocialPage":
-        this.searchBarPlaceholder = "Look for a friend";
+        this.searchBarPlaceholder = "Find a friend";
         break;
 
     }

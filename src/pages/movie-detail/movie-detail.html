@@ -29,7 +29,8 @@
             <ion-col s3>
               <button ion-button (click)="findSimilar()">similar</button>
             </ion-col>
-            <a href="https://www.imdb.com/title/{{IMDBId}}" target="_blank">IMDB</a>
+            <a href="https://www.imdb.com/title/{{IMDBId}}" ion-button target="_blank">IMDB</a>
+            
             <div *ngIf="movie.recommendationText">
               <hr>
               <ion-row>
@@ -65,7 +66,7 @@
             <ion-col s3>
                 <button ion-button (click)="findSimilar()">similar</button>
               </ion-col>
-              <a href="https://www.imdb.com/title/{{IMDBId}}" target="_blank">IMDB</a>
+              <a href="https://www.imdb.com/title/{{IMDBId}}" ion-button target="_blank">IMDB</a>
             </ion-col>
             <div *ngIf="movie.recommendationText">
               <hr>
