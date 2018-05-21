@@ -5,7 +5,8 @@ import {
 import {
   NavController,
   NavParams,
-  ToastController
+  ToastController,
+  ModalController
 } from 'ionic-angular';
 import {
   MovieProvider
@@ -30,6 +31,7 @@ import {
   MovieDetailPage
 } from '../movie-detail/movie-detail';
 import { Movie } from '../../model/movie';
+import { RecommendPage } from '../recommend/recommend';
 
 /**
  * Generated class for the SeenMoviesPage page.
@@ -45,7 +47,8 @@ import { Movie } from '../../model/movie';
 export class SeenMoviesPage {
   private movies: Movie [];
   private watchedMovies: Movie [];
-  private movieDetailPage = MovieDetailPage
+  private movieDetailPage = MovieDetailPage;
+  private recommendPage = RecommendPage;
 
   constructor(
     public navCtrl: NavController,
@@ -53,7 +56,8 @@ export class SeenMoviesPage {
     public movieProvider: MovieProvider,
     public platform: Platform,
     public dbProvider: DbProvider,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    public  modalCtrl: ModalController
   ) {}
 
   ionViewWillEnter() {
@@ -63,7 +67,7 @@ export class SeenMoviesPage {
   openMovieDetail(i) {
     let movie = this.movies[i];
     this.navCtrl.push(this.movieDetailPage, {
-      movie: movie
+      "movie": movie
     });
   }
   isInWatched(movie: Movie): boolean {
@@ -86,6 +90,12 @@ export class SeenMoviesPage {
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("watch", movie);
     this.presentToast(movie.title, "watch");
+  }
+  openRecommendMovie(movie): void {
+    let recommendModal = this.modalCtrl.create(RecommendPage, {
+      "movieToRecommend": movie
+    });
+    recommendModal.present();
   }
 
 }

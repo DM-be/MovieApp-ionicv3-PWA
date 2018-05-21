@@ -37,6 +37,7 @@ export class RecommendPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams,
     private toastCtrl: ToastController, public events: Events) {
     this.movie = this.navParams.get("movieToRecommend");
+    console.log(this.movie);
     this.setupFriends();
   }
 
@@ -77,7 +78,6 @@ export class RecommendPage {
       toast.present();
       this.selectedFriends = [];
       this.recommendText = "";
-      this.events.publish("movie:recommended");
     }
   }
 

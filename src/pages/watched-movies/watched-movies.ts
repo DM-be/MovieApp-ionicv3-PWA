@@ -6,7 +6,8 @@ import {
   NavController,
   NavParams,
   Events,
-  ToastController
+  ToastController,
+  ModalController
 } from 'ionic-angular';
 import {
   DbProvider
@@ -15,6 +16,7 @@ import {
   MovieDetailPage
 } from '../movie-detail/movie-detail';
 import { Movie } from '../../model/movie';
+import { RecommendPage } from '../recommend/recommend';
 
 /**
  * Generated class for the WatchedMoviesPage page.
@@ -30,20 +32,16 @@ import { Movie } from '../../model/movie';
 })
 export class WatchedMoviesPage {
 
-  private movieDetailPage = MovieDetailPage
+  private movieDetailPage = MovieDetailPage;
+  private recommendPage = RecommendPage;
   private movies: Movie [];
   private seenMovies: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public toastCtrl: ToastController) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public toastCtrl: ToastController,
+  public modalCtrl: ModalController) {}
   ionViewWillEnter() {
     this.movies = this.dbProvider.getMovies("watch");
     this.seenMovies = this.dbProvider.getMovies("seen");
-  }
-
-  async setup() {
-    // this.movies = await this.dbProvider.getMovies_async("watch")
-    let users = await this.dbProvider.getAllUsers();
-    console.log(users)
   }
 
   openMovieDetail(i) {
@@ -73,6 +71,13 @@ export class WatchedMoviesPage {
     if (this.seenMovies !== undefined) {
       return (this.seenMovies.findIndex(i => i.title === movie.title) > -1)
     }
+  }
+
+  openRecommendMovie(movie): void {
+    let recommendModal = this.modalCtrl.create(RecommendPage, {
+      "movieToRecommend": movie
+    });
+    recommendModal.present();
   }
 
   

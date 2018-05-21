@@ -24,12 +24,9 @@ export class RecommendationsPage {
   private movieDetailPage = MovieDetailPage;
   private seenMovies: Movie [];
   private watchedMovies: Movie [];
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public events: Events,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider,
   public toastCtrl: ToastController, public modalCtrl: ModalController, public platform: Platform) {
     this.setup();
-    this.events.subscribe("movie:recommended", () => {
-      this.setup();
-    }) 
   }
 
   async setup() {

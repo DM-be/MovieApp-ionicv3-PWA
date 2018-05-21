@@ -291,21 +291,16 @@ export class DbProvider {
     }
   }
 
-  async addRecommendation(movie: {
-    "id": string,
-    "title": string,
-    "poster": string,
-    "overview": string
-  }, friend, recommendationText) {
+  async addRecommendation(recommendMovie, friend, recommendationText) {
     try {
       let doc = await this.sdb.get(friend.username);
-      var newMovie = movie;
-      newMovie["recommendationText"] = recommendationText;
-      newMovie["recommendedBy"] = {
+      let cloneOfRecommendMovie = JSON.parse(JSON.stringify(recommendMovie));
+      cloneOfRecommendMovie["recommendationText"] = recommendationText;
+      cloneOfRecommendMovie["recommendedBy"] = {
         "username": this.user,
         "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png"
-      } // im recommending stuff so yes
-      doc.recommendations.push(movie); // TODO: rework into "user" model and pass a user object
+      }
+      doc.recommendations.push(cloneOfRecommendMovie); // TODO: rework into "user" model and pass a user object
       await this.sdb.put(doc);
     } catch (err) {
       console.log(err);

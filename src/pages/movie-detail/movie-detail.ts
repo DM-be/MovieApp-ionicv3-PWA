@@ -27,6 +27,7 @@ export class MovieDetailPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public movieProvider: MovieProvider, public alertCtrl: AlertController
   , public dbProvider: DbProvider, public events: Events, public appCtrl:App ) {
     this.movie = this.navParams.get("movie");
+    console.log(this.movie);
   }
 
   ionViewDidLoad() {
