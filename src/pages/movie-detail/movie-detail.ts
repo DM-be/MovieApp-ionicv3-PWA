@@ -22,17 +22,19 @@ export class MovieDetailPage {
 
   private username: any;
 
-  private movie: Movie;
-  private IMDBId: any;
+  public movie: Movie;
+  public IMDBId: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public movieProvider: MovieProvider, public alertCtrl: AlertController
   , public dbProvider: DbProvider, public events: Events, public appCtrl:App ) {
     this.movie = this.navParams.get("movie");
-    console.log(this.movie);
   }
 
   ionViewDidLoad() {
+    console.log(this.movie);
     this.movieProvider.getIMDBId(this.movie.id).subscribe(id => {
-      this.IMDBId = id;
+      if(id) {
+        this.IMDBId = id;
+      }
     })
 
     

@@ -148,8 +148,15 @@ export class MovieProvider {
       url, {
         headers: this.headers
       }).map(res => {
-      return res.json().imdb_id
+        if(res.json().imdb_id)
+        {
+          return res.json().imdb_id
+        }
+      
     });
-    return this.cache.loadFromObservable(url, req)
+    
+      return this.cache.loadFromObservable(url, req)
+    
+    
   }
 }
