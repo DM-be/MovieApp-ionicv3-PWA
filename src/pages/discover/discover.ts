@@ -40,58 +40,58 @@ import {
 import {
   LoginPage
 } from '../login/login';
-import { DbProvider } from '../../providers/db/db';
-import { TabsPage } from '../tabs/tabs';
-import { RecommendPage } from '../recommend/recommend';
-import { Http, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { CacheService } from 'ionic-cache';
-import { Movie } from '../../model/movie';
+import {
+  DbProvider
+} from '../../providers/db/db';
+import {
+  TabsPage
+} from '../tabs/tabs';
+import {
+  RecommendPage
+} from '../recommend/recommend';
+import {
+  Http,
+  Headers
+} from '@angular/http';
+import {
+  Observable
+} from 'rxjs/Observable';
+import {
+  CacheService
+} from 'ionic-cache';
+import {
+  Movie
+} from '../../model/movie';
 
 @Component({
   selector: 'page-discover',
   templateUrl: 'discover.html',
 })
 export class DiscoverPage {
-  keyw;
-  offset = 100;
-  defaultImage = "./assets/imgs/preloader.gif"
-  searchTerm: string = '';
-  searchControl: FormControl;
-  movieDetailPage = MovieDetailPage;
-  recommendPage = RecommendPage;
-  loginPage = LoginPage
-  movies: Movie[];
-  tabsPage = TabsPage
-  seenMovies: any;
-  watchedMovies: any;
-  films: Observable<any>;
-  hasNextPage: boolean =  false;
-  firstSearch: boolean = true;
-  findingSimilarMovies: boolean = false;
-
-  @ViewChild(Content) content: Content;
+  private searchTerm: string = '';
+  private searchControl: FormControl;
+  private movieDetailPage = MovieDetailPage;
+  private recommendPage = RecommendPage;
+  private movies: Movie[];
+  private seenMovies: any;
+  private watchedMovies: any;
+  private hasNextPage: boolean = false;
+  private firstSearch: boolean = true;
+  private findingSimilarMovies: boolean = false;
 
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    public movieProvider: MovieProvider,
-    public platform: Platform,
-    public loadingCtrl: LoadingController,
-    public modalCtrl: ModalController,
-    public events: Events,
-    public dbProvider: DbProvider,
-    public appCtrl: App,
+    private navCtrl: NavController,
+    private navParams: NavParams,
+    private movieProvider: MovieProvider,
+    private platform: Platform,
+    private loadingCtrl: LoadingController,
+    private modalCtrl: ModalController,
+    private events: Events,
+    private dbProvider: DbProvider,
     private toastCtrl: ToastController,
     private http: Http,
     private cache: CacheService,
-
-
-  ) 
-  {
-
-
-
+  ) {
     this.searchControl = new FormControl();
     this.movies = [];
     this.movieProvider.getMovies(true, false, true).subscribe(movies => {
@@ -100,78 +100,52 @@ export class DiscoverPage {
       });
     })
     this.refreshMovies();
-
-
-    
-    
-    
-
-    
-    
-
-  //   if (navigator.storage && navigator.storage.persist)
-  // navigator.storage.persist().then(function(persistent) {
-  //   if (persistent)
-  //     console.log("Storage will not be cleared except by explicit user action");
-  //   else
-  //     console.log("Storage may be cleared by the UA under storage pressure.");
-  // });
   }
 
-  setSmallIcons() {
+  ionViewWillEnter() {
+    this.refreshMovies();
+  }
+
+  setSmallIcons(): boolean {
     return this.platform.width() < 500;
   }
 
-  presentToast(movieTitle: string, typeOfList: string) {
-    let toast = this.toastCtrl.create({
-      message: `${movieTitle} was added to your ${typeOfList}list`,
-      duration: 1500,
-      position: 'bottom'
-    });
-    toast.present();
-  }
-  refreshMovies() {
+  refreshMovies(): void {
     this.seenMovies = this.dbProvider.getMovies("seen")
     this.watchedMovies = this.dbProvider.getMovies("watch")
   }
   ionViewDidLoad() {
-
     this.events.subscribe("similarMovies", movieId => {
+      let loading = this.loadingCtrl.create({
+        cssClass: 'transparent'
+      });
+      loading.present();
       this.movies = [];
       this.movieProvider.setQuery(movieId);
       this.movieProvider.getMovies(true, true).subscribe(similarMovies => {
-        similarMovies.forEach(element => {
+        similarMovies.forEach(movie => {
           this.findingSimilarMovies = true;
-          this.movies.push(element);
+          this.movies.push(movie);
         });
-        
       })
+      loading.dismiss();
     })
 
     this.events.subscribe("discover:updated", (searchTerm) => {
       this.searchTerm = searchTerm;
-      if(this.firstSearch)
-      {
+      if (this.firstSearch) {
         this.firstSearch = false;
       }
-      if(this.movieProvider.getSearchingBy() === 'getKeyword' || this.movieProvider.getSearchingBy() === 'findByKeyword' )
-      {
-        this.setMoviesByKeyWords_async(searchTerm);
-      }
-      else if(this.movieProvider.getSearchingBy() === 'title')
-      {
+      if (this.movieProvider.getSearchingBy() === 'getKeyword' || this.movieProvider.getSearchingBy() === 'findByKeyword') {
+        this.setMoviesByKeyWord(searchTerm);
+      } else if (this.movieProvider.getSearchingBy() === 'title') {
         this.setMoviesByTitle(searchTerm);
       }
-      
     })
     this.refreshMovies();
   }
 
-  ionViewDidEnter() {
- //   this.content.scrollToTop();
-  }
-
-  setMoviesByTitle(searchTerm) {
+  setMoviesByTitle(searchTerm): void {
     try {
       let loading = this.loadingCtrl.create({
         cssClass: 'transparent'
@@ -183,67 +157,63 @@ export class DiscoverPage {
       this.movieProvider.setQuery(searchTerm);
       this.movieProvider.getMovies(true).subscribe(movies => {
         movies.forEach(movie => {
-            this.movies.push(movie);
+          this.movies.push(movie);
         });
       })
-      this.refreshMovies();  // update to disable buttons
+      this.refreshMovies();
       loading.dismiss();
     } catch (err) {
       console.log("error in setting the movies by title : " + err);
     }
   }
 
-
-  ionViewWillEnter() {
-    this.refreshMovies();
-  }
-  logOut() {
-   // this.dbProvider.logOut();
-  //  this.appCtrl.getRootNav().setRoot(TabsPage);
-
-  }
   isInWatched(movie: Movie): boolean {
-    if(this.watchedMovies !== undefined) // new users do not have watched movies
-    {
-       return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
+    if (this.watchedMovies !== undefined) {
+      return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
     }
   }
-
-  isInSeen(movie: Movie): boolean
-  {
-    if(this.seenMovies !== undefined)
-    {
+  isInSeen(movie: Movie): boolean {
+    if (this.seenMovies !== undefined) {
       return (this.seenMovies.findIndex(i => i.title === movie.title) > -1)
     }
-    
   }
 
+  presentToast(movieTitle: string, typeOfList: string): void {
+    let toast = this.toastCtrl.create({
+      message: `${movieTitle} was added to your ${typeOfList}list`,
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
+  }
 
-  async addToWatch(event,movie) {
+   addToWatch(event, movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
-    await this.dbProvider.addMovie("watch", movie);
+    this.dbProvider.addMovie("watch", movie);
     this.presentToast(movie.title, "watch");
   }
 
-  async addToSeen(event,movie) {
+  addToSeen(event, movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
-    await this.dbProvider.addMovie("seen", movie);
+    this.dbProvider.addMovie("seen", movie);
     this.presentToast(movie.title, "seen");
   }
 
-  openMovieDetail(movie: Movie) {
+  openMovieDetail(movie: Movie): void {
     this.navCtrl.push(this.movieDetailPage, {
       movie: movie
     });
   }
-  openRecommendMovie(movie) {
-   let recommendModal = this.modalCtrl.create(RecommendPage, {"movie": movie});
-   recommendModal.present();
-  } 
+  openRecommendMovie(movie): void {
+    let recommendModal = this.modalCtrl.create(RecommendPage, {
+      "movie": movie
+    });
+    recommendModal.present();
+  }
 
-  async setMoviesByKeyWords_async(keyword) {
+  setMoviesByKeyWord(keyword): void {
     try {
       let loading = this.loadingCtrl.create({
         cssClass: 'transparent'
@@ -255,35 +225,25 @@ export class DiscoverPage {
       this.movieProvider.getKeyWords().subscribe(keywordAsANumber => {
         this.movieProvider.setQuery(keywordAsANumber);
         this.movieProvider.setSearchingBy('findByKeyword');
-         this.movieProvider.getMovies(true).subscribe(movies => {
+        this.movieProvider.getMovies(true).subscribe(movies => {
           movies.forEach(movie => {
             this.movies.push(movie);
           });
         })
       })
-      this.refreshMovies();  // update to disable buttons  
-      loading.dismiss();  
+      this.refreshMovies(); 
+      loading.dismiss();
     } catch (err) {
       console.log("error in setting the movies by keyword : " + err);
     }
   }
 
-  doInfinite(event) {
+  doInfinite(event): void {
     this.movieProvider.getMovies(false, this.findingSimilarMovies, this.firstSearch).subscribe(movies => {
       movies.forEach(movie => {
         this.movies.push(movie);
       });
       event.complete()
-      })
-
-    }
-
-   
-    
-    
-
-  
-
-  }
-
-
+    })
+}
+}
