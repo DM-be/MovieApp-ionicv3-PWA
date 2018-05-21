@@ -299,8 +299,9 @@ export class DbProvider {
   }, friend, recommendationText) {
     try {
       let doc = await this.sdb.get(friend.username);
-      movie["recommendationText"] = recommendationText;
-      movie["recommendedBy"] = {
+      var newMovie = movie;
+      newMovie["recommendationText"] = recommendationText;
+      newMovie["recommendedBy"] = {
         "username": this.user,
         "avatar": "https://ionicframework.com/dist/preview-app/www/assets/img/marty-avatar.png"
       } // im recommending stuff so yes

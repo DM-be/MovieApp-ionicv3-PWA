@@ -7,7 +7,8 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  ToastController
+  ToastController,
+  Events
 } from 'ionic-angular';
 import {
   DbProvider
@@ -30,12 +31,12 @@ export class RecommendPage {
   public movie: any;
   private friends;
   private selectedFriends = [];
-  private recommendationText: string;
+  private recommendText: string;
   private reset = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams,
-    private toastCtrl: ToastController) {
-    this.movie = (this.navParams.get("movie"));
+    private toastCtrl: ToastController, public events: Events) {
+    this.movie = this.navParams.get("movieToRecommend");
     this.setupFriends();
   }
 
@@ -44,7 +45,7 @@ export class RecommendPage {
     if (this.selectedFriends.findIndex(f => f.username === friend.username) === -1) {
       this.selectedFriends.push(friend);
     } else {
-      this.selectedFriends = this.selectedFriends.filter(f => friend.username !== f.username)
+      this.selectedFriends = this.selectedFriends.filter(f => friend.username !== f.username);
     }
   }
 
@@ -58,9 +59,10 @@ export class RecommendPage {
 
   recommendMovie() {
     let friendsString = "";
-    if (this.recommendationText !== "" && this.selectedFriends.length > 0) {
+    if (this.recommendText !== "" && this.selectedFriends.length > 0) {
       this.selectedFriends.forEach((friend, i) => {
-        this.dbProvider.addRecommendation(this.movie, friend, this.recommendationText);
+        
+        this.dbProvider.addRecommendation(this.movie, friend, this.recommendText);
         if (i === this.selectedFriends.length - 1 && this.selectedFriends.length > 1) {
           friendsString += ` and ${friend.username}`
         } else {
@@ -74,7 +76,8 @@ export class RecommendPage {
       });
       toast.present();
       this.selectedFriends = [];
-      this.recommendationText = "";
+      this.recommendText = "";
+      this.events.publish("movie:recommended");
     }
   }
 

@@ -4,7 +4,8 @@ import {
 } from '@angular/core';
 import {
   NavController,
-  NavParams
+  NavParams,
+  ToastController
 } from 'ionic-angular';
 import {
   MovieProvider
@@ -43,6 +44,7 @@ import { Movie } from '../../model/movie';
 })
 export class SeenMoviesPage {
   private movies: Movie [];
+  private watchedMovies: Movie [];
   private movieDetailPage = MovieDetailPage
 
   constructor(
@@ -50,11 +52,13 @@ export class SeenMoviesPage {
     public navParams: NavParams,
     public movieProvider: MovieProvider,
     public platform: Platform,
-    public dbProvider: DbProvider
+    public dbProvider: DbProvider,
+    public toastCtrl: ToastController
   ) {}
 
   ionViewWillEnter() {
     this.movies = this.dbProvider.getMovies("seen");
+    this.watchedMovies = this.dbProvider.getMovies("watch");
   }
   openMovieDetail(i) {
     let movie = this.movies[i];
@@ -62,5 +66,27 @@ export class SeenMoviesPage {
       movie: movie
     });
   }
+  isInWatched(movie: Movie): boolean {
+    if (this.watchedMovies !== undefined) {
+      return (this.watchedMovies.findIndex(i => i.title === movie.title) > -1)
+    }
+  }
+
+  presentToast(movieTitle: string, typeOfList: string): void {
+    let toast = this.toastCtrl.create({
+      message: `${movieTitle} was added to your ${typeOfList}list`,
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  addToWatch(event, movie): void {
+    event.preventDefault();
+    event.target.offsetParent.setAttribute("disabled", "disabled");
+    this.dbProvider.addMovie("watch", movie);
+    this.presentToast(movie.title, "watch");
+  }
 
 }
+

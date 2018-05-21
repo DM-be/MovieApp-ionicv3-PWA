@@ -10,27 +10,32 @@
   <ion-grid fixed>
     <ion-row>
 
-      <ion-col col-6 col-sm-6 col-md-4 col-lg-3 *ngFor="let movie of recommendations; let i = index">
-        <ion-card (click)="openMovieDetail(i)">
+      <ion-col col-6 col-sm-6 col-md-4 col-lg-3 *ngFor="let mov of recommendations; let i = index">
+        <ion-card >
           <div hideWhen="android, ios">
             <ion-item text-wrap>
               <ion-avatar item-start>
-                <img src="{{movie.recommendedBy.avatar}}">
+                <img src="{{mov.recommendedBy.avatar}}">
               </ion-avatar>
-              <h2>{{movie.recommendedBy.username}}</h2>
+              <h2>{{mov.recommendedBy.username}}</h2>
             </ion-item>
           </div>
-          <ion-card-content>
-            <img src="{{movie.poster}}">
+          <ion-card-content (click)="openMovieDetail(i)">
+            <img src="{{mov.poster}}">
           </ion-card-content>
           <ion-row no-padding>
             <ion-col text-center>
-              <button ion-button clear icon-only color="primary" icon-start>
+              <button ion-button clear icon-only [small]="setSmallIcons()" color="primary" icon-start [disabled]="isInWatched(mov)" (click)=addToWatch($event,mov)>
                 <ion-icon name='eye'></ion-icon>
               </button>
             </ion-col>
             <ion-col text-center>
-              <button ion-button clear icon-only color="primary" icon-start>
+              <button ion-button clear icon-only [small]="setSmallIcons()" color="primary" icon-start [disabled]="isInSeen(mov)" (click)=addToSeen($event,mov)>
+                <ion-icon name='checkmark'></ion-icon>
+              </button>
+            </ion-col>
+            <ion-col text-center>
+              <button ion-button clear icon-only [small]="setSmallIcons()" color="primary" icon-start (click)=openRecommendMovie(mov)>
                 <ion-icon name='flag'></ion-icon>
               </button>
             </ion-col>

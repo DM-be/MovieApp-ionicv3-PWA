@@ -26,13 +26,15 @@ export class MovieDetailPage {
   private IMDBId: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public movieProvider: MovieProvider, public alertCtrl: AlertController
   , public dbProvider: DbProvider, public events: Events, public appCtrl:App ) {
-  this.movie = this.navParams.get("movie")
+    this.movie = this.navParams.get("movie");
   }
 
   ionViewDidLoad() {
     this.movieProvider.getIMDBId(this.movie.id).subscribe(id => {
       this.IMDBId = id;
     })
+
+    
     
   }
   addToWatch() {

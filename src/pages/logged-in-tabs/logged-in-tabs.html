@@ -7,7 +7,7 @@
     <!-- Title -->
     <ion-title *ngIf="!toggled">Discover</ion-title>
     <!-- Search Bar -->
-    <ion-searchbar *ngIf="toggled" [(ngModel)]="searchTerm" [showCancelButton]="true" (ionCancel)="toggleSearch()" (ionInput)="onInput($event)"
+    <ion-searchbar *ngIf="toggled" [(ngModel)]="searchTerm" [showCancelButton]="true" (ionCancel)="toggleSearch()"
       [formControl]="searchControl" [placeholder]="searchBarPlaceholder"></ion-searchbar>
     <!-- Search Icon -->
     <ion-buttons end *ngIf="!toggled">

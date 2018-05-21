@@ -12,14 +12,14 @@
     <ion-row>
 
       <ion-col col-6 col-sm-6 col-md-4 col-lg-3 *ngFor="let movie of movies; let i = index">
-        <ion-card (click)="openMovieDetail(i)">
-          <ion-card-content>
-            <img src="{{movie.poster}}">
+        <ion-card >
+          <ion-card-content (click)="openMovieDetail(i)">
+            <op-lazy-img [source]="movie.poster"></op-lazy-img>
           </ion-card-content>
           <ion-row no-padding>
 
             <ion-col text-center>
-              <button ion-button clear icon-only color="primary" icon-start>
+              <button ion-button clear icon-only color="primary" icon-start [disabled]="isInSeen(movie)" (click)=addToSeen($event,movie)>
                 <ion-icon name='checkmark'></ion-icon>
               </button>
             </ion-col>

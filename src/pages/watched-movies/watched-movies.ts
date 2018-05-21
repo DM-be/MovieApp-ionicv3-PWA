@@ -5,7 +5,8 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  Events
+  Events,
+  ToastController
 } from 'ionic-angular';
 import {
   DbProvider
@@ -32,11 +33,11 @@ export class WatchedMoviesPage {
   private movieDetailPage = MovieDetailPage
   private movies: Movie [];
   private seenMovies: any;
-  private watchedMovies: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public toastCtrl: ToastController) {}
   ionViewWillEnter() {
-    this.movies = this.dbProvider.getMovies("watch")
+    this.movies = this.dbProvider.getMovies("watch");
+    this.seenMovies = this.dbProvider.getMovies("seen");
   }
 
   async setup() {
@@ -50,6 +51,28 @@ export class WatchedMoviesPage {
     this.navCtrl.push(this.movieDetailPage, {
       movie: movie
     });
+  }
+
+  presentToast(movieTitle: string, typeOfList: string): void {
+    let toast = this.toastCtrl.create({
+      message: `${movieTitle} was added to your ${typeOfList}list`,
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  addToSeen(event, movie): void {
+    event.preventDefault();
+    event.target.offsetParent.setAttribute("disabled", "disabled");
+    this.dbProvider.addMovie("seen", movie);
+    this.presentToast(movie.title, "seen");
+  }
+
+  isInSeen(movie: Movie): boolean {
+    if (this.seenMovies !== undefined) {
+      return (this.seenMovies.findIndex(i => i.title === movie.title) > -1)
+    }
   }
 
   
