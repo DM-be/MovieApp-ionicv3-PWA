@@ -19,9 +19,10 @@
               </ion-avatar>
               <h2>{{mov.recommendedBy.username}}</h2>
             </ion-item>
+            <hr>
           </div>
           <ion-card-content (click)="openMovieDetail(i)">
-            <img src="{{mov.poster}}">
+            <op-lazy-img [source]="mov.poster"></op-lazy-img>
           </ion-card-content>
           <ion-row no-padding>
             <ion-col text-center>

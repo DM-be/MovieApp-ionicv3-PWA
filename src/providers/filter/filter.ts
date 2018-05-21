@@ -11,7 +11,6 @@ import { Injectable } from '@angular/core';
 export class FilterProvider {
 
   constructor(public http: HttpClient) {
-    console.log('Hello FilterProvider Provider');
   }
 
   filterBySearchTerm(arr, searchTerm)
@@ -19,10 +18,15 @@ export class FilterProvider {
     return arr.filter(function(o) {
       return Object.keys(o).some(function(k) {
     
-        if(o[k] != null)
-        {
-          return o[k].toString().toLowerCase().indexOf(searchTerm) != -1;
-        }
+       if(typeof o[k] === 'object')
+       {
+          return Object.keys(o[k]).some(k2 => o[k][k2].toString().toLowerCase().indexOf(searchTerm) != -1)
+       }
+       else {
+         return o[k].toString().toLowerCase().indexOf(searchTerm) != -1;
+       }
+          
+        
         
       })
     })
