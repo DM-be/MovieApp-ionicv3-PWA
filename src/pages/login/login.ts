@@ -4,7 +4,8 @@ import {
   NavParams,
   Tabs,
   Events,
-  Platform
+  Platform,
+  AlertController
 } from 'ionic-angular';
 import {
   Component,
@@ -75,7 +76,8 @@ export class LoginPage {
     public dbProvider: DbProvider,
     public appCtrl: App,
     public events: Events,
-    public platform: Platform
+    public platform: Platform,
+    public alertCtrl: AlertController
 
   ) {}
 
@@ -84,7 +86,7 @@ export class LoginPage {
   }
 
   onCore() {
-    return this.platform.is('core');
+    return this.platform.is('core')
   }
 
   login() {
@@ -108,6 +110,14 @@ export class LoginPage {
         loader.dismiss();
         this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
       }) // have to wait for the data to be in sync, how else can we check the seen/watch list?
+    }, error => {
+      loader.dismiss();
+      
+      this.alertCtrl.create({
+        title: 'Bad request',
+        subTitle: error.json().message,
+        buttons: ['Dismiss']
+      }).present();
     })
   }
   launchSignup() {

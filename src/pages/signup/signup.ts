@@ -7,7 +7,8 @@ import {
   NavParams,
   App,
   LoadingController,
-  Events
+  Events,
+  AlertController
 } from 'ionic-angular';
 import {
   Http,
@@ -52,7 +53,8 @@ export class SignupPage {
     public dbProvider: DbProvider,
     public appCtrl: App,
     public loadingController: LoadingController,
-    public events: Events) {}
+    public events: Events,
+    public alertCtrl: AlertController) {}
 
   register() {
     let headers = new Headers();
@@ -78,8 +80,17 @@ export class SignupPage {
           this.dbProvider.register(user);
           this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
         }) // have to wait for the shared DB to be in sync to register new users
-      }, (err) => {
-        console.log(err);
+      }, error => {
+          loader.dismiss();
+          let errorObject = error.json().validationErrors
+          Object.values(errorObject).forEach(error => {
+             this.alertCtrl.create({
+            title: 'Bad request',
+            message: error,
+            buttons: ['Dismiss']
+          }).present();
+          });
+
       });
   }
 
