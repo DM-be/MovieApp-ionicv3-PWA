@@ -235,6 +235,7 @@ export class DbProvider {
     }
   }
 
+
   async inviteFriend(username: string) {
     // todo fix multiple users invited giving a 409
     try {
@@ -244,14 +245,14 @@ export class DbProvider {
         "accepted": false,
         "declined": false
       })
-      await this.sdb.put(doc);
+      await this.sdb.put(doc, {latest:true, force: true}); // forces the latest revision: todo: test with recommendations etc
       let otherdoc = await this.sdb.get(username);
       otherdoc.recievedInvites.push({
         "username": this.user,
         "accepted": false,
         "declined": false
       })
-      await this.sdb.put(otherdoc);
+      await this.sdb.put(otherdoc, {latest:true, force: true});
     } catch (err) {
       console.log(err);
     }
