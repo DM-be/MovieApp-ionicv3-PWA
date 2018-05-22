@@ -63,10 +63,7 @@ export class DbProvider {
       continuous: true
     }
 
-    // this.sharedRemote = "http://localhost:5984/shared";
-    PouchDB.plugin(pouchdbadapteridb);
-
-
+    PouchDB.plugin(pouchdbadapteridb);  
   }
 
   getMovies(type: string): Movie [] {
@@ -90,15 +87,17 @@ export class DbProvider {
     this.sdb = new PouchDB('shared', {
       adapter: 'idb'
     });
-    this.db.sync(this.remote).on('complete', () => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
+    this.db.sync(this.remote).on('complete', async x => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
       this.db.sync(this.remote, this.options);
       this.initializeMovies(); 
+     
       this.events.publish("localsync:completed");
     })
     this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', async info => {
       this.sdb.sync(this.sharedRemote, this.sharedOptions);
       this.movies["recommendations"] = await this.getRecommendations() || []; // prevent undefined when a user is registered
-      this.acceptedFriends = await this.getAcceptedFriends();
+      this.acceptedFriends = await this.getAcceptedFriends() || [];
+      this.listenToChanges();
       this.events.publish("sharedsync:completed");
 
     });
@@ -109,33 +108,49 @@ export class DbProvider {
         movies: []
       })
     }
-    this.listenToChanges();
+    
   }
 
+  async updateAcceptedFriends(){
+    this.acceptedFriends = await this.getAcceptedFriends();
+  } 
+
+  getAcceptedFriendsProperty() {
+    return this.acceptedFriends;
+  }
+
+  
   listenToChanges() {
     this.sdb.changes({
       since: 'now',
       live: true,
       include_docs: true
-    }).on('change', change => {
+    }).on('change', async change => {
   
       if(change.id === this.user)
       {
         // todo: implement friend invite accepted toast
+        // --> A invites B, B accepts and A gets a toast, beware: if A accepts, shouldnt get a toast, he just accepted
+        var filteredFriends = change.doc.friends.filter(friend => friend.accepted);
+
         
-        // var filteredFriends = change.doc.friends.filter(friend => friend.accepted)
         if(this.movies["recommendations"].length < change.doc.recommendations.length)
         {
           let movie = change.doc.recommendations[change.doc.recommendations.length -1];
           this.events.publish("movie:recievedRecommendation", movie);
           this.movies["recommendations"].push(movie); // push it locally, save a call
         }
-        // if (this.acceptedFriends.length < filteredFriends )
-        // {
-        //   let newFriend = this.findNewFriend(this.acceptedFriends, filteredFriends); 
-        //   console.log(newFriend);
-        //   this.events.publish("friend:accepted", newFriend);
-        // }
+        if (this.acceptedFriends.length < filteredFriends.length )
+        {
+          let newFriend = filteredFriends[ filteredFriends.length -1];
+          let showPopup: boolean = false;
+          if(change.doc.sentInvites.findIndex(u => u.username === newFriend.username)  !== -1)
+          {
+            showPopup = true;
+          }
+          await this.updateAcceptedFriends();
+          this.events.publish("friend:accepted", newFriend, showPopup);
+        }
       }
       // change.id contains the doc id, change.doc contains the doc
      if (change.deleted) {

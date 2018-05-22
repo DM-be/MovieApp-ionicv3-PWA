@@ -7,7 +7,8 @@ import {
   NavParams,
   ModalController,
   AlertController,
-  Events
+  Events,
+  ToastController
 } from 'ionic-angular';
 import {
   SocialProvider
@@ -40,7 +41,8 @@ export class SocialPage {
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
     public events: Events,
-    public filterProvider: FilterProvider) {
+    public filterProvider: FilterProvider,
+    public toastCtrl: ToastController) {
     this.events.subscribe("data:changed", () => {
       this.setup();
       this.checkForFriendInvites();
@@ -56,11 +58,29 @@ export class SocialPage {
       this.friends = this.filterProvider.filterBySearchTerm(this.friends, searchTerm);
     })
     this.events.subscribe("social:empty", async () => {
-      this.friends = await this.socialProvider.getAcceptedFriends();
+      this.friends = this.socialProvider.getAcceptedFriends();
+    })
+    this.events.subscribe("friend:accepted", (newFriend, showPopup) => {
+      if(showPopup)
+      {
+        this.presentToast(newFriend.username);
+      }
+     this.friends = this.socialProvider.getAcceptedFriends();   
     })
   }
-  async setup() {
-    this.friends = await this.socialProvider.getAcceptedFriends();
+
+
+  presentToast(friendName: string): void {
+    let toast = this.toastCtrl.create({
+      message: `${friendName} has accepted your friend request`,
+      duration: 2500,
+      position: 'top'
+    });
+    toast.present();
+  }
+
+  setup() {
+    this.friends =  this.socialProvider.getAcceptedFriends();
   }
 
   addFriendAction() {

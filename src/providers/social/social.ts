@@ -33,9 +33,9 @@ export class SocialProvider implements AutoCompleteService {
     this.getAcceptedFriends();
   }
 
-  async getAcceptedFriends() {
-    let acceptedFriends = await this.dbProvider.getAcceptedFriends();
-    return acceptedFriends;
+  getAcceptedFriends() {
+    // let acceptedFriends = await this.dbProvider.getAcceptedFriends();
+    return this.dbProvider.getAcceptedFriendsProperty();
   }
 
   async getOpenInvitedFriends() {
