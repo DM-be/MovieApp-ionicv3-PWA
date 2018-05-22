@@ -29,19 +29,22 @@ import {
 export class RecommendPage {
 
   public movie: any;
-  private friends;
-  private selectedFriends = [];
-  private recommendText: string;
-  private reset = false;
+  public friends;
+  public selectedFriends = [];
+  public recommendText: string;
+  public reset = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams,
     private toastCtrl: ToastController, public events: Events) {
     this.movie = this.navParams.get("movieToRecommend");
-    console.log(this.movie);
     this.setupFriends();
+    this.recommendText = "";
   }
 
-
+  recommendEmpty(){
+    return this.recommendText == "" || undefined;
+  }
+  
   updateSelectedFriends(friend) {
     if (this.selectedFriends.findIndex(f => f.username === friend.username) === -1) {
       this.selectedFriends.push(friend);

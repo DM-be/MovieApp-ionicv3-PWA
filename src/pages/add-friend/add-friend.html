@@ -26,7 +26,7 @@
       </button>
     </ion-chip>
   </ion-scroll>
-  <button ion-button icon-start full (click)=inviteFriends()>
+  <button ion-button icon-start full (click)=inviteFriends() [attr.disabled]="friendEmpty()">
     <ion-icon name="mail"></ion-icon>
     send
   </button>

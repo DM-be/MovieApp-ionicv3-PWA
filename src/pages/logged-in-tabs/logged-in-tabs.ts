@@ -135,16 +135,16 @@ export class LoggedInTabsPage {
     this.toggled = false;
     switch (this.selectedTabPage) {
       case "SeenMoviesPage":
-        this.searchBarPlaceholder = "Filter your seen movies";
+        this.searchBarPlaceholder = "Filter seen movies";
         break;
       case "DiscoverPage":
         this.searchBarPlaceholder = "Discover new movies";
         break;
       case "RecommendationsPage":
-        this.searchBarPlaceholder = "Filter your recommendations";
+        this.searchBarPlaceholder = "Filter recommendations";
         break;
       case "WatchedMoviesPage":
-        this.searchBarPlaceholder = "Filter your watched movies";
+        this.searchBarPlaceholder = "Filter movies to watch";
         break;
       case "SocialPage":
         this.searchBarPlaceholder = "Find a friend";

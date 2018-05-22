@@ -32,7 +32,7 @@
       <ion-input placeholder="Your personal recommendation" [(ngModel)]="recommendText"></ion-input>
     </ion-item>
   </ion-list>
-  <button ion-button icon-start full (click)=recommendMovie()>
+  <button ion-button icon-start full (click)=recommendMovie() [attr.disabled]="recommendEmpty()">
     <ion-icon name="flag"></ion-icon>
     recommend
   </button>

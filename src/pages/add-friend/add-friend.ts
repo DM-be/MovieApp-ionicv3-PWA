@@ -38,6 +38,10 @@ export class AddFriendPage {
     this.possibleFriends = [];
   }
 
+  friendEmpty(){
+    return this.possibleFriends.length == 0 || undefined;
+  }
+
   itemSelected(possibleFriend) {
     if (this.possibleFriends.findIndex(u => u.username === possibleFriend.username) === -1) {
       this.possibleFriends.push(possibleFriend)
@@ -46,7 +50,8 @@ export class AddFriendPage {
   }
 
   delete(i) {
-    this.possibleFriends.slice(i, 1);
+    console.log(i);
+  this.possibleFriends.splice(i, 1);
   }
 
   async invite(friend) {
@@ -56,9 +61,12 @@ export class AddFriendPage {
   inviteFriends() {
     let friendsString = "";
     console.log(this.possibleFriends)
-    this.possibleFriends.forEach((friend, i) => {
+    this.possibleFriends.forEach(async (friend, i) => {
       
-      this.invite(friend);
+     this.dbProvider.inviteFriend(friend.username);
+     
+     
+      
       // yield is reserved in foreach
       if (i === this.possibleFriends.length - 1 && this.possibleFriends.length > 1) {
         friendsString += ` and ${friend.username}`

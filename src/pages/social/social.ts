@@ -32,8 +32,8 @@ import { FilterProvider } from '../../providers/filter/filter';
 })
 export class SocialPage {
 
-  private friends: any;
-  private allUsers: any;
+  public friends: any;
+  public allUsers: any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -43,10 +43,7 @@ export class SocialPage {
     public events: Events,
     public filterProvider: FilterProvider,
     public toastCtrl: ToastController) {
-    this.events.subscribe("data:changed", () => {
-      this.setup();
-      this.checkForFriendInvites();
-    })
+  
   }
   ionViewDidEnter() {
     this.setup();
@@ -106,7 +103,6 @@ export class SocialPage {
       buttons: [{
           text: 'Decline',
           handler: data => {
-            console.log("who is this guy???")
             this.socialProvider.declineInvite(friend.username);
           }
         },

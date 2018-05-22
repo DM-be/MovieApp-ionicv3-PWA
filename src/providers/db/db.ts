@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import PouchDB from 'pouchdb';
 import pouchdbadapteridb from 'pouchdb-adapter-idb';
+import upsert from 'pouchdb-upsert';
 import {
   Movie
 } from '../../model/movie';
@@ -64,6 +65,7 @@ export class DbProvider {
     }
 
     PouchDB.plugin(pouchdbadapteridb);  
+    PouchDB.plugin(upsert);
   }
 
   getMovies(type: string): Movie [] {
@@ -234,7 +236,7 @@ export class DbProvider {
   }
 
   async inviteFriend(username: string) {
-    // todo: check sentinvites of a user before allowing to send another invite
+    // todo fix multiple users invited giving a 409
     try {
       let doc = await this.sdb.get(this.user);
       doc.sentInvites.push({

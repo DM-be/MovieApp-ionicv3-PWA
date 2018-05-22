@@ -50,6 +50,7 @@
     "ng2-completer": "^1.6.3",
     "pouchdb": "^6.4.3",
     "pouchdb-adapter-idb": "^6.4.3",
+    "pouchdb-upsert": "^2.2.0",
     "rxjs": "^5.5.7",
     "sw-toolbox": "3.6.0",
     "worker-pouch": "^2.1.0",
