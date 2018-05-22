@@ -63,9 +63,8 @@ import {
 })
 export class LoginPage {
 
-  private username: string;
-  private password: string;
-  private onBrowser: boolean = true;
+  public username: string;
+  public password: string;
 
   constructor(
     public navCtrl: NavController,
@@ -77,17 +76,9 @@ export class LoginPage {
     public appCtrl: App,
     public events: Events,
     public platform: Platform,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
 
   ) {}
-
-  onMobile() {
-    return this.platform.is('mobile');
-  }
-
-  onCore() {
-    return this.platform.is('core')
-  }
 
   login() {
     let loader = this.loadingController.create({

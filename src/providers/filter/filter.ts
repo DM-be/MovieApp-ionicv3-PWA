@@ -13,21 +13,19 @@ export class FilterProvider {
   constructor(public http: HttpClient) {
   }
 
-  filterBySearchTerm(arr, searchTerm)
+  filterBySearchTerm(arr, searchTerm: String)
   {
+    let lowerCasedSearchTerm = searchTerm.toLowerCase();
     return arr.filter(function(o) {
       return Object.keys(o).some(function(k) {
     
        if(typeof o[k] === 'object')
        {
-          return Object.keys(o[k]).some(k2 => o[k][k2].toString().toLowerCase().indexOf(searchTerm) != -1)
+          return Object.keys(o[k]).some(k2 => o[k][k2].toString().toLowerCase().indexOf(lowerCasedSearchTerm) != -1)
        }
        else {
-         return o[k].toString().toLowerCase().indexOf(searchTerm) != -1;
-       }
-          
-        
-        
+         return o[k].toString().toLowerCase().indexOf(lowerCasedSearchTerm) != -1;
+       }    
       })
     })
   }

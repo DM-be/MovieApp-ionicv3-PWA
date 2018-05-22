@@ -45,17 +45,16 @@ import {
 })
 export class TabsPage {
 
-  private tabsPlacement: string;
-  private tabsLayout: string;
-  private signup: any = SignupPage;
-  private login: any = LoginPage;
+  public tabsPlacement: string;
+  public tabsLayout: string;
+  public signup: any = SignupPage;
+  public login: any = LoginPage;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform) {
     if (!this.platform.is('mobile')) {
       this.tabsPlacement = 'top';
       this.tabsLayout = 'icon-left';
     }
-
   }
 
 }

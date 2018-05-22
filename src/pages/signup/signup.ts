@@ -40,11 +40,11 @@ import {
 })
 export class SignupPage {
 
-  private name: string;
-  private username: string;
-  private email: string;
-  private password: string;
-  private confirmPassword: string;
+  public name: string;
+  public username: string;
+  public email: string;
+  public password: string;
+  public confirmPassword: string;
 
   constructor(
     public navCtrl: NavController,
@@ -84,8 +84,7 @@ export class SignupPage {
           loader.dismiss();
           let errorObject = error.json().validationErrors
           Object.values(errorObject).forEach((error: string) => {
-            
-             this.alertCtrl.create({
+            this.alertCtrl.create({
             title: 'Bad request',
             message: error,
             buttons: ['Dismiss']

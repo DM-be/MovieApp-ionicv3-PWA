@@ -33,10 +33,10 @@ import { FilterProvider } from '../../providers/filter/filter';
 })
 export class WatchedMoviesPage {
 
-  private movieDetailPage = MovieDetailPage;
-  private recommendPage = RecommendPage;
-  private movies: Movie [];
-  private seenMovies: any;
+  public movieDetailPage = MovieDetailPage;
+  public recommendPage = RecommendPage;
+  public movies: Movie [];
+  public seenMovies: Movie [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public toastCtrl: ToastController,
   public modalCtrl: ModalController, public filterProvider: FilterProvider, public events: Events) {}
@@ -55,7 +55,7 @@ export class WatchedMoviesPage {
     })
   }
 
-  openMovieDetail(i) {
+  openMovieDetail(i: number): void {
     let movie = this.movies[i];
     this.navCtrl.push(this.movieDetailPage, {
       movie: movie
@@ -71,7 +71,7 @@ export class WatchedMoviesPage {
     toast.present();
   }
 
-  addToSeen(event, movie): void {
+  addToSeen(event: any, movie: Movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("seen", movie);
@@ -84,19 +84,17 @@ export class WatchedMoviesPage {
     }
   }
 
-  openRecommendMovie(movie): void {
+  openRecommendMovie(movie: Movie): void {
     let recommendModal = this.modalCtrl.create(RecommendPage, {
       "movieToRecommend": movie
     });
     recommendModal.present();
   }
 
-  removeMovie(movie)
+  removeMovie(movie: Movie): void
   {
     this.dbProvider.removeMovie("watch", movie);
     this.movies = this.dbProvider.getMovies("watch");
   }
 
-
-  
 }

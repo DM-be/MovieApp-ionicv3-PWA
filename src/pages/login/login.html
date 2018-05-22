@@ -1,9 +1,16 @@
-<ion-content padding>
+
+<ion-header showWhen="android, ios">
+  <div text-center margin-top margin-bottom>
+    <img src="assets/imgs/logo2.png" />
+  </div>
+</ion-header>
+
+<ion-content padding  >
   <ion-grid fixed>
     
-        <ion-row>
-            <ion-col text-center margin-top margin-bottom >
-              <img src="assets/imgs/logo2.png" />
+        <ion-row hideWhen="android, ios">
+            <ion-col  text-center margin-top margin-bottom >
+                <img src="assets/imgs/logo2.png" />
             </ion-col>
           </ion-row>
       <ion-row >
@@ -41,8 +48,6 @@
             </ion-list>
             <button ion-button class="login-button" (click)="login()">Login</button>
           </ion-col>
-
-
       </ion-row>
     
   </ion-grid>

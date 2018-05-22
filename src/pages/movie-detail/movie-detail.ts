@@ -20,7 +20,7 @@ import { Movie } from '../../model/movie';
 })
 export class MovieDetailPage {
 
-  private username: any;
+  public username: any;
 
   public movie: Movie;
   public IMDBId: any;
@@ -30,15 +30,12 @@ export class MovieDetailPage {
   }
 
   ionViewDidLoad() {
-    console.log(this.movie);
     this.movieProvider.getIMDBId(this.movie.id).subscribe(id => {
       if(id) {
         this.IMDBId = id;
       }
     })
 
-    
-    
   }
   addToWatch() {
     this.dbProvider.addMovie("watch", this.movie);
