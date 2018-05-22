@@ -45,12 +45,12 @@ export class SocialPage {
     public toastCtrl: ToastController) {
     this.events.subscribe("data:changed", () => {
       this.setup();
-      this.checkForFriendInvites();
+     // this.checkForFriendInvites();
     })
   }
   ionViewDidEnter() {
     this.setup();
-    this.checkForFriendInvites();
+ //   this.checkForFriendInvites();
   }
 
   ionViewDidLoad() {
@@ -91,34 +91,4 @@ export class SocialPage {
     modal.present();
   }
 
-  async checkForFriendInvites() {
-    let openFriends = await this.socialProvider.getOpenInvitedFriends();
-    if (openFriends.length > 0) {
-      openFriends.forEach(friend => {
-        this.createPrompt(friend);
-      });
-    }
-  }
-  createPrompt(friend) {
-    let prompt = this.alertCtrl.create({
-      title: 'Friend invite',
-      message: friend.username + " invited you as a friend, will you accept or decline?",
-      buttons: [{
-          text: 'Decline',
-          handler: data => {
-            console.log("who is this guy???")
-            this.socialProvider.declineInvite(friend.username);
-          }
-        },
-        {
-          text: 'Accept',
-          handler: async data => {
-            await this.socialProvider.acceptInvite(friend.username)
-            this.setup();
-          }
-        }
-      ]
-    });
-    prompt.present();
-  }
 }

@@ -35,6 +35,7 @@ export class DbProvider {
   private sharedOptions: any;
   private basicOptions;
   private acceptedFriends = [];
+  private recievedInvites = [];
 
   constructor(public events: Events) {
 
@@ -96,7 +97,8 @@ export class DbProvider {
     this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', async info => {
       this.sdb.sync(this.sharedRemote, this.sharedOptions);
       this.movies["recommendations"] = await this.getRecommendations() || []; // prevent undefined when a user is registered
-      this.acceptedFriends = await this.getAcceptedFriends() || [];
+      this.acceptedFriends = await this.getAcceptedFriends() || []; // todo: now init gets called first after registering, resulting in a pouch error because the array is empty, but now it defaults to [] so... 
+      this.recievedInvites = await this.getOpenFriendInvites() || [];
       this.listenToChanges();
       this.events.publish("sharedsync:completed");
 
@@ -118,6 +120,13 @@ export class DbProvider {
   getAcceptedFriendsProperty() {
     return this.acceptedFriends;
   }
+  
+  async updateRecievedInvites() {
+    this.recievedInvites = await this.getOpenFriendInvites();
+  }
+  getRecievedInvitesProperty() {
+    return this.recievedInvites;
+  }
 
   
   listenToChanges() {
@@ -129,10 +138,9 @@ export class DbProvider {
   
       if(change.id === this.user)
       {
-        // todo: implement friend invite accepted toast
-        // --> A invites B, B accepts and A gets a toast, beware: if A accepts, shouldnt get a toast, he just accepted
+       
         var filteredFriends = change.doc.friends.filter(friend => friend.accepted);
-
+        let invites = change.doc.recievedInvites;
         
         if(this.movies["recommendations"].length < change.doc.recommendations.length)
         {
@@ -150,6 +158,12 @@ export class DbProvider {
           }
           await this.updateAcceptedFriends();
           this.events.publish("friend:accepted", newFriend, showPopup);
+        }
+        if(this.recievedInvites.length < invites.length)
+        {
+          await this.updateRecievedInvites();
+          this.events.publish("friend:newInvite", invites);
+          
         }
       }
       // change.id contains the doc id, change.doc contains the doc
