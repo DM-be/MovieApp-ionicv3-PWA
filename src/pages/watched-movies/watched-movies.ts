@@ -65,8 +65,8 @@ export class WatchedMoviesPage {
   presentToast(movieTitle: string, typeOfList: string): void {
     let toast = this.toastCtrl.create({
       message: `${movieTitle} was added to your ${typeOfList}list`,
-      duration: 1500,
-      position: 'bottom'
+      duration: 2500,
+      position: 'top'
     });
     toast.present();
   }

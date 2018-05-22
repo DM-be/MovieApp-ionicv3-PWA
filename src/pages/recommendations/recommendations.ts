@@ -20,7 +20,7 @@ import { FilterProvider } from '../../providers/filter/filter';
 })
 export class RecommendationsPage {
 
-  private recommendPage = RecommendPage;
+
   private recommendations: Movie [];
   private movieDetailPage = MovieDetailPage;
   private seenMovies: Movie [];
@@ -45,8 +45,8 @@ export class RecommendationsPage {
     this.events.subscribe("movie:recievedRecommendation", async movie => {
       let toast = this.toastCtrl.create({
         message: `${movie.title} was recommended to you by ${movie.recommendedBy.username}`,
-        duration: 2000,
-        position: 'bottom'
+        duration: 3000,
+        position: 'top'
       });
       toast.present();
       this.recommendations = await this.dbProvider.getRecommendations();

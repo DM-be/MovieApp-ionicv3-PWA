@@ -68,7 +68,7 @@ export class AddFriendPage {
     });
     let toast = this.toastCtrl.create({
       message: `Sent a friend invite to ${friendsString}`,
-      duration: 3000,
+      duration: 2000,
       position: 'top'
     });
     toast.present();
