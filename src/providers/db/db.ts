@@ -210,8 +210,11 @@ export class DbProvider {
       let invitedFriends = await this.getSentInvitesFriends();
       let doc = await this.sdb.get("allUsers");
       return doc.users.filter(user => {
-        return ((declinedFriends.findIndex(u => u.username === user.username) === -1) && user.username !== this.user && user.isPublic &&
-          invitedFriends.findIndex(u => u.username === user.username) === -1);
+        return (
+          (declinedFriends.findIndex(u => u.username === user.username) === -1)
+          && user.username !== this.user 
+          && user.isPublic 
+          && invitedFriends.findIndex(u => u.username === user.username) === -1);
         // filter out declined friends in the searchbar and the logged in user
         // filter out friends you already invited
       })
@@ -241,7 +244,8 @@ export class DbProvider {
         "accepted": false,
         "declined": false
       })
-      await this.sdb.put(doc, {latest:true, force: true}); // forces the latest revision: todo: test with recommendations etc
+      await this.sdb.put(doc, {latest:true, force: true}); 
+      // forces the latest revision: todo: test with recommendations etc
       let otherdoc = await this.sdb.get(username);
       otherdoc.recievedInvites.push({
         "username": this.user,
