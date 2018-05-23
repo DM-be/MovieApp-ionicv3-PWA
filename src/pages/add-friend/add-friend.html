@@ -15,7 +15,7 @@
 
 <ion-content padding="true">
   <ion-auto-complete [dataProvider]="socialProvider" (itemSelected)="itemSelected($event)" #searchbar></ion-auto-complete>
-  <ion-scroll style="height:40vh">
+  <ion-scroll style="height:30vh">
     <ion-chip *ngFor="let possibleFriend of possibleFriends; let i = index">
       <ion-avatar>
         <img src={{possibleFriend.avatar}}>
