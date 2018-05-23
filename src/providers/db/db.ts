@@ -65,7 +65,6 @@ export class DbProvider {
     }
 
     PouchDB.plugin(pouchdbadapteridb);  
-    PouchDB.plugin(upsert);
   }
 
   getMovies(type: string): Movie [] {
@@ -91,8 +90,7 @@ export class DbProvider {
     });
     this.db.sync(this.remote).on('complete', async x => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
       this.db.sync(this.remote, this.options);
-      this.initializeMovies(); 
-     
+      await this.initializeMovies(); 
       this.events.publish("localsync:completed");
     })
     this.sdb.sync(this.sharedRemote, this.basicOptions).on('complete', async info => {
@@ -121,7 +119,7 @@ export class DbProvider {
     return this.acceptedFriends;
   }
 
-  
+
   listenToChanges() {
     this.sdb.changes({
       since: 'now',
@@ -133,9 +131,7 @@ export class DbProvider {
       {
         // todo: implement friend invite accepted toast
         // --> A invites B, B accepts and A gets a toast, beware: if A accepts, shouldnt get a toast, he just accepted
-        var filteredFriends = change.doc.friends.filter(friend => friend.accepted);
-
-        
+        var filteredFriends = change.doc.friends.filter(friend => friend.accepted);  
         if(this.movies["recommendations"].length < change.doc.recommendations.length)
         {
           let movie = change.doc.recommendations[change.doc.recommendations.length -1];
@@ -332,7 +328,7 @@ export class DbProvider {
         // push the friend to the friends array only if its not in it already
         // todo: find a nicer way to handle multiple friend invites sent (A sent to B, B sent to A, now friend gets added once but still a pop up)
       }
-      this.sdb.put(doc);
+      await this.sdb.put(doc);
       // update recievedinvites 
       // add the invitee to the inviters friends array
       let otherdoc = await this.sdb.get(username);
@@ -341,7 +337,7 @@ export class DbProvider {
         "accepted": true,
         "declined": false
       })
-      this.sdb.put(otherdoc);
+      await this.sdb.put(otherdoc);
     } catch (err) {
       console.log(err);
     }
@@ -406,8 +402,8 @@ export class DbProvider {
       let doc = await this.db.get(this.user)
       movie.type = type;
       doc.movies.push(movie);
-      await this.db.put(doc);
       this.movies[type].push(movie);
+      await this.db.put(doc);
     } catch (err) {
       console.log(err)
     }

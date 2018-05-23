@@ -92,12 +92,19 @@ export class DiscoverPage {
   ) {
     this.searchControl = new FormControl();
     this.movies = [];
+    this.refreshMovies();
+
+    let loading = this.loadingCtrl.create({
+      cssClass: 'transparent'
+    });
+    loading.present();
     this.movieProvider.getMovies(true, false, true).subscribe(movies => {
       movies.forEach(movie => {
         this.movies.push(movie);
       });
+      loading.dismiss();
     })
-    this.refreshMovies();
+    
   }
 
   ionViewWillEnter() {

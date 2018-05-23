@@ -47,10 +47,10 @@ import { FilterProvider } from '../../providers/filter/filter';
   templateUrl: 'seen-movies.html',
 })
 export class SeenMoviesPage {
-  private movies: Movie [];
-  private watchedMovies: Movie [];
-  private movieDetailPage = MovieDetailPage;
-  private recommendPage = RecommendPage;
+  public movies: Movie [];
+  public watchedMovies: Movie [];
+  public movieDetailPage = MovieDetailPage;
+  public recommendPage = RecommendPage;
 
   constructor(
     public navCtrl: NavController,
