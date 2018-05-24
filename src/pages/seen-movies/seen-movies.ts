@@ -1,13 +1,13 @@
 import {
-  Component,
-  ViewChild
+  Component, ViewChild
 } from '@angular/core';
 import {
   NavController,
   NavParams,
   ToastController,
   ModalController,
-  Events
+  Events,
+  Content
 } from 'ionic-angular';
 import {
   MovieProvider
@@ -15,16 +15,7 @@ import {
 import {
   Platform
 } from 'ionic-angular/platform/platform';
-import {
-  Content
-} from 'ionic-angular';
-import {
-  SuperTabs
-} from 'ionic2-super-tabs';
-import {
-  FormControl
-} from '@angular/forms';
-import 'rxjs/add/operator/debounceTime';
+
 import {
   DbProvider
 } from '../../providers/db/db';
@@ -34,6 +25,8 @@ import {
 import { Movie } from '../../model/movie';
 import { RecommendPage } from '../recommend/recommend';
 import { FilterProvider } from '../../providers/filter/filter';
+
+
 
 /**
  * Generated class for the SeenMoviesPage page.
@@ -51,6 +44,9 @@ export class SeenMoviesPage {
   public watchedMovies: Movie [];
   public movieDetailPage = MovieDetailPage;
   public recommendPage = RecommendPage;
+  private movieCounter: number;
+  public moviesInView: Movie [];
+  @ViewChild(Content) content: Content;
 
   constructor(
     public navCtrl: NavController,
@@ -62,23 +58,55 @@ export class SeenMoviesPage {
     public  modalCtrl: ModalController,
     public events: Events,
     public filterProvider: FilterProvider
-  ) {}
+  ) {
+    this.movieCounter = 20;
+    this.movies = this.dbProvider.getMovies("seen");
+    this.moviesInView =  this.dbProvider.getMoviesInView("seen");
+    
+  }
 
   ionViewDidLoad() {
+    this.moviesInView = this.dbProvider.getMoviesInView("seen");
     this.events.subscribe("seen:updated", (searchTerm) => {
       this.movies = this.dbProvider.getMovies("seen");
       this.movies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
+      this.resetMoviesInView(this.movies);
     })
     this.events.subscribe("seen:empty", () => {
       this.movies = this.dbProvider.getMovies("seen");
+      this.resetMoviesInView();
+    })
+    this.events.subscribe("selected:clicked", () => {
+      this.content.scrollToTop(0);
+      this.moviesInView =  this.dbProvider.getMoviesInView("seen");
     })
   }
 
-  ionViewWillEnter() {
-    this.movies = this.dbProvider.getMovies("seen");
-    this.watchedMovies = this.dbProvider.getMovies("watch");
+  resetMoviesInView(movies?: Movie []) {
+    
+    this.dbProvider.setCounter("seen", 20);
+    if(movies)
+    {
+      this.dbProvider.setMoviesInView("seen", movies);
+    }
+    this.dbProvider.setMoviesInView("seen");
+    this.moviesInView = this.dbProvider.getMoviesInView("seen");
   }
-  openMovieDetail(i) {
+
+  ionViewWillEnter() {
+
+  }
+  
+
+  ionViewDidEnter(){
+   this.movies = this.dbProvider.getMovies("seen");
+   this.watchedMovies = this.dbProvider.getMovies("watch");
+  }
+
+
+
+
+  openMovieDetail(i): void {
     let movie = this.movies[i];
     this.navCtrl.push(this.movieDetailPage, {
       "movie": movie
@@ -106,7 +134,7 @@ export class SeenMoviesPage {
     this.presentToast(movie.title, "watch");
   }
 
-  removeMovie(movie)
+  removeMovie(movie): void 
   {
     this.dbProvider.removeMovie("seen", movie);
     this.movies = this.dbProvider.getMovies("seen");
@@ -118,6 +146,21 @@ export class SeenMoviesPage {
     });
     recommendModal.present();
   }
+  showNextMoviePage() {
+    let currentCounter = this.dbProvider.getCounter("seen");
+    currentCounter += 20;
+    this.dbProvider.setCounter("seen", currentCounter);
+    this.dbProvider.setMoviesInView("seen");
+    this.moviesInView = this.dbProvider.getMoviesInView("seen");
+  }
+
+  showNextMovies(event): void {
+    console.log("calling");
+    this.showNextMoviePage();
+    event.complete();
+  
+  }
+
 
 }
 

@@ -26,7 +26,6 @@ import { FilterProvider } from '../../providers/filter/filter';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-watched-movies',
   templateUrl: 'watched-movies.html',

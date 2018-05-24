@@ -36,9 +36,15 @@ export class DbProvider {
   private sharedOptions: any;
   private basicOptions;
   private acceptedFriends = [];
+  private moviesInView: Object = {};
+  private counter: Object = {};
+
 
   constructor(public events: Events) {
-
+    
+    this.moviesInView["watch"] = [];
+    this.counter["seen"] = 20;
+    this.counter["watch"] = 20;
     this.username = 'bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix';
     this.password = '142963408785f5c6fe057bd73c7e0db10527bd0003ab1b889bdf7421a3025c39';
     this.sharedRemote = 'https://bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix.cloudant.com/shared-new';
@@ -70,6 +76,33 @@ export class DbProvider {
   getMovies(type: string): Movie [] {
     return this.movies[type];
   }
+
+  setMoviesInView(type: string, movies?: Movie[])
+  {
+    if(movies)
+    {
+      this.moviesInView[type] = movies.slice(1, this.counter[type]);
+    }
+    else {
+      this.moviesInView[type] = this.getMovies(type).slice(1, this.counter[type]);
+    }
+  }
+
+  getMoviesInView(type: string): Movie []{
+    return this.moviesInView[type];
+  }
+
+  setCounter(type: string, amount: number): void {
+    this.counter[type] = amount;
+  }
+
+  getCounter(type: string): number {
+    return this.counter[type];
+  }
+
+
+
+
   init(details, signingUp: boolean): void {
 
     if (this.movies === undefined) {
@@ -169,6 +202,7 @@ export class DbProvider {
   async initializeMovies() {
     await this.getMoviesByType("watch");
     await this.getMoviesByType("seen");
+    this.moviesInView["seen"] = this.getMoviesInView("seen");
   }
   async register(user) {
     this.sdb.put({

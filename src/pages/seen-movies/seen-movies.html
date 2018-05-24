@@ -10,7 +10,7 @@
   <ion-grid fixed>
     <ion-row>
 
-      <ion-col col-6 col-sm-6 col-md-4 col-lg-3 *ngFor="let movie of movies; let i = index">
+      <ion-col col-6 col-sm-6 col-md-4 col-lg-3 *ngFor="let movie of moviesInView; let i = index">
         <ion-card >
           <ion-card-content (click)="openMovieDetail(i)">
             <op-lazy-img [source]="movie.poster"></op-lazy-img>
@@ -36,5 +36,13 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+
+  <div>
+    <ion-infinite-scroll (ionInfinite)="showNextMovies($event)" >
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
+
 
 </ion-content>

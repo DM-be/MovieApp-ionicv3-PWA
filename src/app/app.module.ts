@@ -15,12 +15,9 @@ import { MyApp } from './app.component';
 
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
-
 import { MovieProvider } from '../providers/movie/movie';
 import { SeenMoviesPage } from '../pages/seen-movies/seen-movies';
 import { TabsPage } from '../pages/tabs/tabs';
-import { SuperTabsModule } from 'ionic2-super-tabs';
-import { Content } from 'ionic-angular/components/content/content';
 import { DiscoverPage } from '../pages/discover/discover';
 import { MovieDetailPage } from '../pages/movie-detail/movie-detail';
 import { SocialPage } from '../pages/social/social';
@@ -64,18 +61,13 @@ import { PopoverDiscoverPage } from '../pages/popover-discover/popover-discover'
     Ng2CompleterModule,
     FormsModule,
     IonicModule.forRoot(MyApp),
-    SuperTabsModule.forRoot(),
     IonicImageLoader.forRoot(),
     IonicImageLoader,
     LazyLoadImageModule,
     BrowserAnimationsModule,
     CacheModule.forRoot(),
     CacheImgModule,
-    
 
-    
-    
-    
     
   ],
   bootstrap: [IonicApp],

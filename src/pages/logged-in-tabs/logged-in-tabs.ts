@@ -1,3 +1,5 @@
+import { DbProvider } from './../../providers/db/db';
+import { MovieProvider } from './../../providers/movie/movie';
 import {
   Component
 } from '@angular/core';
@@ -46,24 +48,24 @@ import {
 export class LoggedInTabsPage {
 
 
-  private tabsPlacement: string;
-  private tabsLayout: string;
-  private toggled = false;
+  public tabsPlacement: string;
+  public tabsLayout: string;
+  public toggled = false;
 
-  private searchBarPlaceholder = "Discover new movies"
-  private selectedTabPage: string = "DiscoverPage"
+  public searchBarPlaceholder = "Discover new movies"
+  public selectedTabPage: string = "DiscoverPage"
 
-  private searchTerm: string = '';
-  private searchControl: FormControl
+  public searchTerm: string = '';
+  public searchControl: FormControl
 
-  private discover: any = DiscoverPage;
-  private seen: any = SeenMoviesPage;
-  private watch: any = WatchedMoviesPage;
-  private social: any = SocialPage;
-  private recommendation: any = RecommendationsPage;
+  public discover: any = DiscoverPage;
+  public seen: any = SeenMoviesPage;
+  public watch: any = WatchedMoviesPage;
+  public social: any = SocialPage;
+  public recommendation: any = RecommendationsPage;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public events: Events,
-    public popoverCtrl: PopoverController) {
+    public popoverCtrl: PopoverController, public dbProvider: DbProvider) {
     if (!this.platform.is('mobile')) {
       this.tabsPlacement = 'top';
       this.tabsLayout = 'icon-left';
@@ -81,45 +83,42 @@ export class LoggedInTabsPage {
       if (this.selectedTabPage == "DiscoverPage" && search !== "") {
         this.events.publish("discover:updated", search)
       } else if (this.selectedTabPage == "SeenMoviesPage") {
-        if(search == "")
-        {
+        if (search == "") {
           this.events.publish("seen:empty");
-        }
-        else{
+        } else {
           this.events.publish("seen:updated", search);
         }
-      }
-      else if (this.selectedTabPage == "WatchedMoviesPage") {
-        if(search == "")
-        {
+      } else if (this.selectedTabPage == "WatchedMoviesPage") {
+        if (search == "") {
           this.events.publish("watch:empty");
-        }
-        else{
+        } else {
           this.events.publish("watch:updated", search);
         }
-      }
-      else if (this.selectedTabPage == "RecommendationsPage") {
-        if(search == "")
-        {
+      } else if (this.selectedTabPage == "RecommendationsPage") {
+        if (search == "") {
           this.events.publish("recommendations:empty");
-        }
-        else{
+        } else {
           this.events.publish("recommendations:updated", search);
         }
-      }
-      else if (this.selectedTabPage == "SocialPage") {
-        if(search == "")
-        {
+      } else if (this.selectedTabPage == "SocialPage") {
+        if (search == "") {
           this.events.publish("social:empty");
-        }
-        else{
+        } else {
           this.events.publish("social:updated", search);
         }
       }
-      
+
 
     });
 
+  }
+
+  seenSelected() {
+    // seen tab has been selected, reset the seen movies to prevent loading alot of movies
+    console.log("seen selected");
+   this.dbProvider.setCounter("seen", 20);
+   this.dbProvider.setMoviesInView("seen");
+   this.events.publish("selected:clicked");
   }
 
   presentPopover(event) {

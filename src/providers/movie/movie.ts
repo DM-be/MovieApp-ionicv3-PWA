@@ -42,6 +42,10 @@ export class MovieProvider {
     this.setSearchingBy('title');
   }
 
+
+  
+
+
   setQuery(query: string) {
     this.query = query;
   }
