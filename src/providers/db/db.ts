@@ -81,10 +81,11 @@ export class DbProvider {
   {
     if(movies)
     {
-      this.moviesInView[type] = movies.slice(1, this.counter[type]);
+      
+      this.moviesInView[type] = movies.slice(0, this.counter[type]);
     }
     else {
-      this.moviesInView[type] = this.getMovies(type).slice(1, this.counter[type]);
+      this.moviesInView[type] = this.getMovies(type).slice(0, this.counter[type]);
     }
   }
 

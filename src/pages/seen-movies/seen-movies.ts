@@ -46,6 +46,7 @@ export class SeenMoviesPage {
   public recommendPage = RecommendPage;
   private movieCounter: number;
   public moviesInView: Movie [];
+  public filtered: boolean = false;
   @ViewChild(Content) content: Content;
 
   constructor(
@@ -71,10 +72,13 @@ export class SeenMoviesPage {
       this.movies = this.dbProvider.getMovies("seen");
       this.movies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
       this.resetMoviesInView(this.movies);
+      this.content.scrollToTop(0);
+      this.filtered = true;
     })
     this.events.subscribe("seen:empty", () => {
       this.movies = this.dbProvider.getMovies("seen");
       this.resetMoviesInView();
+      this.filtered = false;
     })
     this.events.subscribe("selected:clicked", () => {
       this.content.scrollToTop(0);
@@ -89,7 +93,10 @@ export class SeenMoviesPage {
     {
       this.dbProvider.setMoviesInView("seen", movies);
     }
-    this.dbProvider.setMoviesInView("seen");
+    else {
+      this.dbProvider.setMoviesInView("seen");
+    }
+    
     this.moviesInView = this.dbProvider.getMoviesInView("seen");
   }
 
@@ -150,7 +157,13 @@ export class SeenMoviesPage {
     let currentCounter = this.dbProvider.getCounter("seen");
     currentCounter += 20;
     this.dbProvider.setCounter("seen", currentCounter);
-    this.dbProvider.setMoviesInView("seen");
+    if(this.filtered)
+    {
+      this.dbProvider.setMoviesInView("seen", this.movies);
+    }
+    else{
+      this.dbProvider.setMoviesInView("seen");
+    }
     this.moviesInView = this.dbProvider.getMoviesInView("seen");
   }
 
