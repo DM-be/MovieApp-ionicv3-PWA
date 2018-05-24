@@ -47,6 +47,7 @@ export class SeenMoviesPage {
   private movieCounter: number;
   public moviesInView: Movie [];
   public filtered: boolean = false;
+  public filteredMovies: any;
   @ViewChild(Content) content: Content;
 
   constructor(
@@ -62,7 +63,7 @@ export class SeenMoviesPage {
   ) {
     this.movieCounter = 20;
     this.movies = this.dbProvider.getMovies("seen");
-    this.moviesInView =  this.dbProvider.getMoviesInView("seen");
+    this.filteredMovies = [];
     
   }
 
@@ -70,14 +71,15 @@ export class SeenMoviesPage {
     this.moviesInView = this.dbProvider.getMoviesInView("seen");
     this.events.subscribe("seen:updated", (searchTerm) => {
       this.movies = this.dbProvider.getMovies("seen");
-      this.movies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
-      this.resetMoviesInView(this.movies);
+      this.filteredMovies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
+      this.resetMoviesInView(this.filteredMovies);
       this.content.scrollToTop(0);
       this.filtered = true;
     })
     this.events.subscribe("seen:empty", () => {
       this.movies = this.dbProvider.getMovies("seen");
       this.resetMoviesInView();
+      this.content.scrollToTop(0);
       this.filtered = false;
     })
     this.events.subscribe("selected:clicked", () => {
@@ -114,7 +116,7 @@ export class SeenMoviesPage {
 
 
   openMovieDetail(i): void {
-    let movie = this.movies[i];
+    let movie = this.moviesInView[i];
     this.navCtrl.push(this.movieDetailPage, {
       "movie": movie
     });
@@ -159,7 +161,7 @@ export class SeenMoviesPage {
     this.dbProvider.setCounter("seen", currentCounter);
     if(this.filtered)
     {
-      this.dbProvider.setMoviesInView("seen", this.movies);
+      this.dbProvider.setMoviesInView("seen", this.filteredMovies);
     }
     else{
       this.dbProvider.setMoviesInView("seen");
