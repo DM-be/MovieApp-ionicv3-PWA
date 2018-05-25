@@ -33,6 +33,7 @@ import { RecommendPage } from '../pages/recommend/recommend';
 import { CacheModule } from 'ionic-cache';
 import { CacheImgModule, ImgCacheService } from '../../global';
 import { PopoverDiscoverPage } from '../pages/popover-discover/popover-discover';
+import { ToastProvider } from '../providers/toast/toast';
 
 
 
@@ -95,7 +96,8 @@ import { PopoverDiscoverPage } from '../pages/popover-discover/popover-discover'
     SocialProvider,
     DbProvider,
     FilterProvider, 
-    ImgCacheService
+    ImgCacheService,
+    ToastProvider
     
 
   ]

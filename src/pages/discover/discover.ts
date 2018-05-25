@@ -60,6 +60,7 @@ import {
 import {
   Movie
 } from '../../model/movie';
+import { ToastProvider } from '../../providers/toast/toast';
 
 @Component({
   selector: 'page-discover',
@@ -89,6 +90,7 @@ export class DiscoverPage {
     private toastCtrl: ToastController,
     private http: Http,
     private cache: CacheService,
+    public toastProvider: ToastProvider
   ) {
     this.searchControl = new FormControl();
     this.movies = [];
@@ -196,14 +198,18 @@ export class DiscoverPage {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("watch", movie);
-    this.presentToast(movie.title, "watch");
+    this.toastProvider.addToastToQueue(movie.title, "watch");
+    this.toastProvider.presentToast();
+  //  this.presentToast(movie.title, "watch");
   }
 
   addToSeen(event, movie: Movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("seen", movie);
-    this.presentToast(movie.title, "seen");
+    this.toastProvider.addToastToQueue(movie.title, "seen");
+ //   this.presentToast(movie.title, "seen");
+    this.toastProvider.presentToast();
   }
 
   openMovieDetail(movie: Movie): void {

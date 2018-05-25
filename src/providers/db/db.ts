@@ -1,12 +1,12 @@
+
 import {
   Events
 } from 'ionic-angular';
 import {
   Injectable
 } from '@angular/core';
-import PouchDB from 'pouchdb';
+
 import pouchdbadapteridb from 'pouchdb-adapter-idb';
-import upsert from 'pouchdb-upsert';
 import {
   Movie
 } from '../../model/movie';
@@ -38,6 +38,7 @@ export class DbProvider {
   private acceptedFriends = [];
   private moviesInView: Object = {};
   private counter: Object = {};
+  private pouch;
 
 
   constructor(public events: Events) {
@@ -70,7 +71,9 @@ export class DbProvider {
       continuous: true
     }
 
-    PouchDB.plugin(pouchdbadapteridb);  
+   // PouchDB.plugin(pouchdbadapteridb);
+ 
+   
   }
 
   getMovies(type: string): Movie [] {
@@ -114,14 +117,12 @@ export class DbProvider {
       }
     } 
 
-    this.db = new PouchDB('movies', {
-      adapter: 'idb'
-    });
+    this.db = new PouchDB('movies', {adapter: 'worker'})
+ //   this.db.adapter('worker', worker);
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
-    this.sdb = new PouchDB('shared', {
-      adapter: 'idb'
-    });
+    this.sdb = new PouchDB('shared',{adapter: 'worker'});
+   // this.sdb.adapter('worker', worker);
     this.db.sync(this.remote).on('complete', async x => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
       this.db.sync(this.remote, this.options);
       await this.initializeMovies(); 
