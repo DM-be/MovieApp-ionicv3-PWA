@@ -1,3 +1,4 @@
+import { ToastProvider } from './../../providers/toast/toast';
 import {
   Component,
   ViewChild
@@ -34,7 +35,7 @@ export class AddFriendPage {
   @ViewChild('searchbar') searchbar: AutoCompleteComponent;
   public possibleFriends: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public socialProvider: SocialProvider, private completerService: CompleterService,
-    public dbProvider: DbProvider, public toastCtrl: ToastController) {
+    public dbProvider: DbProvider, public toastCtrl: ToastController, public toastProvider: ToastProvider) {
     this.possibleFriends = [];
   }
 
@@ -60,13 +61,9 @@ export class AddFriendPage {
 
   inviteFriends() {
     let friendsString = "";
-    console.log(this.possibleFriends)
     this.possibleFriends.forEach(async (friend, i) => {
-      
+    
      this.dbProvider.inviteFriend(friend.username);
-     
-     
-      
       // yield is reserved in foreach
       if (i === this.possibleFriends.length - 1 && this.possibleFriends.length > 1) {
         friendsString += ` and ${friend.username}`
@@ -74,12 +71,7 @@ export class AddFriendPage {
         friendsString += ` ${friend.username}`
       }
     });
-    let toast = this.toastCtrl.create({
-      message: `Sent a friend invite to ${friendsString}`,
-      duration: 2000,
-      position: 'top'
-    });
-    toast.present();
+    this.toastProvider.addToastToQueue(undefined, undefined, friendsString, undefined, undefined, undefined, true);
     this.navCtrl.pop();
   }
   closeModal() {

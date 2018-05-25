@@ -70,7 +70,7 @@ export class SeenMoviesPage {
     public modalCtrl: ModalController,
     public events: Events,
     public filterProvider: FilterProvider,
-    public toastProvider: ToastProvider
+    public toastProvider: ToastProvider,
   ) {
     this.movieCounter = 20;
     this.movies = this.dbProvider.getMovies("seen");
@@ -99,7 +99,10 @@ export class SeenMoviesPage {
       this.filtered = false;
     })
   }
-
+  setSmallIcons(): boolean {
+    return this.platform.width() < 500;
+  }
+  
   resetMoviesInView(movies ? : Movie[]) {
 
     this.dbProvider.setCounter("seen", 20);

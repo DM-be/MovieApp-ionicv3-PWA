@@ -9,7 +9,8 @@ import {
   Events,
   ToastController,
   ModalController,
-  Content
+  Content,
+  Platform
 } from 'ionic-angular';
 import {
   DbProvider
@@ -45,7 +46,7 @@ export class WatchedMoviesPage {
   @ViewChild(Content) content: Content;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public toastCtrl: ToastController,
-  public modalCtrl: ModalController, public filterProvider: FilterProvider, public events: Events, public toastProvider: ToastProvider) {}
+  public modalCtrl: ModalController, public filterProvider: FilterProvider, public events: Events, public toastProvider: ToastProvider, public platform: Platform) {}
   ionViewWillEnter() {
     this.movies = this.dbProvider.getMovies("watch");
     this.movieCounter = 20;
@@ -126,6 +127,10 @@ export class WatchedMoviesPage {
     await this.dbProvider.removeMovie("watch", movie);
     this.dbProvider.setMoviesInView("watch");
     this.moviesInView = this.dbProvider.getMoviesInView("watch");
+  }
+
+  setSmallIcons(): boolean {
+    return this.platform.width() < 500;
   }
 
   showNextMoviePage() {

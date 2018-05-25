@@ -1,4 +1,6 @@
-import { Network } from '@ionic-native/network';
+import {
+  Network
+} from '@ionic-native/network';
 import {
   HttpClient
 } from '@angular/common/http';
@@ -25,7 +27,7 @@ export class ToastProvider {
 
   constructor(public toastCtrl: ToastController, public events: Events, public network: Network) {
     this.queue = [];
-    
+
     this.events.subscribe("network:offline", () => {
       this.addNetworkToastToQueue(false);
     })
@@ -57,12 +59,10 @@ export class ToastProvider {
   addNetworkToastToQueue(network: boolean) {
 
     let message;
-    if(network)
-    {
-      message = "network reconnected, you can now enter new searches"
-    }
-    else{
-      message = "network disconnected: everything you searched before is accessible, you cannot enter new searches until network connectivity is regained"
+    if (network) {
+      message = "Network reconnected: new searches are available again"
+    } else {
+      message = "Network disconnected: you can still invite friends, recommend movies and add movies to lists. Former searches are available. Reconnect to enter a new search."
     }
     let toast = this.toastCtrl.create({
       message,
@@ -71,22 +71,27 @@ export class ToastProvider {
       closeButtonText: 'OK'
     })
     this.add(toast);
-    if(this.size() == 1) 
-    {
+    if (this.size() == 1) {
       this.presentToast();
     }
 
   }
 
 
-  addToastToQueue(movieTitle?: string, typeOfList?: string, friendName?: string, recommended?: boolean, friendInvite?: boolean): void {
+  addToastToQueue(movieTitle ? : string, typeOfList ? : string, friendName ? : string, recommended ? : boolean, friendInvite ? : boolean, recommendedTo ? : boolean, sent ? : boolean): void {
 
-    let message  = `${movieTitle} was added to your ${typeOfList}list`;
-    if(recommended) {
+    let message = `${movieTitle} was added to your ${typeOfList}list`;
+    if (recommended) {
       message = `${movieTitle} was recommended to you by ${friendName}`;
     }
-    if(friendInvite) {
+    if (friendInvite) {
       message = `${friendName} has accepted your friend request`;
+    }
+    if (recommendedTo) {
+      message = `${movieTitle} was recommended to ${friendName}`;
+    }
+    if (sent) {
+      message = `Sent a friend invite to  ${friendName} `;
     }
 
     let toast = this.toastCtrl.create({
@@ -95,8 +100,7 @@ export class ToastProvider {
       position: 'top'
     });
     this.add(toast);
-    if(this.size() == 1) 
-    {
+    if (this.size() == 1) {
       this.presentToast();
     }
   }
@@ -107,8 +111,7 @@ export class ToastProvider {
       await this.last().present();
       this.last().onDidDismiss(async () => {
         this.remove();
-        if(this.size() > 0)
-        {
+        if (this.size() > 0) {
           this.presentToast();
         }
       })
@@ -116,7 +119,7 @@ export class ToastProvider {
 
   }
 
- 
+
 
 
 

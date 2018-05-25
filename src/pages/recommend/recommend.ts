@@ -13,6 +13,7 @@ import {
 import {
   DbProvider
 } from '../../providers/db/db';
+import { ToastProvider } from '../../providers/toast/toast';
 
 /**
  * Generated class for the RecommendPage page.
@@ -35,7 +36,7 @@ export class RecommendPage {
   public reset = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, params: NavParams,
-    private toastCtrl: ToastController, public events: Events) {
+    private toastCtrl: ToastController, public events: Events, public toastProvider: ToastProvider) {
     this.movie = this.navParams.get("movieToRecommend");
     this.setupFriends();
     this.recommendText = "";
@@ -73,12 +74,7 @@ export class RecommendPage {
           friendsString += ` ${friend.username}`
         }
       });
-      let toast = this.toastCtrl.create({
-        message: `${this.movie.title} was recommended to ${friendsString}`,
-        duration: 3000,
-        position: 'top'
-      });
-      toast.present();
+      this.toastProvider.addToastToQueue(this.movie.title, undefined, friendsString, false, false, true);
       this.selectedFriends = [];
       this.recommendText = "";
     }
