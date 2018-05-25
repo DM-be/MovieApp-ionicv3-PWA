@@ -1,3 +1,4 @@
+
 import {
   Component, ViewChild
 } from '@angular/core';
@@ -87,6 +88,7 @@ export class SeenMoviesPage {
     this.events.subscribe("selected:clicked", () => {
       this.content.scrollToTop(0);
       this.moviesInView =  this.dbProvider.getMoviesInView("seen");
+      this.filtered = false;
     })
   }
 
@@ -108,8 +110,7 @@ export class SeenMoviesPage {
    this.watchedMovies = this.dbProvider.getMovies("watch");
   }
 
-  openMovieDetail(i): void {
-    let movie = this.moviesInView[i];
+  openMovieDetail(movie: Movie): void {
     this.navCtrl.push(this.movieDetailPage, {
       "movie": movie
     });
@@ -155,6 +156,7 @@ export class SeenMoviesPage {
 
   showNextMovies(event): void {
     console.log("calling");
+    console.log(this.filtered);
     this.showNextMoviePage();
     event.complete();
   

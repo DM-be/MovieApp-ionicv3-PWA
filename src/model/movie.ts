@@ -16,7 +16,7 @@ export class Movie {
             this.poster = "https://image.tmdb.org/t/p/w200" + poster_path;
         }
         else {
-            this.poster = poster;
+            this.poster = "assets/imgs/no-poster.png"
         }
         this.overview = overview;
         this.poster_path =  poster_path

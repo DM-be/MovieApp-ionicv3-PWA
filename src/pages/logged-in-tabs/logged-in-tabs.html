@@ -24,7 +24,7 @@
 <ion-content scroll="false">
   <ion-tabs [tabsPlacement]="tabsPlacement" [tabsLayout]="tabsLayout" (ionChange)="tabSelected($event)">
     <ion-tab [root]="discover" tabTitle="Discover" tabIcon="film"></ion-tab>
-    <ion-tab [root]="watch" tabTitle="Watch" tabIcon="eye"></ion-tab>
+    <ion-tab [root]="watch" tabTitle="Watch" tabIcon="eye" (ionSelect)="watchSelected()"></ion-tab>
     <ion-tab [root]="seen" tabTitle="Seen" tabIcon="checkmark" (ionSelect)="seenSelected()"></ion-tab>
     <ion-tab [root]="recommendation" tabTitle="Recommended" tabIcon="flag"></ion-tab>
     <ion-tab [root]="social" tabTitle="Friends" tabIcon="people"></ion-tab>

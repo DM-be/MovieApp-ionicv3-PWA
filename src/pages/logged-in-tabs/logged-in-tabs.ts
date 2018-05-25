@@ -121,6 +121,12 @@ export class LoggedInTabsPage {
    this.events.publish("selected:clicked");
   }
 
+  watchSelected() {
+    this.dbProvider.setCounter("watch", 20);
+    this.dbProvider.setMoviesInView("watch");
+    this.events.publish("watch:clicked");
+  }
+
   presentPopover(event) {
     let popover = this.popoverCtrl.create(PopoverDiscoverPage);
     popover.present({

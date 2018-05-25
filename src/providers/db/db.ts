@@ -38,12 +38,9 @@ export class DbProvider {
   private acceptedFriends = [];
   private moviesInView: Object = {};
   private counter: Object = {};
-  private pouch;
-
 
   constructor(public events: Events) {
     
-    this.moviesInView["watch"] = [];
     this.counter["seen"] = 20;
     this.counter["watch"] = 20;
     this.username = 'bdacf8d9-eac9-4a6f-bc3b-2ad16614d31d-bluemix';

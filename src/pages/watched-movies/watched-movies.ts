@@ -1,6 +1,6 @@
 import { ToastProvider } from './../../providers/toast/toast';
 import {
-  Component
+  Component, ViewChild
 } from '@angular/core';
 import {
   IonicPage,
@@ -8,7 +8,8 @@ import {
   NavParams,
   Events,
   ToastController,
-  ModalController
+  ModalController,
+  Content
 } from 'ionic-angular';
 import {
   DbProvider
@@ -37,28 +38,66 @@ export class WatchedMoviesPage {
   public recommendPage = RecommendPage;
   public movies: Movie [];
   public seenMovies: Movie [];
+  private movieCounter: number;
+  public moviesInView: Movie [];
+  public filtered: boolean = false;
+  public filteredMovies: any;
+  @ViewChild(Content) content: Content;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public toastCtrl: ToastController,
   public modalCtrl: ModalController, public filterProvider: FilterProvider, public events: Events, public toastProvider: ToastProvider) {}
   ionViewWillEnter() {
     this.movies = this.dbProvider.getMovies("watch");
+    this.movieCounter = 20;
+    this.filteredMovies = [];
     this.seenMovies = this.dbProvider.getMovies("seen");
   }
 
   ionViewDidLoad() {
+    this.moviesInView = this.dbProvider.getMoviesInView("watch");
+
     this.events.subscribe("watch:updated", (searchTerm) => {
       this.movies = this.dbProvider.getMovies("watch");
-      this.movies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
+      this.filteredMovies = this.filterProvider.filterBySearchTerm(this.movies, searchTerm);
+      this.resetMoviesInView(this.filteredMovies);
+      this.content.scrollToTop(0);
+      this.filtered = true;
     })
     this.events.subscribe("watch:empty", () => {
       this.movies = this.dbProvider.getMovies("watch");
+      this.resetMoviesInView();
+      this.content.scrollToTop(0);
+      this.filtered = false;
+    })
+    this.events.subscribe("watch:clicked", () => {
+      this.content.scrollToTop(0);
+      this.moviesInView =  this.dbProvider.getMoviesInView("watch");
+      this.filtered = false;
     })
   }
+  
+  resetMoviesInView(movies?: Movie []) {
+    
+    this.dbProvider.setCounter("watch", 20);
+    if(movies)
+    {
+      this.dbProvider.setMoviesInView("watch", movies);
+    }
+    else {
+      this.dbProvider.setMoviesInView("watch");
+    }
+    
+    this.moviesInView = this.dbProvider.getMoviesInView("watch");
+  }
 
-  openMovieDetail(i: number): void {
-    let movie = this.movies[i];
+  ionViewDidEnter(){
+    this.movies = this.dbProvider.getMovies("watch");
+    this.seenMovies = this.dbProvider.getMovies("seen");
+   }
+
+  openMovieDetail(movie: Movie): void {
     this.navCtrl.push(this.movieDetailPage, {
-      movie: movie
+      "movie": movie
     });
   }
 
@@ -86,6 +125,28 @@ export class WatchedMoviesPage {
   {
     this.dbProvider.removeMovie("watch", movie);
     this.movies = this.dbProvider.getMovies("watch");
+  }
+
+  showNextMoviePage() {
+    let currentCounter = this.dbProvider.getCounter("watch");
+    currentCounter += 20;
+    this.dbProvider.setCounter("watch", currentCounter);
+    if(this.filtered)
+    {
+      this.dbProvider.setMoviesInView("watch", this.filteredMovies);
+    }
+    else{
+      this.dbProvider.setMoviesInView("watch");
+    }
+    this.moviesInView = this.dbProvider.getMoviesInView("watch");
+  }
+
+  showNextMovies(event): void {
+    console.log("calling");
+    console.log(this.filtered);
+    this.showNextMoviePage();
+    event.complete();
+  
   }
 
 }
