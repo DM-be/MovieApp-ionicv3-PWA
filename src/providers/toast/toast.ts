@@ -45,22 +45,38 @@ export class ToastProvider {
     return this.queue.length;
   }
 
-  addToastToQueue(movieTitle: string, typeOfList: string): void {
+  addToastToQueue(movieTitle?: string, typeOfList?: string, friendName?: string, recommended?: boolean, friendInvite?: boolean): void {
+
+    let message  = `${movieTitle} was added to your ${typeOfList}list`;
+    if(recommended) {
+      message = `${movieTitle} was recommended to you by ${friendName}`;
+    }
+    if(friendInvite) {
+      message = `${friendName} has accepted your friend request`;
+    }
+
     let toast = this.toastCtrl.create({
-      message: `${movieTitle} was added to your ${typeOfList}list`,
+      message,
       duration: 2500,
       position: 'top'
     });
     this.add(toast);
+    if(this.size() == 1) 
+    {
+      this.presentToast();
+    }
   }
 
   async presentToast() {
 
-    if (this.size() > 0) {
+    if (this.last()) {
       await this.last().present();
-      this.last().onDidDismiss(() => {
+      this.last().onDidDismiss(async () => {
         this.remove();
-        this.presentToast();
+        if(this.size() > 0)
+        {
+          this.presentToast();
+        }
       })
     }
 

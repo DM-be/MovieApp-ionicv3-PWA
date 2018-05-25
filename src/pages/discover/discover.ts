@@ -1,3 +1,5 @@
+'use strict'
+
 import {
   Component,
   ViewChild
@@ -185,21 +187,14 @@ export class DiscoverPage {
     }
   }
 
-  presentToast(movieTitle: string, typeOfList: string): void {
-    let toast = this.toastCtrl.create({
-      message: `${movieTitle} was added to your ${typeOfList}list`,
-      duration: 2500,
-      position: 'top'
-    });
-    toast.present();
-  }
+ 
 
    addToWatch(event, movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("watch", movie);
     this.toastProvider.addToastToQueue(movie.title, "watch");
-    this.toastProvider.presentToast();
+    //this.toastProvider.presentToast();
   //  this.presentToast(movie.title, "watch");
   }
 
@@ -209,7 +204,7 @@ export class DiscoverPage {
     this.dbProvider.addMovie("seen", movie);
     this.toastProvider.addToastToQueue(movie.title, "seen");
  //   this.presentToast(movie.title, "seen");
-    this.toastProvider.presentToast();
+   // this.toastProvider.presentToast();
   }
 
   openMovieDetail(movie: Movie): void {

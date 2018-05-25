@@ -5,6 +5,7 @@ import { MovieDetailPage } from '../movie-detail/movie-detail';
 import { Movie } from '../../model/movie';
 import { RecommendPage } from '../recommend/recommend';
 import { FilterProvider } from '../../providers/filter/filter';
+import { ToastProvider } from '../../providers/toast/toast';
 
 /**
  * Generated class for the RecommendationsPage page.
@@ -26,7 +27,8 @@ export class RecommendationsPage {
   private seenMovies: Movie [];
   private watchedMovies: Movie [];
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider,
-  public toastCtrl: ToastController, public modalCtrl: ModalController, public platform: Platform, public events: Events, public filterProvider: FilterProvider) {
+  public toastCtrl: ToastController, public modalCtrl: ModalController, public platform: Platform, public events: Events, public filterProvider: FilterProvider,
+  public toastProvider: ToastProvider) {
     
   }
 
@@ -43,12 +45,7 @@ export class RecommendationsPage {
       this.recommendations = this.dbProvider.getMovies("recommendations");
     })
     this.events.subscribe("movie:recievedRecommendation", async movie => {
-      let toast = this.toastCtrl.create({
-        message: `${movie.title} was recommended to you by ${movie.recommendedBy.username}`,
-        duration: 3000,
-        position: 'top'
-      });
-      toast.present();
+      this.toastProvider.addToastToQueue(movie.title, undefined, movie.recommendedBy.username, true);
       this.recommendations = await this.dbProvider.getRecommendations();
     })
   }
@@ -76,27 +73,18 @@ export class RecommendationsPage {
     }
   }
 
-  presentToast(movieTitle: string, typeOfList: string): void {
-    let toast = this.toastCtrl.create({
-      message: `${movieTitle} was added to your ${typeOfList}list`,
-      duration: 1500,
-      position: 'bottom'
-    });
-    toast.present();
-  }
-
    addToWatch(event, movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("watch", movie);
-    this.presentToast(movie.title, "watch");
+    this.toastProvider.addToastToQueue(movie.title, "watch");
   }
 
   addToSeen(event, movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("seen", movie);
-    this.presentToast(movie.title, "seen");
+    this.toastProvider.addToastToQueue(movie.title, "watch");
   }
 
   openRecommendMovie(movie): void {

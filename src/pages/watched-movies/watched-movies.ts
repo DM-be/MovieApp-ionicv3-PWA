@@ -1,3 +1,4 @@
+import { ToastProvider } from './../../providers/toast/toast';
 import {
   Component
 } from '@angular/core';
@@ -38,7 +39,7 @@ export class WatchedMoviesPage {
   public seenMovies: Movie [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public toastCtrl: ToastController,
-  public modalCtrl: ModalController, public filterProvider: FilterProvider, public events: Events) {}
+  public modalCtrl: ModalController, public filterProvider: FilterProvider, public events: Events, public toastProvider: ToastProvider) {}
   ionViewWillEnter() {
     this.movies = this.dbProvider.getMovies("watch");
     this.seenMovies = this.dbProvider.getMovies("seen");
@@ -61,20 +62,11 @@ export class WatchedMoviesPage {
     });
   }
 
-  presentToast(movieTitle: string, typeOfList: string): void {
-    let toast = this.toastCtrl.create({
-      message: `${movieTitle} was added to your ${typeOfList}list`,
-      duration: 2500,
-      position: 'top'
-    });
-    toast.present();
-  }
-
   addToSeen(event: any, movie: Movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("seen", movie);
-    this.presentToast(movie.title, "seen");
+    this.toastProvider.addToastToQueue(movie.title, "seen");
   }
 
   isInSeen(movie: Movie): boolean {

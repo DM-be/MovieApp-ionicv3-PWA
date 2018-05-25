@@ -25,6 +25,7 @@ import {
 import { Movie } from '../../model/movie';
 import { RecommendPage } from '../recommend/recommend';
 import { FilterProvider } from '../../providers/filter/filter';
+import { ToastProvider } from '../../providers/toast/toast';
 
 
 
@@ -59,7 +60,8 @@ export class SeenMoviesPage {
     public toastCtrl: ToastController,
     public  modalCtrl: ModalController,
     public events: Events,
-    public filterProvider: FilterProvider
+    public filterProvider: FilterProvider,
+    public toastProvider: ToastProvider
   ) {
     this.movieCounter = 20;
     this.movies = this.dbProvider.getMovies("seen");
@@ -101,19 +103,10 @@ export class SeenMoviesPage {
     
     this.moviesInView = this.dbProvider.getMoviesInView("seen");
   }
-
-  ionViewWillEnter() {
-
-  }
-  
-
   ionViewDidEnter(){
    this.movies = this.dbProvider.getMovies("seen");
    this.watchedMovies = this.dbProvider.getMovies("watch");
   }
-
-
-
 
   openMovieDetail(i): void {
     let movie = this.moviesInView[i];
@@ -127,20 +120,11 @@ export class SeenMoviesPage {
     }
   }
 
-  presentToast(movieTitle: string, typeOfList: string): void {
-    let toast = this.toastCtrl.create({
-      message: `${movieTitle} was added to your ${typeOfList}list`,
-      duration: 2500,
-      position: 'top'
-    });
-    toast.present();
-  }
-
   addToWatch(event, movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("watch", movie);
-    this.presentToast(movie.title, "watch");
+    this.toastProvider.addToastToQueue(movie.title, "watch");
   }
 
   removeMovie(movie): void 

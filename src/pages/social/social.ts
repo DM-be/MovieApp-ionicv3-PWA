@@ -1,3 +1,4 @@
+import { ToastProvider } from './../../providers/toast/toast';
 import {
   Component
 } from '@angular/core';
@@ -42,7 +43,8 @@ export class SocialPage {
     public alertCtrl: AlertController,
     public events: Events,
     public filterProvider: FilterProvider,
-    public toastCtrl: ToastController) {
+    public toastCtrl: ToastController,
+    public toastProvider: ToastProvider) {
   
   }
   ionViewDidEnter() {
@@ -60,20 +62,10 @@ export class SocialPage {
     this.events.subscribe("friend:accepted", (newFriend, showPopup) => {
       if(showPopup)
       {
-        this.presentToast(newFriend.username);
+        this.toastProvider.addToastToQueue(undefined, undefined, newFriend.username, false, true);
       }
      this.friends = this.socialProvider.getAcceptedFriends();   
     })
-  }
-
-
-  presentToast(friendName: string): void {
-    let toast = this.toastCtrl.create({
-      message: `${friendName} has accepted your friend request`,
-      duration: 2500,
-      position: 'top'
-    });
-    toast.present();
   }
 
   setup() {
