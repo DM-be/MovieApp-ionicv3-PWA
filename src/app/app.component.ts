@@ -1,3 +1,5 @@
+import { NetworkProvider } from './../providers/network/network';
+
 import { Component } from '@angular/core';
 import { Platform, Config } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -15,7 +17,7 @@ import { ImgCacheService } from '../../global';
 export class MyApp {
   rootPage:any = TabsPage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, cache: CacheService, imgCacheService: ImgCacheService, public config: Config) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, cache: CacheService, imgCacheService: ImgCacheService, public config: Config, public networkProvider: NetworkProvider) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -27,9 +29,15 @@ export class MyApp {
        // Keep our cached results when device is offline!
        cache.setOfflineInvalidate(false);
 
+       setTimeout(() => {
+          this.networkProvider.initializeNetworkEvents();
+       }, 2000);
+      
+
+
        imgCacheService.initImgCache()
        .subscribe((v) => console.log('init'), () => console.log('fail init'));
-      
+
        this.config.set( 'scrollPadding', false )
        this.config.set( 'scrollAssist', false )
        this.config.set( 'autoFocusAssist', false )

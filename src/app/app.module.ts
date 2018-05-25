@@ -1,3 +1,5 @@
+import { Network } from '@ionic-native/network';
+
 import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { Ng2CompleterModule } from "ng2-completer";
 import { FormsModule } from "@angular/forms";
@@ -35,6 +37,8 @@ import { CacheImgModule, ImgCacheService } from '../../global';
 import { PopoverDiscoverPage } from '../pages/popover-discover/popover-discover';
 import { ToastProvider } from '../providers/toast/toast';
 import { IntroPage } from '../pages/intro/intro';
+import { NetworkProvider } from '../providers/network/network';
+
 
 
 
@@ -100,7 +104,9 @@ import { IntroPage } from '../pages/intro/intro';
     DbProvider,
     FilterProvider, 
     ImgCacheService,
-    ToastProvider
+    Network,
+    ToastProvider,
+    NetworkProvider
     
 
   ]

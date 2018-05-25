@@ -69,16 +69,16 @@ import { ToastProvider } from '../../providers/toast/toast';
   templateUrl: 'discover.html',
 })
 export class DiscoverPage {
-  private searchTerm: string = '';
-  private searchControl: FormControl;
-  private movieDetailPage = MovieDetailPage;
-  private recommendPage = RecommendPage;
-  private movies: Movie[];
-  private seenMovies: any;
-  private watchedMovies: any;
-  private hasNextPage: boolean = false;
-  private firstSearch: boolean = true;
-  private findingSimilarMovies: boolean = false;
+  public searchTerm: string = '';
+  public searchControl: FormControl;
+  public movieDetailPage = MovieDetailPage;
+  public recommendPage = RecommendPage;
+  public movies: Movie[];
+  public seenMovies: any;
+  public watchedMovies: any;
+  public hasNextPage: boolean = false;
+  public firstSearch: boolean = true;
+  public findingSimilarMovies: boolean = false;
 
   constructor(
     private navCtrl: NavController,

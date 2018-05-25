@@ -121,10 +121,11 @@ export class WatchedMoviesPage {
     recommendModal.present();
   }
 
-  removeMovie(movie: Movie): void
+  async removeMovie(movie: Movie)
   {
-    this.dbProvider.removeMovie("watch", movie);
-    this.movies = this.dbProvider.getMovies("watch");
+    await this.dbProvider.removeMovie("watch", movie);
+    this.dbProvider.setMoviesInView("watch");
+    this.moviesInView = this.dbProvider.getMoviesInView("watch");
   }
 
   showNextMoviePage() {
@@ -142,11 +143,8 @@ export class WatchedMoviesPage {
   }
 
   showNextMovies(event): void {
-    console.log("calling");
-    console.log(this.filtered);
     this.showNextMoviePage();
     event.complete();
-  
   }
 
 }

@@ -1,6 +1,6 @@
-
 import {
-  Component, ViewChild
+  Component,
+  ViewChild
 } from '@angular/core';
 import {
   NavController,
@@ -23,10 +23,18 @@ import {
 import {
   MovieDetailPage
 } from '../movie-detail/movie-detail';
-import { Movie } from '../../model/movie';
-import { RecommendPage } from '../recommend/recommend';
-import { FilterProvider } from '../../providers/filter/filter';
-import { ToastProvider } from '../../providers/toast/toast';
+import {
+  Movie
+} from '../../model/movie';
+import {
+  RecommendPage
+} from '../recommend/recommend';
+import {
+  FilterProvider
+} from '../../providers/filter/filter';
+import {
+  ToastProvider
+} from '../../providers/toast/toast';
 
 
 
@@ -42,12 +50,12 @@ import { ToastProvider } from '../../providers/toast/toast';
   templateUrl: 'seen-movies.html',
 })
 export class SeenMoviesPage {
-  public movies: Movie [];
-  public watchedMovies: Movie [];
+  public movies: Movie[];
+  public watchedMovies: Movie[];
   public movieDetailPage = MovieDetailPage;
   public recommendPage = RecommendPage;
   private movieCounter: number;
-  public moviesInView: Movie [];
+  public moviesInView: Movie[];
   public filtered: boolean = false;
   public filteredMovies: any;
   @ViewChild(Content) content: Content;
@@ -59,7 +67,7 @@ export class SeenMoviesPage {
     public platform: Platform,
     public dbProvider: DbProvider,
     public toastCtrl: ToastController,
-    public  modalCtrl: ModalController,
+    public modalCtrl: ModalController,
     public events: Events,
     public filterProvider: FilterProvider,
     public toastProvider: ToastProvider
@@ -67,7 +75,7 @@ export class SeenMoviesPage {
     this.movieCounter = 20;
     this.movies = this.dbProvider.getMovies("seen");
     this.filteredMovies = [];
-    
+
   }
 
   ionViewDidLoad() {
@@ -87,27 +95,25 @@ export class SeenMoviesPage {
     })
     this.events.subscribe("selected:clicked", () => {
       this.content.scrollToTop(0);
-      this.moviesInView =  this.dbProvider.getMoviesInView("seen");
+      this.moviesInView = this.dbProvider.getMoviesInView("seen");
       this.filtered = false;
     })
   }
 
-  resetMoviesInView(movies?: Movie []) {
-    
+  resetMoviesInView(movies ? : Movie[]) {
+
     this.dbProvider.setCounter("seen", 20);
-    if(movies)
-    {
+    if (movies) {
       this.dbProvider.setMoviesInView("seen", movies);
-    }
-    else {
+    } else {
       this.dbProvider.setMoviesInView("seen");
     }
-    
+
     this.moviesInView = this.dbProvider.getMoviesInView("seen");
   }
-  ionViewDidEnter(){
-   this.movies = this.dbProvider.getMovies("seen");
-   this.watchedMovies = this.dbProvider.getMovies("watch");
+  ionViewDidEnter() {
+    this.movies = this.dbProvider.getMovies("seen");
+    this.watchedMovies = this.dbProvider.getMovies("watch");
   }
 
   openMovieDetail(movie: Movie): void {
@@ -128,10 +134,11 @@ export class SeenMoviesPage {
     this.toastProvider.addToastToQueue(movie.title, "watch");
   }
 
-  removeMovie(movie): void 
-  {
-    this.dbProvider.removeMovie("seen", movie);
-    this.movies = this.dbProvider.getMovies("seen");
+  async removeMovie(movie: Movie) {
+    await this.dbProvider.removeMovie("seen", movie);
+    this.dbProvider.setMoviesInView("seen");
+    this.moviesInView = this.dbProvider.getMoviesInView("seen");
+
   }
 
   openRecommendMovie(movie): void {
@@ -144,24 +151,18 @@ export class SeenMoviesPage {
     let currentCounter = this.dbProvider.getCounter("seen");
     currentCounter += 20;
     this.dbProvider.setCounter("seen", currentCounter);
-    if(this.filtered)
-    {
+    if (this.filtered) {
       this.dbProvider.setMoviesInView("seen", this.filteredMovies);
-    }
-    else{
+    } else {
       this.dbProvider.setMoviesInView("seen");
     }
     this.moviesInView = this.dbProvider.getMoviesInView("seen");
   }
 
   showNextMovies(event): void {
-    console.log("calling");
-    console.log(this.filtered);
     this.showNextMoviePage();
     event.complete();
-  
   }
 
 
 }
-

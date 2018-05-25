@@ -1,3 +1,4 @@
+import { Network } from '@ionic-native/network';
 import {
   HttpClient
 } from '@angular/common/http';
@@ -6,7 +7,8 @@ import {
 } from '@angular/core';
 import {
   Toast,
-  ToastController
+  ToastController,
+  Events
 } from 'ionic-angular';
 
 /*
@@ -21,8 +23,15 @@ export class ToastProvider {
   private queue: Toast[];
 
 
-  constructor(public toastCtrl: ToastController) {
+  constructor(public toastCtrl: ToastController, public events: Events, public network: Network) {
     this.queue = [];
+    
+    this.events.subscribe("network:offline", () => {
+      this.addNetworkToastToQueue(false);
+    })
+    this.events.subscribe("network:online", () => {
+      this.addNetworkToastToQueue(true);
+    })
   }
 
   private add(toast: Toast): void {
@@ -44,6 +53,31 @@ export class ToastProvider {
   private size(): number {
     return this.queue.length;
   }
+
+  addNetworkToastToQueue(network: boolean) {
+
+    let message;
+    if(network)
+    {
+      message = "network reconnected, you can now enter new searches"
+    }
+    else{
+      message = "network disconnected: everything you searched before is accessible, you cannot enter new searches until network connectivity is regained"
+    }
+    let toast = this.toastCtrl.create({
+      message,
+      position: 'bottom',
+      showCloseButton: true,
+      closeButtonText: 'OK'
+    })
+    this.add(toast);
+    if(this.size() == 1) 
+    {
+      this.presentToast();
+    }
+
+  }
+
 
   addToastToQueue(movieTitle?: string, typeOfList?: string, friendName?: string, recommended?: boolean, friendInvite?: boolean): void {
 
@@ -80,17 +114,9 @@ export class ToastProvider {
       })
     }
 
-
   }
 
-  notifyToasts() {
-
-  }
-
-
-
-
-
+ 
 
 
 
