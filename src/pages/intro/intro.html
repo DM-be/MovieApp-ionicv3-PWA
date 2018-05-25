@@ -1,0 +1,54 @@
+<!--
+  Generated template for the IntroPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content fixed padding>
+  <ion-slides pager="true" parallax="true" padding>
+
+    <ion-slide fixed padding>
+      
+      <h1>Welcome to my app + name</h1>
+      <p>This app is made to keep track of all your seen movies and watched movies</p>
+      <p>You can add friends and recommend them a new movie</p>
+
+
+    </ion-slide>
+
+    <ion-slide fixed padding>
+
+      <ion-grid fixed>
+        <ion-row>
+          
+          <ion-col col-6>
+             <img src="assets/imgs/card_example.png">
+          </ion-col>
+          <ion-col>   
+            <h1>Features</h1>
+            <p>Add a movie to your seen or watch list using the <ion-icon name="eye"></ion-icon> or <ion-icon name="check"></ion-icon> icons</p>
+      <p>Add friends to your friendlist with the add friend button. Use the searchbar to find them. After they accept you can recommend them movies!</p>
+      <p>Using the <ion-icon name="flag"></ion-icon> icon you can select multiple or a single friend from your friendlist. Add a note to tell them why they should watch</p>
+</ion-col>
+        </ion-row>
+
+      </ion-grid>
+      
+     
+    </ion-slide>
+    <ion-slide> <h2>Functionality</h2>
+
+
+     
+   
+      <h2>Offline</h2>
+      <p>Every search you do is stored locally on your device/browser. As well as the images and even your watched/movies list</p>
+      <p>Dont worry! This doesnt take up alot of space</p>
+      <p>Because of this you can use this app even when you are offline, go ahead test it out!</p>
+      <h1>Get started now!</h1>
+      <button ion-button outline small (click)="navHome()">
+        Start using the app
+      </button>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
