@@ -100,7 +100,6 @@ export class MovieProvider {
       let now = moment().format('YYYY-MM-DD');
       let aMonthAgo = moment().subtract(1, 'months').format('YYYY-MM-DD');
       return `https://api.themoviedb.org/3/discover/movie?api_key=${this.api_key}&primary_release_date.gte=${aMonthAgo}&primary_release_date.lte=${now}&page=${this.currentPage}`;
-
     } else {
       switch (this.getSearchingBy()) {
         case 'title':
@@ -125,15 +124,22 @@ export class MovieProvider {
         headers: this.headers
       }).map(res => {
       this.setTotalPages(res.json().total_pages);
-      return res.json().results.map(movie => new Movie(movie.id, movie.title, movie.overview, movie.poster_path))
-    })
-    this.incrementCurrentPage();
+      return res.json().results.reduce((acc, movie) => 
+        {
+          if(movie.poster_path)
+          {
+            acc.push(new Movie(movie.id, movie.title, movie.overview, movie.poster_path));
+          }
+          return acc;
+        }, [])
+    });
     if (this.getCurrentPage() === this.getTotalPages()) {
       this.setHasNextPage(false);
     } else {
+      this.incrementCurrentPage();
       this.setHasNextPage(true);
     }
-    return this.cache.loadFromObservable(url, req)
+    return this.cache.loadFromObservable(url, req);
   }
 
   getKeyWords() {

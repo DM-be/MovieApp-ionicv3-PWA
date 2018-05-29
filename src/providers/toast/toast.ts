@@ -74,7 +74,20 @@ export class ToastProvider {
     if (this.size() == 1) {
       this.presentToast();
     }
+  }
 
+  addErrorToastToQueue(error: string)
+  {
+    let message = error;
+    let toast = this.toastCtrl.create({
+      message,
+      duration: 2500,
+      position: 'bottom'
+    });
+    this.add(toast);
+    if (this.size() == 1) {
+      this.presentToast();
+    }
   }
 
 

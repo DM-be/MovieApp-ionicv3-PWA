@@ -62,7 +62,9 @@ import {
 import {
   Movie
 } from '../../model/movie';
-import { ToastProvider } from '../../providers/toast/toast';
+import {
+  ToastProvider
+} from '../../providers/toast/toast';
 
 @Component({
   selector: 'page-discover',
@@ -79,11 +81,12 @@ export class DiscoverPage {
   public hasNextPage: boolean = false;
   public firstSearch: boolean = true;
   public findingSimilarMovies: boolean = false;
+  public loadingText = 'Loading more movies...'
 
   constructor(
     private navCtrl: NavController,
-    private navParams: NavParams,
-    private movieProvider: MovieProvider,
+    public navParams: NavParams,
+    public movieProvider: MovieProvider,
     private platform: Platform,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
@@ -108,7 +111,7 @@ export class DiscoverPage {
       });
       loading.dismiss();
     })
-    
+
   }
 
   ionViewWillEnter() {
@@ -187,15 +190,15 @@ export class DiscoverPage {
     }
   }
 
- 
 
-   addToWatch(event, movie): void {
+
+  addToWatch(event, movie): void {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("watch", movie);
     this.toastProvider.addToastToQueue(movie.title, "watch");
     //this.toastProvider.presentToast();
-  //  this.presentToast(movie.title, "watch");
+    //  this.presentToast(movie.title, "watch");
   }
 
   addToSeen(event, movie: Movie): void {
@@ -203,8 +206,8 @@ export class DiscoverPage {
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("seen", movie);
     this.toastProvider.addToastToQueue(movie.title, "seen");
- //   this.presentToast(movie.title, "seen");
-   // this.toastProvider.presentToast();
+    //   this.presentToast(movie.title, "seen");
+    // this.toastProvider.presentToast();
   }
 
   openMovieDetail(movie: Movie): void {
@@ -237,7 +240,7 @@ export class DiscoverPage {
           });
         })
       })
-      this.refreshMovies(); 
+      this.refreshMovies();
       loading.dismiss();
     } catch (err) {
       console.log("error in setting the movies by keyword : " + err);
@@ -245,11 +248,24 @@ export class DiscoverPage {
   }
 
   doInfinite(event): void {
-    this.movieProvider.getMovies(false, this.findingSimilarMovies, this.firstSearch).subscribe(movies => {
-      movies.forEach(movie => {
-        this.movies.push(movie);
+
+    this.movieProvider.getMovies(false, this.findingSimilarMovies, this.firstSearch).subscribe(
+      movies => {
+        console.log(movies);
+        movies.forEach(movie => {
+          this.movies.push(movie);
+          this.loadingText = 'Loading more movies...';
+          event.complete();
+        })
+      }, err => {
+        if (!err.ok) {
+          this.loadingText = 'Reconnect to the internet to load more movies'
+          setTimeout(() => {
+            event.complete();
+          }, 3500);
+        }
       });
-      event.complete()
-    })
-}
+  }
+
+
 }
