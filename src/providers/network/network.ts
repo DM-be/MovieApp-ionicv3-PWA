@@ -22,8 +22,6 @@ export class NetworkProvider {
 
   constructor(public network: Network, public events: Events) {
     
-      console.log("provider made")
-      console.log(this.network)
     this.previousStatus = ConnectionStatusEnum.Online;
   }
 
