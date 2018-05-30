@@ -36,6 +36,9 @@
     e.preventDefault();
     // Stash the event so it can be triggered later.
     deferredPrompt = e;
+    setTimeout(() => {
+      e.prompt();
+    }, 1500);
   });
   // Update UI notify the user they can add to home screen
     btnAdd.style.display = 'block';
