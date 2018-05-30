@@ -84,7 +84,7 @@ export class RecommendationsPage {
     event.preventDefault();
     event.target.offsetParent.setAttribute("disabled", "disabled");
     this.dbProvider.addMovie("seen", movie);
-    this.toastProvider.addToastToQueue(movie.title, "watch");
+    this.toastProvider.addToastToQueue(movie.title, "seen");
   }
 
   openRecommendMovie(movie): void {
