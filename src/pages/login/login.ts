@@ -114,5 +114,8 @@ export class LoginPage {
   launchSignup() {
     this.navCtrl.push(SignupPage);
   }
+  install() {
+    
+  }
 
 }
