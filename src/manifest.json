@@ -4,7 +4,7 @@
   "start_url": "index.html",
   "display": "fullscreen",
   "description": "The app that helps you find the coolest movies!",
-  ​​"orientation": "portrait",
+  "​​orientation": "portrait",
   "icons": [{
     "src": "assets/imgs/logo.png",
     "sizes": "512x512",
