@@ -5,7 +5,7 @@ import {
 import {
   Injectable
 } from '@angular/core';
-
+import PouchDB from 'pouchdb';
 import pouchdbadapteridb from 'pouchdb-adapter-idb';
 import {
   Movie
@@ -68,7 +68,7 @@ export class DbProvider {
       continuous: true
     }
 
-    //PouchDB.plugin(pouchdbadapteridb);
+    PouchDB.plugin(pouchdbadapteridb);
  
    
   }
@@ -114,11 +114,11 @@ export class DbProvider {
       }
     } 
 
-    this.db = new PouchDB('movies', {adapter: 'worker'})
+    this.db = new PouchDB('movies', {adapter: 'idb'})
  //   this.db.adapter('worker', worker);
     this.remote = details.userDBs.supertest;
     this.user = details.user_id;
-    this.sdb = new PouchDB('shared',{adapter: 'worker'});
+    this.sdb = new PouchDB('shared',{adapter: 'idb'});
    // this.sdb.adapter('worker', worker);
     this.db.sync(this.remote).on('complete', async x => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
       this.db.sync(this.remote, this.options);
@@ -475,4 +475,3 @@ export class DbProvider {
   }
 
 }
- 
