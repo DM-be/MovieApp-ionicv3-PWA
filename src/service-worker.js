@@ -26,6 +26,7 @@ self.toolbox.precache(
 
 self.addEventListener('fetch', function(event) {
   if (event.request.method != 'GET') return;
+  // need a non empty function 
 });
 
 // dynamically cache any other local assets
