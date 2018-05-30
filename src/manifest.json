@@ -2,7 +2,7 @@
   "name": "Movietracker",
   "short_name": "Movietracker",
   "start_url": "index.html",
-  "display": "fullscreen",
+  "display": "standalone",
   "description": "The app that helps you find the coolest movies!",
   "​​orientation": "portrait",
   "icons": [{
