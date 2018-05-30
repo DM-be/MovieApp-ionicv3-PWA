@@ -62,11 +62,11 @@ export class ToastProvider {
     if (network) {
       message = "Network reconnected: new searches are available again"
     } else {
-      message = "Network disconnected: you can still invite friends, recommend movies and add movies to lists. Former searches are available. Reconnect to enter a new search."
+      message = "Network disconnected: you can still invite friends, recommend movies and add movies to lists. Recent searches are available. Reconnect to enter a new search."
     }
     let toast = this.toastCtrl.create({
       message,
-      position: 'bottom',
+      position: 'middle',
       showCloseButton: true,
       closeButtonText: 'OK'
     })
@@ -75,21 +75,6 @@ export class ToastProvider {
       this.presentToast();
     }
   }
-
-  addErrorToastToQueue(error: string)
-  {
-    let message = error;
-    let toast = this.toastCtrl.create({
-      message,
-      duration: 2500,
-      position: 'bottom'
-    });
-    this.add(toast);
-    if (this.size() == 1) {
-      this.presentToast();
-    }
-  }
-
 
   addToastToQueue(movieTitle ? : string, typeOfList ? : string, friendName ? : string, recommended ? : boolean, friendInvite ? : boolean, recommendedTo ? : boolean, sent ? : boolean): void {
 

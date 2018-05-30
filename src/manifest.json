@@ -1,8 +1,10 @@
 {
-  "name": "Ionic",
-  "short_name": "Ionic",
+  "name": "Movietracker",
+  "short_name": "Movietracker",
   "start_url": "index.html",
-  "display": "standalone",
+  "display": "fullscreen",
+  "description": "The app that helps you find the coolest movies!",
+  ​​"orientation": "portrait-primary",
   "icons": [{
     "src": "assets/imgs/logo.png",
     "sizes": "512x512",
