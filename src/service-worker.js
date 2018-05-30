@@ -25,7 +25,7 @@ self.toolbox.precache(
 
 
 self.addEventListener('fetch', function(event) {
-  // needed to install manifest
+  console.log("nothing"); // needed to install manifest
 });
 
 // dynamically cache any other local assets
