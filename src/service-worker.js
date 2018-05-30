@@ -24,11 +24,7 @@ self.toolbox.precache(
 );
 
 
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    // magic goes here
-  );
-});
+self.addEventListener('fetch', function(event) {});
 
 // dynamically cache any other local assets
 self.toolbox.router.any('/*', self.toolbox.fastest);
