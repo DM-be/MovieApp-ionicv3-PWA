@@ -36,7 +36,6 @@ import { CacheModule } from 'ionic-cache';
 import { CacheImgModule, ImgCacheService } from '../../global';
 import { PopoverDiscoverPage } from '../pages/popover-discover/popover-discover';
 import { ToastProvider } from '../providers/toast/toast';
-import { IntroPage } from '../pages/intro/intro';
 import { NetworkProvider } from '../providers/network/network';
 
 
@@ -58,7 +57,7 @@ import { NetworkProvider } from '../providers/network/network';
     LoggedInTabsPage,
     RecommendPage,
     PopoverDiscoverPage,
-    IntroPage
+
     
   ],
   imports: [
@@ -93,7 +92,7 @@ import { NetworkProvider } from '../providers/network/network';
     LoggedInTabsPage,
     RecommendPage,
     PopoverDiscoverPage,
-    IntroPage
+
   ],
   providers: [
     StatusBar,
