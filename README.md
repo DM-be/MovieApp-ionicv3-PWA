@@ -16,11 +16,10 @@ A cache is used to keep requests when the network disconnects.
 * lazy loading images
 
 ## Installation
-The "add application to starter screen" can be used or a converted android application. 
+The "add application to starter screen" can be used or a converted android application can be downloaded directly (link only shown on mobile). 
 
 ## Hosting
 The app is hosted on heroku with a separate node server responsible for creating users in the database. 
-
 
 ### demo
 
