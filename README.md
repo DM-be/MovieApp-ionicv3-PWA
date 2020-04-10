@@ -2,24 +2,28 @@
 
 ## Description
 This is a progressive web application built with Ionic v3. With this application you can keep track of movies you have seen and which movies you would like to see. Friends can be invited. Movie recommendations can be sent. 
-It uses service workers and indexedDB (PouchDB) to keep a local database of movies and syncs this with a remote database.
+It uses service workers and CouchDB ([PouchDB](https://pouchdb.com/)) to keep a local database of movies that syncs with a remote database.
 A cache is used to keep requests when the network disconnects.
 
 ## Features
-* offline cached movie lookup requests
-* images are saved locally and reused
+* cached movie lookup requests
+* images are cached locally and reused
 * database synchronises locally to a remote database (useable offline)
 * invite based friend system
 * single page application
 * real time data base changes (friends and recommended movies are shown without refreshing/navigating)
 * layout changes depending on detected platform (android vs desktop)
 * lazy loading images
+* infinite scrolling with a new request (next page) on scroll end
 
 ## Installation
 The "add application to starter screen" can be used or a converted android application can be downloaded directly (link only shown on mobile). 
 
 ## Hosting
-The app is hosted on heroku with a separate node server responsible for creating users in the database. 
+The app is hosted on [heroku](http://movietracker-deploy.herokuapp.com) with a separate node server responsible for registering users.
+Cloudant is used to host the host the CouchDB database.
 
 ### demo
+
+#### desktop view
 
