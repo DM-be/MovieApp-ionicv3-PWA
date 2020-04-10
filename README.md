@@ -20,7 +20,7 @@ A cache is used to cache requests when the network disconnects.Users can use eve
 The "add application to starter screen" can be used or a converted android application can be downloaded directly (link only shown on mobile). 
 
 ## Hosting
-The app is hosted on [heroku](http://movietracker-deploy.herokuapp.com) with a separate node server responsible for registering users.
+The app is hosted on [heroku](https://movietracker-deploy.herokuapp.com) with a separate node server responsible for registering users.
 Cloudant is used to host the host the CouchDB database.
 
 ### demo
