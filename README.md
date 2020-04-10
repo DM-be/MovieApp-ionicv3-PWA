@@ -3,7 +3,7 @@
 ## Description
 This is a progressive web application built with Ionic v3. With this application you can keep track of movies you have seen and which movies you would like to see. Friends can be invited. Movie recommendations can be sent. 
 It uses service workers and CouchDB ([PouchDB](https://pouchdb.com/)) to keep a local database of movies that syncs with a remote database.
-A cache is used to keep requests when the network disconnects.
+A cache is used to cache requests when the network disconnects.Users can use every function of the application offline, except new searches. 
 
 ## Features
 * cached movie lookup requests
@@ -26,4 +26,6 @@ Cloudant is used to host the host the CouchDB database.
 ### demo
 
 #### desktop view
+
+#### offline requests
 
