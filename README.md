@@ -27,5 +27,14 @@ Cloudant is used to host the host the CouchDB database.
 
 #### desktop view
 
+![desktop overview](demofullview.gif)
+
+#### add friends
+![offline requests](addfriend.gif)
+
+#### recommend movies
+![recommend](recommendmovies.gif)
+
 #### offline requests
 
+![offline requests](reconnectinternet.gif)
