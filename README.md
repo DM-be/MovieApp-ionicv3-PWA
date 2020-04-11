@@ -3,8 +3,7 @@
 ## Description
 This is a progressive web application built with Ionic v3. With this application you can keep track of movies you have seen and which movies you would like to see. Friends can be added and movie recommendations can be sent to them. 
 It uses service workers and CouchDB ([PouchDB](https://pouchdb.com/)) to keep a local database of movies that syncs with a remote database.
-A cache is used to cache requests when the network disconnects. Users can use every function of the application offline with the exception of new movie searches. 
-Images are also cached and reused.
+Caches are used for the images and requests (movie searches). When the user disconnects every function of the application remains functional except new movie searches. 
 
 ## Features
 * cached movie lookup requests
